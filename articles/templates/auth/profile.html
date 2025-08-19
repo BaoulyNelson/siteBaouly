@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+    
+    <!-- Profil utilisateur -->
+    <div class="bg-white rounded-2xl shadow p-6 text-center">
+        <img src="https://picsum.photos/300/180?random=12' %}" 
+             alt="Photo de Profil" 
+             class="w-28 h-28 rounded-full mx-auto object-cover mb-4 border-4 border-blue-500">
+        <h3 class="text-xl font-bold text-gray-800">{{ user.username }}</h3>
+        <p class="text-gray-500 text-sm">{{ user.email }}</p>
+        <a href="{% url 'articles:confirmer_deconnexion' %}" 
+           class="inline-block mt-4 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+            Se déconnecter
+        </a>
+    </div>
+
+    <!-- Informations personnelles -->
+    <div class="md:col-span-2 bg-white rounded-2xl shadow p-6">
+        <h4 class="text-lg font-semibold text-gray-800 mb-6">Informations Personnelles</h4>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Nom d'utilisateur -->
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-600">Nom d'utilisateur</label>
+                <input type="text" readonly 
+                       id="username" 
+                       value="{{ user.username }}" 
+                       class="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 mt-1 text-gray-700">
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-600">Email</label>
+                <input type="email" readonly 
+                       id="email" 
+                       value="{{ user.email }}" 
+                       class="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 mt-1 text-gray-700">
+            </div>
+
+            <!-- Prénom -->
+            <div>
+                <label for="first_name" class="block text-sm font-medium text-gray-600">Prénom</label>
+                <input type="text" readonly 
+                       id="first_name" 
+                       value="{{ user.first_name }}" 
+                       class="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 mt-1 text-gray-700">
+            </div>
+
+            <!-- Nom -->
+            <div>
+                <label for="last_name" class="block text-sm font-medium text-gray-600">Nom</label>
+                <input type="text" readonly 
+                       id="last_name" 
+                       value="{{ user.last_name }}" 
+                       class="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 mt-1 text-gray-700">
+            </div>
+
+            <!-- Dernière connexion -->
+            <div>
+                <label for="last_login" class="block text-sm font-medium text-gray-600">Dernière connexion</label>
+                <input type="text" readonly 
+                       id="last_login" 
+                       value="{{ user.last_login }}" 
+                       class="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 mt-1 text-gray-700">
+            </div>
+
+            <!-- Date d'inscription -->
+            <div>
+                <label for="date_joined" class="block text-sm font-medium text-gray-600">Date d'inscription</label>
+                <input type="text" readonly 
+                       id="date_joined" 
+                       value="{{ user.date_joined }}" 
+                       class="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 mt-1 text-gray-700">
+            </div>
+        </div>
+
+        <div class="mt-8 text-center">
+            <a href="{% url 'articles:edit_profile' %}" 
+               class="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-2 rounded-lg transition">
+                Modifier les informations
+            </a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

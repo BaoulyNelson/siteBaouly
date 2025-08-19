@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="flex justify-center items-center min-h-screen bg-gray-100 px-4">
+    <div class="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md text-center">
+        <h4 class="text-xl font-semibold text-red-600 mb-3 flex items-center justify-center gap-2">
+            <!-- Icône Heroicons (logout) -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-10V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2h4a2 2 0 002-2v-1" />
+            </svg>
+            Déconnexion
+        </h4>
+        <p class="text-gray-600 mb-6">Êtes-vous sûr de vouloir vous déconnecter ?</p>
+        
+        <form method="post" class="flex justify-center gap-4">
+            {% csrf_token %}
+            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-medium px-5 py-2 rounded-lg transition">
+                ✅ Oui, se déconnecter
+            </button>
+            <a href="{% url 'articles:profile' %}" class="border border-gray-300 text-gray-700 hover:bg-gray-100 font-medium px-5 py-2 rounded-lg transition">
+                ❌ Annuler
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

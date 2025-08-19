@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Articles — {{ categorie|capfirst }}{% endblock %}
+
+{% block content %}
+<main class="max-w-4xl mx-auto px-4 mt-10">
+    <h1 class="text-2xl font-bold mb-6 text-center">Articles — {{ categorie|capfirst }}</h1>
+
+    {% if articles %}
+        <!-- Article principal -->
+        {% with articles.0 as principal %}
+        <section class="md:col-span-6 order-1 md:order-2">
+          <article class="mb-8">
+            <a href="{% url 'articles:detail' principal.slug %}">
+              <img src="{% if principal.image %}{{ principal.image.url }}{% else %}https://picsum.photos/900/520?random=1{% endif %}" 
+                   alt="{{ principal.titre }}" 
+                   class="w-full rounded-lg object-cover shadow-lg" 
+                   loading="lazy">
+            </a>
+            <div class="mt-6">
+              <p class="text-sm text-blue-600">
+                {{ principal.date_publication|date:"j F Y" }} — par {{ principal.auteur.username }}
+              </p>
+              <h2 class="mt-3 text-2xl md:text-3xl font-extrabold leading-tight">
+                <a href="{% url 'articles:detail' principal.slug %}" class="hover:underline">{{ principal.titre }}</a>
+              </h2>
+              <p class="mt-4 text-gray-700">{{ principal.contenu|truncatewords:40 }}</p>
+            </div>
+          </article>
+        </section>
+        {% endwith %}
+
+        <!-- Deux articles secondaires -->
+        <div class="grid grid-cols-1 gap-8">
+          {% for art in articles|slice:"1:3" %}
+          <article class="mb-8">
+            <a href="{% url 'articles:detail' art.slug %}">
+              <img src="{% if art.image %}{{ art.image.url }}{% else %}https://picsum.photos/900/520?random={{ forloop.counter }}{% endif %}" 
+                   alt="{{ art.titre }}" 
+                   class="w-full rounded-lg object-cover shadow-md" 
+                   loading="lazy">
+            </a>
+            <div class="mt-4">
+              <p class="text-sm text-blue-600">
+                {{ art.date_publication|date:"j F Y" }} — par {{ art.auteur.username }}
+              </p>
+              <h3 class="mt-2 text-xl font-bold leading-snug">
+                <a href="{% url 'articles:detail' art.slug %}" class="hover:underline">{{ art.titre }}</a>
+              </h3>
+              <p class="mt-3 text-gray-600">{{ art.contenu|truncatewords:20 }}</p>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+
+        <!-- Les autres articles -->
+        <div class="mt-10 space-y-6">
+          {% for art in articles|slice:"3:" %}
+          <article class="border-b pb-4">
+            <h3 class="text-lg font-semibold">
+              <a href="{% url 'articles:detail' art.slug %}" class="hover:underline">{{ art.titre }}</a>
+            </h3>
+            <p class="text-sm text-gray-600">
+              {{ art.date_publication|date:"j F Y" }} — par {{ art.auteur.username }}
+            </p>
+            <p class="mt-2 text-gray-700">{{ art.contenu|truncatewords:25 }}</p>
+          </article>
+          {% endfor %}
+        </div>
+    {% else %}
+        <p>Aucun article dans cette catégorie pour le moment.</p>
+    {% endif %}
+</main>
+{% endblock %}

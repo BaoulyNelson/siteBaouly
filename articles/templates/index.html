@@ -1,0 +1,325 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/accueil.css' %}" />
+{% endblock %}
+
+{% block title %}Accueil — Mon Journal{% endblock %}
+
+{% block content %}
+<main class="max-w-7xl mx-auto px-4 mt-10">
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+    <!-- LEFT column -->
+    <aside class="md:col-span-3 order-2 md:order-1">
+  <div class="sticky top-24">
+    <!-- Bloc : À la minute -->
+    <h3 class="text-xl font-semibold mb-4">À LA MINUTE</h3>
+
+    {% for art in a_la_minute %}
+    <article class="mb-6 flex gap-3 items-start">
+      {% if art.image %}
+      <img
+        src="{{ art.image.url }}"
+        alt=""
+        class="w-28 h-20 object-cover rounded"
+        loading="lazy"
+      />
+      {% else %}
+      <img
+        src="https://picsum.photos/120/80?random={{ forloop.counter }}"
+        alt="{{ art.titre }}"
+        class="w-28 h-20 object-cover rounded"
+        loading="lazy"
+      />
+      {% endif %}
+
+      <div class="flex-1">
+        <div class="flex items-center gap-3">
+          <time class="text-sm text-blue-600">
+            {{ art.date_pub|date:"j F Y" }}
+          </time>
+          <span class="text-sm text-slate-600">
+            par
+            <span class="font-medium">
+              {{ art.auteur.get_full_name|default:art.auteur.username }}
+            </span>
+          </span>
+        </div>
+
+        <h4 class="mt-2 text-lg font-bold leading-tight">
+          <a
+            href="{% url 'articles:detail' art.slug %}"
+            class="hover:underline"
+            >{{ art.titre }}</a
+          >
+        </h4>
+      </div>
+    </article>
+    {% empty %}
+    <p class="text-sm text-slate-500">
+      Aucun article 'à la minute' pour le moment.
+    </p>
+    {% endfor %}
+
+    <!-- Bloc : Annonces -->
+    <div class="mt-6 p-4 bg-slate-50 rounded">
+      <h4 class="text-sm font-semibold text-slate-700 mb-3">
+        <a
+          href="{% url 'articles:articles_par_categorie' slug='annonces' %}"
+          class="hover:underline"
+        >
+          Annonces
+        </a>
+      </h4>
+
+      {% if annonces %}
+      <div class="space-y-4">
+        {% for annonce in annonces %}
+        <div class="flex items-center space-x-3">
+          <!-- Image -->
+          <img
+            src="{% if annonce.image %}{{ annonce.image.url }}{% else %}https://picsum.photos/60/40?random={{ forloop.counter }}{% endif %}"
+            alt="{{ annonce.titre }}"
+            class="w-20 h-14 object-cover rounded"
+            loading="lazy"
+          />
+
+          <div>
+            <!-- Titre -->
+            <a
+              href="{% url 'articles:detail' slug=annonce.slug %}"
+              class="text-sm text-slate-600 hover:text-slate-900"
+            >
+              {{ annonce.titre }}
+            </a>
+
+            <!-- Auteur + Statut -->
+            <div class="flex items-center space-x-2 mt-1">
+              <span class="text-xs text-slate-600">
+                par
+                <span class="font-medium">
+                  {{ annonce.auteur.get_full_name|default:annonce.auteur.username }}
+                </span>
+              </span>
+
+              {% if annonce.active %}
+              <span
+                class="inline-block px-2 py-0.5 text-xs font-semibold text-green-800 bg-green-200 rounded-full"
+              >
+                Active
+              </span>
+              {% else %}
+              <span
+                class="inline-block px-2 py-0.5 text-xs font-semibold text-red-800 bg-red-200 rounded-full"
+              >
+                Inactive
+              </span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="text-xs text-slate-500 mt-2">
+        Aucune annonce pour le moment.
+      </p>
+      {% endif %}
+    </div>
+  </div>
+</aside>
+
+    <!-- CENTER column -->
+    <section class="md:col-span-6 order-1 md:order-2">
+      {% if a_la_une %}
+      <article class="mb-8">
+        {% if a_la_une.image %}
+        <img
+          src="{{ a_la_une.image.url }}"
+          alt="{{ a_la_une.titre }}"
+          class="w-full rounded-lg object-cover shadow-lg"
+          loading="lazy"
+        />
+        {% else %}
+        <img
+          src="https://picsum.photos/900/520?random=1"
+          alt="{{ a_la_une.titre }}"
+          class="w-full rounded-lg object-cover shadow-lg"
+          loading="lazy"
+        />
+        {% endif %}
+        <div class="mt-6">
+          <div class="flex items-center gap-3">
+            <time class="text-sm text-blue-600">
+              {{ a_la_une.date_pub|date:"j F Y" }}
+            </time>
+            <span class="text-sm text-slate-600">
+              par <span class="font-medium">{{ a_la_une.auteur.get_full_name|default:a_la_une.auteur.username }}</span>
+            </span>
+          </div>
+
+          <h2 class="mt-3 text-2xl md:text-3xl font-extrabold leading-tight">
+            <a
+              href="{% url 'articles:detail' a_la_une.slug %}"
+              class="hover:underline"
+              >{{ a_la_une.titre }}</a
+            >
+          </h2>
+          <p class="mt-4 text-gray-700">
+            {{ a_la_une.contenu|truncatewords:50 }}
+          </p>
+        </div>
+      </article>
+      {% endif %}
+
+      <div class="grid grid-cols-1 gap-8">
+        {% for article in autres|slice:":2" %}
+        <article class="mb-8">
+          {% if article.image %}
+          <img
+            src="{{ article.image.url }}"
+            alt="{{ article.titre }}"
+            class="w-full rounded-lg object-cover shadow-md"
+            loading="lazy"
+          />
+          {% else %}
+          <img
+            src="https://picsum.photos/900/520?random={{ forloop.counter }}"
+            alt="{{ article.titre }}"
+            class="w-full rounded-lg object-cover shadow-md"
+            loading="lazy"
+          />
+          {% endif %}
+          <div class="mt-4">
+            <div class="flex items-center gap-3">
+              <time class="text-sm text-blue-600">
+                {{ article.date_pub|date:"j F Y" }}
+              </time>
+              <span class="text-sm text-slate-600">
+                par <span class="font-medium">{{ article.auteur.get_full_name|default:article.auteur.username }}</span>
+              </span>
+            </div>
+
+            <h3 class="mt-2 text-xl font-bold leading-snug">
+              <a
+                href="{% url 'articles:detail' article.slug %}"
+                class="hover:underline"
+                >{{ article.titre }}</a
+              >
+            </h3>
+            <p class="mt-3 text-gray-600">
+              {{ article.contenu|truncatewords:30 }}
+            </p>
+          </div>
+        </article>
+        {% endfor %} 
+      </div>
+    </section>
+
+    <!-- RIGHT column -->
+    <aside class="md:col-span-3 order-3">
+  <div class="sticky top-24">
+    <!-- Bloc : Baouly's Infos -->
+    <div class="bg-sky-50 p-6 rounded-lg">
+      <h4 class="text-lg font-semibold text-slate-800 mb-2">
+        Baouly's Infos
+      </h4>
+      {% if a_la_une %}
+      <div class="flex items-center gap-3">
+        <time class="text-sm text-slate-600">
+          {{ a_la_une.date_pub|date:"j F Y" }}
+        </time>
+        <span class="text-sm text-slate-600">
+          par
+          <span class="font-medium">
+            {{ a_la_une.auteur.get_full_name|default:a_la_une.auteur.username }}
+          </span>
+        </span>
+      </div>
+      {% endif %}
+
+      <img
+        src="https://picsum.photos/250/340?random=4"
+        alt="Une une du journal"
+        class="mt-4 mx-auto rounded shadow-sm"
+        loading="lazy"
+      />
+    </div>
+
+    <!-- Bloc : À la une -->
+    <div class="mt-6 p-4 border rounded">
+      <h5 class="text-sm font-semibold">À la une</h5>
+      <ul class="mt-3 text-sm space-y-3">
+        {% for p in populaires %}
+        <li class="flex items-start gap-3">
+          {% if p.image %}
+          <img
+            src="{{ p.image.url }}"
+            alt="{{ p.titre }}"
+            class="w-16 h-10 object-cover rounded"
+            loading="lazy"
+          />
+          {% else %}
+          <img
+            src="https://picsum.photos/80/56?random={{ forloop.counter }}"
+            alt="{{ p.titre }}"
+            class="w-16 h-10 object-cover rounded"
+            loading="lazy"
+          />
+          {% endif %}
+
+          <div class="flex-1">
+            <!-- Titre -->
+            <a
+              class="text-blue-600 hover:underline font-medium"
+              href="{% url 'articles:detail' p.slug %}"
+              >{{ p.titre }}</a
+            >
+
+            <!-- Auteur -->
+            <div class="text-xs text-slate-600 mt-1">
+              par
+              <span class="font-medium">
+                {{ p.auteur.get_full_name|default:p.auteur.username }}
+              </span>
+            </div>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</aside>
+
+  </div>
+
+
+  <div class="mt-6">
+  <h4 class="text-lg font-semibold text-slate-700 mb-4">Témoignages</h4>
+
+  {% if temoignages %}
+  <div class="swiper mySwiper">
+    <div class="swiper-wrapper">
+      {% for t in temoignages %}
+      <div class="swiper-slide p-4 bg-white rounded-lg shadow border">
+        <p class="text-slate-700 italic mb-2">“{{ t.message }}”</p>
+        <span class="text-xs text-slate-500">— {{ t.nom }}, {{ t.date|date:"j F Y" }}</span>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Navigation -->
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+
+    <!-- Pagination -->
+    <div class="swiper-pagination mt-2"></div>
+  </div>
+  {% else %}
+    <p class="text-xs text-slate-500 mt-2">Aucun témoignage pour le moment.</p>
+  {% endif %}
+</div>
+
+</main>
+{% endblock %}

@@ -1,0 +1,179 @@
+{# templates/auth/login.html #}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Se connecter — Mon Journal{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* (Colle ici le CSS de ta maquette, ou charge-le depuis un fichier static) */
+  /* Je garde un CSS minimal reprenant ta maquette. */
+  :root {
+    --page-bg: #f7f8fa;
+    --accent: #1a73e8;
+    --muted: #5f6b73;
+    --border: #e6e7ea;
+  }
+
+  body {
+    background: var(--page-bg);
+  }
+
+  .card {
+    width: 520px;
+    max-width: 94vw;
+    background: #fff;
+    border-radius: 14px;
+    padding: 34px 56px;
+    margin: 40px auto;
+    border: 1px solid var(--border);
+  }
+
+  .logo {
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .google-word {
+    font-weight: 700;
+    font-size: 28px;
+  }
+
+  .google-word .g1 {
+    color: #4285F4
+  }
+
+  .g2 {
+    color: #EA4335
+  }
+
+  .g3 {
+    color: #FBBC05
+  }
+
+  .g4 {
+    color: #34A853
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 30px;
+    margin: 6px 0 6px;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+
+  .input-box {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    min-height: 56px;
+  }
+
+  .input-box input {
+    border: 0;
+    outline: none;
+    font-size: 16px;
+    width: 100%;
+    background: transparent;
+  }
+
+  .btn {
+    background: var(--accent);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .error {
+    color: #b00020;
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+  }
+
+  .helper {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 18px;
+  }
+
+  .small-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="card" role="main" aria-labelledby="title">
+  <div class="logo" aria-hidden="true">
+    <div class="google-word" aria-hidden="true">
+      <span class="g1">B</span><span class="g2">a</span><span class="g3">o</span><span class="g4">u</span><span class="g1">l</span><span class="g2">y</span>
+    </div>
+  </div>
+
+  <h1 id="title">Se connecter à Mon Journal</h1>
+  <div class="subtitle">Utilisez votre compte</div>
+
+  <form method="post" action="{% url 'articles:login' %}" aria-label="Connexion">
+    {% csrf_token %}
+
+    {# erreurs globales (ex: identifiants invalides) #}
+    {% if form.non_field_errors %}
+    <div class="error">
+      {% for err in form.non_field_errors %}
+      {{ err }}
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {# champ username (widget configuré dans CustomAuthForm) #}
+    <div class="input-box">
+      {{ form.username }}
+    </div>
+    {% if form.username.errors %}
+    <div class="error">
+      {% for e in form.username.errors %}{{ e }}{% endfor %}
+    </div>
+    {% endif %}
+
+    {# champ password #}
+    <div class="input-box">
+      {{ form.password }}
+    </div>
+    {% if form.password.errors %}
+    <div class="error">
+      {% for e in form.password.errors %}{{ e }}{% endfor %}
+    </div>
+    {% endif %}
+
+    <a href="#" class="small-link">Mot de Passe oublié ?</a>
+
+    <p class="helper">Ce n'est pas votre ordinateur ? Utilisez le mode Invité pour vous connecter en mode privé.</p>
+
+    <div class="row" style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+      <a href="{% url 'articles:register' %}" class="small-link">Créer un compte</a>
+      <button class="btn" type="submit">Se connecter</button>
+    </div>
+  </form>
+
+  <div class="footer" style="margin-top:26px; text-align:center; color:var(--muted); font-size:14px;">
+    <div style="display:flex; gap:12px; justify-content:center; margin-top:12px;">
+      <div>Aide</div>
+      <div>Confidentialité</div>
+      <div>Conditions</div>
+    </div>
+  </div>
+</main>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Inscription — Mon Journal{% endblock %}
+
+{% block extra_css %}
+<!-- Tu peux inclure le même CSS que pour login ou extraire en static/css/auth.css -->
+<style>
+/* copie ici le CSS card / input-box que tu utilises pour login */
+:root{ --page-bg:#f7f8fa; --accent:#1a73e8; --muted:#5f6b73; --border:#e6e7ea }
+body{ background:var(--page-bg) }
+.card{ width:520px; max-width:94vw; background:#fff; border-radius:14px; padding:34px 56px; margin:40px auto; border:1px solid var(--border) }
+.logo{ text-align:center; margin-bottom:6px }
+.google-word{ font-weight:700; font-size:28px }
+.input-box{ border:1px solid var(--border); border-radius:6px; padding:14px; margin-bottom:12px; min-height:56px; display:flex; align-items:center }
+.input-box input{ border:0; outline:none; font-size:16px; width:100%; background:transparent }
+.btn-join{ background:#16a34a; color:#fff; padding:10px 18px; border-radius:8px; border:none; font-weight:600; cursor:pointer }
+.error{ color:#b00020; font-size:0.95rem; margin-bottom:12px }
+.helper{ color:var(--muted); font-size:14px; margin-bottom:18px }
+.small-link{ color:var(--accent); text-decoration:none; font-weight:500 }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="card" role="main" aria-labelledby="title">
+  <div class="logo" aria-hidden="true">
+    <div class="google-word" aria-hidden="true">
+      <span style="color:#4285F4">B</span><span style="color:#EA4335">a</span><span style="color:#FBBC05">o</span><span style="color:#34A853">u</span><span style="color:#4285F4">l</span><span style="color:#EA4335">y</span>
+    </div>
+  </div>
+
+  <h1 id="title">Créer un compte</h1>
+  <div class="subtitle" style="text-align:center; color:var(--muted); margin-bottom:14px">Inscrivez-vous pour publier et commenter</div>
+
+  <form method="post" action="{% url 'articles:register' %}">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="error">
+        {% for err in form.non_field_errors %}{{ err }}{% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="input-box">
+      {{ form.username }}
+    </div>
+    {% if form.username.errors %}
+      <div class="error">{% for e in form.username.errors %}{{ e }}{% endfor %}</div>
+    {% endif %}
+
+    <div class="input-box">
+      {{ form.email }}
+    </div>
+    {% if form.email.errors %}
+      <div class="error">{% for e in form.email.errors %}{{ e }}{% endfor %}</div>
+    {% endif %}
+
+    <div class="input-box">
+      {{ form.password1 }}
+    </div>
+    {% if form.password1.errors %}
+      <div class="error">{% for e in form.password1.errors %}{{ e }}{% endfor %}</div>
+    {% endif %}
+
+    <div class="input-box">
+      {{ form.password2 }}
+    </div>
+    {% if form.password2.errors %}
+      <div class="error">{% for e in form.password2.errors %}{{ e }}{% endfor %}</div>
+    {% endif %}
+
+    <p class="helper" style="text-align:center">En créant un compte, vous acceptez nos <a class="small-link" href="#">Conditions</a> et notre <a class="small-link" href="#">Politique de confidentialité</a>.</p>
+
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <a href="{% url 'articles:login' %}" class="small-link">Déjà un compte ?</a>
+      <button class="btn-join" type="submit">S’inscrire</button>
+    </div>
+  </form>
+</main>
+{% endblock %}

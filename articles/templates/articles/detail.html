@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}{{ article.titre }} — Mon Journal{% endblock %}
+
+{% block content %}
+<main class="max-w-3xl mx-auto px-4 mt-10">
+<article>
+    <h1 class="text-3xl font-bold mb-2">{{ article.titre }}</h1>
+    <p class="text-sm text-gray-500">Par {{ article.auteur.get_full_name|default:article.auteur.username }} • {{ article.date_publication|date:"j F Y" }}</p>
+    
+    {% if article.image %}
+        <img src="{{ article.image.url }}" alt="{{ article.titre }}" class="my-4 rounded">
+    {% endif %}
+    
+ 
+
+    <div class="mt-4">
+    <p class="text-justify">{{ article.contenu }}</p>
+    </div>
+
+</article>
+
+</main>
+{% endblock %}

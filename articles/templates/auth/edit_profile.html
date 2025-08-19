@@ -1,0 +1,254 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Modifier votre profil — Mon Journal{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root {
+    --page-bg: #f7f8fa;
+    --accent: #1a73e8;
+    --muted: #5f6b73;
+    --border: #e6e7ea;
+  }
+
+  body {
+    background: var(--page-bg);
+  }
+
+  .card {
+    width: 520px;
+    max-width: 94vw;
+    background: #fff;
+    border-radius: 14px;
+    padding: 34px 40px;
+    margin: 40px auto;
+    border: 1px solid var(--border);
+  }
+
+  .logo {
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .google-word {
+    font-weight: 700;
+    font-size: 22px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 22px;
+    margin: 6px 0 6px;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+
+  .input-box {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    gap: 8px;
+  }
+
+  .input-box input[type="text"],
+  .input-box input[type="email"],
+  .input-box input[type="file"],
+  .input-box textarea,
+  .input-box select {
+    border: 0;
+    outline: none;
+    font-size: 15px;
+    width: 100%;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+  }
+
+  .btn {
+    background: var(--accent);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .error {
+    color: #b00020;
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+  }
+
+  .helper {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 18px;
+  }
+
+  .small-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .profile-header { display:flex; gap:16px; align-items:center; }
+  .profile-avatar { width:72px; height:72px; border-radius:999px; object-fit:cover; border:3px solid #fff; box-shadow:0 6px 18px rgba(20,20,20,0.06); }
+  .muted-sm { color:var(--muted); font-size:0.95rem; }
+
+  /* responsive */
+  @media (max-width:520px){
+    .card{ padding:22px 18px }
+    .profile-header .profile-avatar{ width:56px; height:56px }
+    h1{ font-size:20px }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="card" role="main" aria-labelledby="title">
+  <div class="logo" aria-hidden="true">
+    <div class="google-word" aria-hidden="true">
+      <span class="g1">B</span><span class="g2">a</span><span class="g3">o</span><span class="g4">u</span><span class="g1">l</span><span class="g2">y</span>
+    </div>
+  </div>
+
+  <h1 id="title">Modifier votre profil</h1>
+  <div class="subtitle">Mettez à jour vos informations personnelles</div>
+
+  <div style="margin-bottom:14px; text-align:center; color:var(--muted); font-size:13px;">
+    <a href="{% url 'articles:profile' %}" class="small-link">← Retour à mon profil</a>
+  </div>
+
+  <form method="POST" enctype="multipart/form-data" class="" aria-label="Modifier profil">
+    {% csrf_token %}
+
+    {# erreurs globales #}
+    {% if form.non_field_errors %}
+      <div class="error">
+        {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+      </div>
+    {% endif %}
+
+    {# Header avec avatar et nom simplifié (dans la card) #}
+    <div class="profile-header" style="margin-bottom:12px;">
+      <div>
+        {% if user.profile.avatar %}
+          <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="profile-avatar">
+        {% else %}
+          <img src="{% static 'images/photo (2).jpg' %}" alt="Avatar par défaut" class="profile-avatar">
+        {% endif %}
+      </div>
+      <div>
+        <div style="font-weight:700;">{{ user.get_full_name|default:user.username }}</div>
+        <div class="muted-sm">Modifiez les champs ci-dessous puis cliquez sur Enregistrer</div>
+      </div>
+    </div>
+
+    {# Prénom et Nom côte à côte: on utilise des input-box empilés #}
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:6px;">
+      <div>
+        <label class="muted-sm" for="id_first_name">Prénom <span style="color:#b00020">*</span></label>
+        <div class="input-box">
+          {{ form.first_name|add_class:"border-0 bg-transparent" }}
+        </div>
+        {% if form.first_name.errors %}
+          <div class="error">{% for e in form.first_name.errors %}{{ e }}{% endfor %}</div>
+        {% endif %}
+      </div>
+
+      <div>
+        <label class="muted-sm" for="id_last_name">Nom <span style="color:#b00020">*</span></label>
+        <div class="input-box">
+          {{ form.last_name|add_class:"border-0 bg-transparent" }}
+        </div>
+        {% if form.last_name.errors %}
+          <div class="error">{% for e in form.last_name.errors %}{{ e }}{% endfor %}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    {# Email #}
+    <label class="muted-sm" for="id_email">Adresse email <span style="color:#b00020">*</span></label>
+    <div class="input-box">
+      {{ form.email|add_class:"border-0 bg-transparent" }}
+    </div>
+    {% if form.email.errors %}
+      <div class="error">{% for e in form.email.errors %}{{ e }}{% endfor %}</div>
+    {% endif %}
+
+    {# Username (optionnel) #}
+    {% if form.username %}
+      <label class="muted-sm" for="id_username">Nom d'utilisateur <span style="color:#b00020">*</span></label>
+      <div class="input-box">
+        {{ form.username|add_class:"border-0 bg-transparent" }}
+      </div>
+      {% if form.username.errors %}
+        <div class="error">{% for e in form.username.errors %}{{ e }}{% endfor %}</div>
+      {% endif %}
+    {% endif %}
+
+    {# Bio (textarea) #}
+    {% if form.bio %}
+      <label class="muted-sm" for="id_bio">Biographie</label>
+      <div class="input-box" style="min-height:80px; align-items:flex-start; padding-top:10px; padding-bottom:10px;">
+        {{ form.bio|add_class:"border-0 bg-transparent"|attr:"rows:4" }}
+      </div>
+      {% if form.bio.errors %}
+        <div class="error">{% for e in form.bio.errors %}{{ e }}{% endfor %}</div>
+      {% endif %}
+    {% endif %}
+
+    {# Avatar upload #}
+    {% if form.avatar %}
+      <label class="muted-sm" for="id_avatar">Photo de profil</label>
+      <div class="input-box">
+        {{ form.avatar|add_class:"border-0 bg-transparent" }}
+      </div>
+      {% if form.avatar.errors %}
+        <div class="error">{% for e in form.avatar.errors %}{{ e }}{% endfor %}</div>
+      {% endif %}
+      <div class="helper">Formats acceptés: JPG, PNG. Taille max: 2MB</div>
+    {% endif %}
+
+    {# Champs supplémentaires (autres champs du form) #}
+    {% for field in form %}
+      {% if field.name not in 'first_name,last_name,email,username,bio,avatar' %}
+        <label class="muted-sm" for="{{ field.id_for_label }}">
+          {{ field.label }} {% if field.field.required %}<span style="color:#b00020">*</span>{% endif %}
+        </label>
+        <div class="input-box">
+          {{ field|add_class:"border-0 bg-transparent" }}
+        </div>
+        {% if field.errors %}
+          <div class="error">{% for e in field.errors %}{{ e }}{% endfor %}</div>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+
+    {# Actions: annuler / enregistrer #}
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+      <a href="{% url 'articles:profile' %}" class="small-link">← Annuler</a>
+      <button type="submit" class="btn">💾 Enregistrer</button>
+    </div>
+
+    <div style="margin-top:22px; text-align:center; color:var(--muted); font-size:13px;">
+      <div style="display:flex; gap:12px; justify-content:center;">
+        <div>Aide</div>
+        <div>Confidentialité</div>
+        <div>Conditions</div>
+      </div>
+    </div>
+  </form>
+</main>
+{% endblock %}

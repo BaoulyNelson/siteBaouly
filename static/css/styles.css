@@ -1,0 +1,37 @@
+:root {
+      --brand-blue: #1e73ff;
+      --nav-dark: #042a4a;
+
+      --brand-blue-dark: #0960d9;
+      --accent-yellow: #ffd23f;
+    }
+
+
+
+    /* small visual tweaks similar to screenshot */
+    .topbar {
+      background: var(--nav-dark);
+    }
+
+    .mainnav {
+      background: var(--brand-blue);
+    }
+
+        /* small helpers to match the screenshot */
+    .brand-logo { font-family: "UnifrakturCook", cursive; letter-spacing: -1px; }
+    .nav-compact { white-space: nowrap; -webkit-overflow-scrolling: touch; }
+    /* visual: slightly rotate ticket like the screenshot */
+    .ticket-rot { transform: rotate(-12deg); }
+
+
+    .logo {
+  font-family: var(--font-serif-logo);
+  font-size: 1.8em; /* Taille ajustée pour mobile */
+  font-weight: bold;
+  color: var(--color-text-light);
+  display: block;
+  line-height: 1.1;
+
+  font-family: 'UnifrakturCook', cursive;
+
+}

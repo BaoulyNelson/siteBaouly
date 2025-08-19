@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Contact — Mon Journal{% endblock %}
+
+{% block extra_css %}
+<style>
+:root{ --page-bg:#f7f8fa; --accent:#1a73e8; --muted:#5f6b73; --border:#e6e7ea }
+body{ background:var(--page-bg) }
+.card{ width:520px; max-width:94vw; background:#fff; border-radius:14px; padding:34px 56px; margin:40px auto; border:1px solid var(--border) }
+.logo{ text-align:center; margin-bottom:6px }
+.input-box{ border:1px solid var(--border); border-radius:6px; padding:14px; margin-bottom:12px; min-height:56px; display:flex; align-items:center }
+.input-box input, .input-box textarea{ border:0; outline:none; font-size:16px; width:100%; background:transparent; resize:none }
+.btn-join{ background:#1a73e8; color:#fff; padding:10px 18px; border-radius:8px; border:none; font-weight:600; cursor:pointer }
+.error{ color:#b00020; font-size:0.95rem; margin-bottom:12px }
+.helper{ color:var(--muted); font-size:14px; margin-bottom:18px; text-align:center }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="card" role="main" aria-labelledby="title">
+  <div class="logo">
+    <h1 id="title" style="font-weight:700; font-size:22px; color:#1a73e8;">Contactez-nous</h1>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="error">{% for err in form.non_field_errors %}{{ err }}{% endfor %}</div>
+    {% endif %}
+
+    <div class="input-box">{{ form.nom }}</div>
+    {% if form.nom.errors %}<div class="error">{% for e in form.nom.errors %}{{ e }}{% endfor %}</div>{% endif %}
+
+    <div class="input-box">{{ form.email }}</div>
+    {% if form.email.errors %}<div class="error">{% for e in form.email.errors %}{{ e }}{% endfor %}</div>{% endif %}
+
+    <div class="input-box">{{ form.sujet }}</div>
+    {% if form.sujet.errors %}<div class="error">{% for e in form.sujet.errors %}{{ e }}{% endfor %}</div>{% endif %}
+
+    <div class="input-box">{{ form.message }}</div>
+    {% if form.message.errors %}<div class="error">{% for e in form.message.errors %}{{ e }}{% endfor %}</div>{% endif %}
+
+    <div style="display:flex; justify-content:flex-end; margin-top:12px;">
+      <button class="btn-join" type="submit">Envoyer</button>
+    </div>
+  </form>
+</main>
+{% endblock %}

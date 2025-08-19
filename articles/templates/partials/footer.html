@@ -1,0 +1,123 @@
+
+  <footer class="bg-gray-900 text-gray-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+
+        <!-- LOGO + description -->
+        <div>
+          <div class="mb-4">
+            <!-- Logo fictif en SVG, remplace par ton logo -->
+            <svg width="180" height="48" viewBox="0 0 320 68" xmlns="http://www.w3.org/2000/svg">
+              <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" font-family="Cinzel Decorative, serif" font-weight="700" font-size="28" fill="#ffffff">
+                Le Baouly
+              </text>
+            </svg>
+          </div>
+          <p class="text-sm leading-relaxed">
+            Premier quotidien national. Informations, analyses et opinions pour comprendre l’actualité en Haïti et dans le monde.
+          </p>
+        </div>
+
+        <!-- Navigation -->
+        <div>
+          <h4 class="text-white font-semibold mb-4">Rubriques</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="{% url 'articles:articles_par_categorie' slug='une' %}" class="hover:text-white">À la une</a></li>
+            <li><a href="{% url 'articles:articles_par_categorie' slug='culture' %}" class="hover:text-white">Culture</a></li>
+            <li><a href="{% url 'articles:articles_par_categorie' slug='economie' %}" class="hover:text-white">Économie</a></li>
+            <li><a href="{% url 'articles:articles_par_categorie' slug='sport' %}" class="hover:text-white">Sport</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-white font-semibold mb-4">À propos</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#" class="hover:text-white">Qui sommes-nous</a></li>
+            <li><a href="{% url 'articles:contact' %}" class="hover:text-white">Contact</a></li>
+            <li><a href="#" class="hover:text-white">Publicité</a></li>
+            <li><a href="#" class="hover:text-white">Carrières</a></li>
+          </ul>
+        </div>
+
+        <!-- Newsletter / réseaux sociaux -->
+        <div>
+          <h4 class="text-white font-semibold mb-4">Newsletter</h4>
+          <p class="text-sm mb-4">Recevez chaque matin l’essentiel de l’actualité.</p>
+          <form class="flex">
+            <input type="email" placeholder="Votre email" class="w-full px-3 py-2 rounded-l-md focus:outline-none text-gray-900">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r-md">OK</button>
+          </form>
+
+          <div class="flex space-x-4 mt-6">
+            <a href="#" class="hover:text-white">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22.675 0h-21.35C.596 0 0 .597 0 1.334v21.332C0 23.403.596 24 1.325 24h11.495v-9.294H9.691v-3.622h3.129V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.466.098 2.798.142v3.24h-1.919c-1.505 0-1.797.715-1.797 1.764v2.311h3.592l-.467 3.622h-3.125V24h6.127C23.404 24 24 23.403 24 22.666V1.334C24 .597 23.404 0 22.675 0z" />
+              </svg>
+            </a>
+            <a href="#" class="hover:text-white">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M23.954 4.569c-.885.392-1.83.656-2.825.775 
+                       1.014-.611 1.794-1.574 2.163-2.724-.951.564-2.005.974-3.127 1.195
+                       -.897-.959-2.178-1.559-3.594-1.559-2.717 0-4.924 
+                       2.208-4.924 4.924 0 .39.045.765.127 
+                       1.124-4.09-.205-7.719-2.165-10.148-5.144
+                       -.424.729-.666 1.577-.666 2.475 0 1.708.87 
+                       3.216 2.188 4.099-.807-.026-1.566-.248-2.229-.616v.062c0 
+                       2.385 1.693 4.374 3.946 4.827-.413.112-.849.171-1.296.171
+                       -.317 0-.626-.03-.928-.086.627 1.956 2.444 3.377 4.6 
+                       3.418-1.68 1.318-3.809 2.104-6.115 
+                       2.104-.398 0-.79-.023-1.175-.069 2.179 
+                       1.397 4.768 2.212 7.557 2.212 9.054 
+                       0 14-7.496 14-13.986 0-.21 0-.423-.015-.634.962-.689 
+                       1.8-1.56 2.46-2.548l-.047-.02z" />
+              </svg>
+            </a>
+            <a href="#" class="hover:text-white">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 
+                       1.366.062 2.633.35 3.608 1.325.975.975 
+                       1.262 2.242 1.325 3.608.058 1.266.07 
+                       1.646.07 4.85s-.012 3.584-.07 
+                       4.85c-.063 1.366-.35 2.633-1.325 
+                       3.608-.975.975-2.242 1.262-3.608 
+                       1.325-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07
+                       c-1.366-.063-2.633-.35-3.608-1.325-.975-.975-1.262-2.242-1.325-3.608
+                       C2.175 15.747 2.163 15.367 2.163 
+                       12s.012-3.584.07-4.85c.063-1.366.35-2.633 
+                       1.325-3.608C4.533 2.583 5.8 2.296 
+                       7.166 2.233 8.432 2.175 8.812 2.163 
+                       12 2.163zm0 1.687c-3.155 0-3.522.012-4.764.07-1.02.047-1.577.216-1.944.36-.49.19-.84.416-1.207.783-.367.367-.593.717-.783 
+                       1.207-.144.367-.313.924-.36 1.944-.058 1.242-.07 
+                       1.609-.07 4.764s.012 3.522.07 
+                       4.764c.047 1.02.216 1.577.36 1.944.19.49.416.84.783 
+                       1.207.367.367.717.593 1.207.783.367.144.924.313 
+                       1.944.36 1.242.058 1.609.07 
+                       4.764.07s3.522-.012 4.764-.07c1.02-.047 
+                       1.577-.216 1.944-.36.49-.19.84-.416 
+                       1.207-.783.367-.367.593-.717.783-1.207.144-.367.313-.924.36-1.944.058-1.242.07-1.609.07-4.764s-.012-3.522-.07-4.764c-.047-1.02-.216-1.577-.36-1.944-.19-.49-.416-.84-.783-1.207-.367-.367-.717-.593-1.207-.783-.367-.144-.924-.313-1.944-.36-1.242-.058-1.609-.07-4.764-.07zm0 3.89a5.947 5.947 0 110 11.894 5.947 5.947 0 010-11.894zm0 9.822a3.875 3.875 0 100-7.75 3.875 3.875 0 000 7.75zm6.406-10.845a1.386 1.386 0 11-2.772 0 1.386 1.386 0 012.772 0z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM bar -->
+    <div class="bg-gray-800">
+      <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between text-sm text-gray-400">
+        <p>© 2025 Le Baouly. Tous droits réservés.</p>
+        <div class="flex gap-4 mt-2 sm:mt-0">
+          <a href="#" class="hover:text-white">Mentions légales</a>
+          <a href="#" class="hover:text-white">Politique de confidentialité</a>
+          <a href="#" class="hover:text-white">Cookies</a>
+        </div>
+      </div>
+    </div>
+    <!-- Bouton "Remonter en haut" -->
+<button id="backToTop" 
+  class="hidden fixed bottom-6 right-6 z-50 bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-full shadow-lg transition-opacity duration-300"
+  aria-label="Remonter en haut">
+  ↑
+</button>
+
+  </footer>
