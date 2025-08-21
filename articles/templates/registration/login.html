@@ -1,4 +1,4 @@
-{# templates/auth/login.html #}
+{# templates/registration/login.html #}
 {% extends "base.html" %}
 {% load static %}
 
@@ -158,7 +158,7 @@
     </div>
     {% endif %}
 
-    <a href="#" class="small-link">Mot de Passe oublié ?</a>
+    <a href="{% url 'articles:password_reset' %}" class="small-link">Mot de passe oublié ?</a>
 
     <p class="helper">Ce n'est pas votre ordinateur ? Utilisez le mode Invité pour vous connecter en mode privé.</p>
 

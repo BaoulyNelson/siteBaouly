@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="min-h-screen bg-gray-50 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl w-full bg-white shadow-lg rounded-2xl p-10 text-center">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">Publicité</h1>
+        <p class="text-gray-600 mb-4">
+            Vous souhaitez promouvoir votre marque sur notre plateforme ? Nous offrons des solutions adaptées pour toutes les tailles d’entreprise.
+        </p>
+        <p class="text-gray-600 mb-6">
+            Pour toute demande de publicité, contactez-nous à <a href="mailto:contact@monsite.com" class="text-green-500 underline">contact@monsite.com</a>.
+        </p>
+        <a href="{% url 'articles:contact' %}" class="inline-block bg-green-500 text-white font-semibold py-2 px-6 rounded-full shadow hover:bg-green-600 transition">
+            Nous contacter
+        </a>
+    </div>
+</main>
+{% endblock %}

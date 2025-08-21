@@ -1,5 +1,5 @@
 
-  <footer class="bg-gray-900 text-gray-300">
+  <footer class="bg-[#052d4a] text-slate-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
 
@@ -32,10 +32,11 @@
         <div>
           <h4 class="text-white font-semibold mb-4">À propos</h4>
           <ul class="space-y-2 text-sm">
-            <li><a href="#" class="hover:text-white">Qui sommes-nous</a></li>
+            <li><a href="{% url 'articles:about_us' %}" class="hover:text-white">Qui sommes-nous</a></li>
             <li><a href="{% url 'articles:contact' %}" class="hover:text-white">Contact</a></li>
-            <li><a href="#" class="hover:text-white">Publicité</a></li>
-            <li><a href="#" class="hover:text-white">Carrières</a></li>
+            <li><a href="{% url 'articles:advertising' %}" class="hover:text-white">Publicité</a></li>
+            <li><a href="{% url 'articles:careers' %}" class="hover:text-white">Carrières</a></li>
+
           </ul>
         </div>
 
@@ -105,19 +106,27 @@
     <!-- BOTTOM bar -->
     <div class="bg-gray-800">
       <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between text-sm text-gray-400">
-        <p>© 2025 Le Baouly. Tous droits réservés.</p>
+        <p>© {% now "Y" %} Le Baouly. Tous droits réservés.</p>
         <div class="flex gap-4 mt-2 sm:mt-0">
-          <a href="#" class="hover:text-white">Mentions légales</a>
-          <a href="#" class="hover:text-white">Politique de confidentialité</a>
-          <a href="#" class="hover:text-white">Cookies</a>
+          <a href="{% url 'articles:legal_notice' %}" class="hover:text-white">Mentions légales</a>
+          <a href="{% url 'articles:privacy_policy' %}" class="hover:text-white">Politique de confidentialité</a>
+          <a href="{% url 'articles:cookies_policy' %}" class="hover:text-white">Cookies</a>
+
         </div>
       </div>
     </div>
-    <!-- Bouton "Remonter en haut" -->
+
+      <!-- icône de partage (alignée à droite) -->
+<!-- Bouton "Remonter en haut" -->
 <button id="backToTop" 
-  class="hidden fixed bottom-6 right-6 z-50 bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-full shadow-lg transition-opacity duration-300"
+  class="hidden fixed bottom-6 right-6 z-50 p-3 border border-white/20 rounded-lg bg-indigo-600/90 hover:bg-indigo-700/90 shadow-lg transition-opacity duration-300"
   aria-label="Remonter en haut">
-  ↑
+
+  <!-- Icône "flèche haut" -->
+  <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 19V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M7 10l5-5 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
 </button>
 
   </footer>

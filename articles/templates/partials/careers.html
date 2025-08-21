@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="min-h-screen bg-gray-50 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl w-full bg-white shadow-lg rounded-2xl p-10">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Carrières</h1>
+        <p class="text-gray-600 mb-4">
+            Rejoignez notre équipe dynamique et contribuez à des projets passionnants dans le domaine du digital.
+        </p>
+        <ul class="list-disc list-inside text-gray-600 mb-6">
+            <li>Développeur(se) web / Django</li>
+            <li>Designer UI/UX</li>
+            <li>Rédacteur(trice) de contenu</li>
+            <li>Marketing digital</li>
+        </ul>
+        <p class="text-gray-600 mb-6">
+            Envoyez votre CV et lettre de motivation à <a href="mailto:lebaouly@gmail.com" class="text-green-500 underline">lebaouly@gmail.com</a>.
+        </p>
+        <a href="{% url 'articles:contact' %}" class="inline-block bg-green-500 text-white font-semibold py-2 px-6 rounded-full shadow hover:bg-green-600 transition">
+            Postuler maintenant
+        </a>
+    </div>
+</main>
+{% endblock %}

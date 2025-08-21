@@ -63,13 +63,13 @@ def register(request):
     else:
         form = RegistrationForm()
 
-    return render(request, "auth/register.html", {"form": form})
+    return render(request, "registration/register.html", {"form": form})
 
 
 
 @login_required
 def profile(request):
-    return render(request, "auth/profile.html", {"user": request.user})
+    return render(request, "registration/profile.html", {"user": request.user})
 
 
 def confirmer_deconnexion(request):
@@ -77,7 +77,7 @@ def confirmer_deconnexion(request):
         logout(request)
         messages.success(request, "Vous avez été déconnecté avec succès.")
         return redirect("articles:index")
-    return render(request, "auth/confirmer_deconnexion.html")
+    return render(request, "registration/confirmer_deconnexion.html")
 
 @login_required
 def edit_profile(request):
@@ -90,7 +90,7 @@ def edit_profile(request):
     else:
         form = EditProfileForm(instance=request.user)
 
-    return render(request, "auth/edit_profile.html", {"form": form})
+    return render(request, "registration/edit_profile.html", {"form": form})
 
 
 
@@ -100,12 +100,15 @@ def contact(request):
         form = ContactForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("articles:contact")  # ou une page "merci"
+            return render(request, "contact/contact_success.html")
+        
     else:
         form = ContactForm()
     return render(request, "contact/contact.html", {"form": form})
 
 
+
+@login_required
 def temoignages(request):
     if request.method == "POST":
         form = TemoignageForm(request.POST)
@@ -120,6 +123,24 @@ def temoignages(request):
     return render(request, "temoignages/temoignages.html", {"form": form, "temoignages": liste})
 
 
+def about_us(request):
+    return render(request, "partials/about_us.html")
+
+def advertising(request):
+    return render(request, "partials/advertising.html")
+
+def careers(request):
+    return render(request, "partials/careers.html")
+
+
+def legal_notice(request):
+    return render(request, "partials/legal_notice.html")
+
+def privacy_policy(request):
+    return render(request, "partials/privacy_policy.html")
+
+def cookies_policy(request):
+    return render(request, "partials/cookies_policy.html")
 
 def recherche(request):
     query = request.GET.get('q', '')  # récupère le mot-clé
@@ -129,7 +150,8 @@ def recherche(request):
         results = Article.objects.filter(
             Q(titre__icontains=query) |
             Q(contenu__icontains=query) |
-            Q(resume__icontains=query)
+            Q(resume__icontains=query) |
+            Q(categorie__icontains=query)  # <-- ajoute recherche dans la catégorie
         ).order_by('-date_publication')
 
     return render(request, 'search/recherche.html', {

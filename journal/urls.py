@@ -19,12 +19,12 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-
-
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("articles.urls")),  # on délègue à l'app "articles"
+    path("accounts/", include("django.contrib.auth.urls")),  # 👈 ajoute ça
 ]
+
 # En mode développement : servir les fichiers médias
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
