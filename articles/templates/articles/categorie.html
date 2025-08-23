@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}Articles — {{ categorie|capfirst }}{% endblock %}
+{% block title %}Articles -- {{ categorie|capfirst }}{% endblock %}
 
 {% block content %}
 <div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
     <!-- Header avec breadcrumb -->
-    <div class="bg-white/80 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-10">
+    <div class="bg-white/80 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-30">
         <div class="max-w-6xl mx-auto px-4 py-4">
             <nav class="text-sm text-gray-600 mb-2">
                 <a href="/" class="hover:text-blue-600 transition-colors">Accueil</a>
@@ -13,7 +13,7 @@
                 <span class="text-gray-800 font-medium">{{ categorie|capfirst }}</span>
             </nav>
             <h1 class="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
-                Articles — {{ categorie|capfirst }}
+                Articles -- {{ categorie|capfirst }}
             </h1>
         </div>
     </div>
@@ -23,44 +23,45 @@
             <!-- Article principal (hero) -->
             {% with articles.0 as principal %}
             <section class="mb-16">
+                <!-- La balise <article> est maintenant le conteneur relatif pour notre lien superposé -->
                 <article class="group relative overflow-hidden rounded-2xl bg-white shadow-xl hover:shadow-2xl transition-all duration-500">
                     <div class="aspect-[16/9] lg:aspect-[21/9] overflow-hidden">
-                        <a href="{% url 'articles:detail' principal.slug %}" class="block relative">
-                            <img src="{% if principal.image %}{{ principal.image.url }}{% else %}https://picsum.photos/1200/600?random=1{% endif %}" 
-                                 alt="{{ principal.titre }}" 
-                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-                                 loading="lazy">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                        </a>
+                        <!-- Le lien <a> a été retiré d'ici -->
+                        <img src="{% if principal.image %}{{ principal.image.url }}{% else %}https://picsum.photos/1200/600?random=1{% endif %}" 
+                             alt="{{ principal.titre }}" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                             loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                     </div>
                     
-                    <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
-                        <div class="flex items-center gap-4 mb-4">
+                    <!-- Le bloc de texte est visuellement au-dessus (z-20) mais ignore les clics (pointer-events-none) pour les laisser passer au lien en dessous -->
+                    <div class="absolute bottom-0 left-0 right-0 p-8 text-white z-20 pointer-events-none">
+                        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
                             <span class="px-3 py-1 bg-blue-600 text-xs font-semibold uppercase tracking-wide rounded-full">
                                 {{ categorie|capfirst }}
                             </span>
                             <div class="flex items-center gap-2 text-sm opacity-90">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
-                                </svg>
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
                                 {{ principal.date_publication|date:"j F Y" }}
                             </div>
                             <div class="flex items-center gap-2 text-sm opacity-90">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
-                                </svg>
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
                                 {{ principal.auteur.username }}
                             </div>
                         </div>
-                        <h2 class="text-2xl lg:text-4xl font-bold leading-tight mb-4">
-                            <a href="{% url 'articles:detail' principal.slug %}" class="hover:text-blue-200 transition-colors">
-                                {{ principal.titre }}
-                            </a>
+                        <!-- Le lien <a> a été retiré, mais l'effet de survol est conservé via group-hover -->
+                        <h2 class="text-2xl lg:text-4xl font-bold leading-tight mb-4 transition-colors group-hover:text-blue-200">
+                            {{ principal.titre }}
                         </h2>
-                        <p class="text-gray-200 text-lg leading-relaxed max-w-3xl">
+                        <p class="text-gray-200 text-lg leading-relaxed max-w-3xl hidden sm:block">
                             {{ principal.contenu|truncatewords:35 }}
                         </p>
                     </div>
+
+                    <!-- NOUVEAU : Le lien unique qui recouvre toute la carte. Il est sous le texte (z-10) mais reçoit les clics. -->
+                    <a href="{% url 'articles:detail' principal.slug %}" class="absolute inset-0 z-10">
+                        <span class="sr-only">Lire l'article : {{ principal.titre }}</span>
+                    </a>
                 </article>
             </section>
             {% endwith %}
@@ -70,50 +71,43 @@
             <section class="mb-16">
                 <div class="grid lg:grid-cols-2 gap-8">
                     {% for art in articles|slice:"1:3" %}
-                    <article class="group bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+                    <!-- NOUVEAU : Ajout de 'relative' pour que le lien absolu fonctionne -->
+                    <article class="group relative bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
                         <div class="aspect-[4/3] overflow-hidden">
-                            <a href="{% url 'articles:detail' art.slug %}">
-                                <img src="{% if art.image %}{{ art.image.url }}{% else %}https://picsum.photos/600/450?random={{ forloop.counter|add:1 }}{% endif %}" 
-                                     alt="{{ art.titre }}" 
-                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                                     loading="lazy">
-                            </a>
+                            <!-- Le lien <a> a été retiré d'ici -->
+                            <img src="{% if art.image %}{{ art.image.url }}{% else %}https://picsum.photos/600/450?random={{ forloop.counter|add:1 }}{% endif %}" 
+                                 alt="{{ art.titre }}" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                                 loading="lazy">
                         </div>
                         
                         <div class="p-6">
                             <div class="flex items-center gap-4 mb-3">
-                                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-md">
-                                    {{ categorie|capfirst }}
-                                </span>
-                                <time class="text-sm text-gray-500">
-                                    {{ art.date_publication|date:"j F Y" }}
-                                </time>
+                                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-md">{{ categorie|capfirst }}</span>
+                                <time class="text-sm text-gray-500">{{ art.date_publication|date:"j F Y" }}</time>
                             </div>
                             
+                            <!-- Le lien <a> a été retiré d'ici -->
                             <h3 class="text-xl font-bold leading-snug mb-3 group-hover:text-blue-600 transition-colors">
-                                <a href="{% url 'articles:detail' art.slug %}">{{ art.titre }}</a>
+                                {{ art.titre }}
                             </h3>
                             
-                            <p class="text-gray-600 leading-relaxed mb-4">
-                                {{ art.contenu|truncatewords:20 }}
-                            </p>
+                            <p class="text-gray-600 leading-relaxed mb-4">{{ art.contenu|truncatewords:20 }}</p>
                             
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-2 text-sm text-gray-500">
-                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
-                                    </svg>
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
                                     {{ art.auteur.username }}
                                 </div>
-                                <a href="{% url 'articles:detail' art.slug %}" 
-                                   class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors">
+                                <!-- Le lien <a> a été transformé en <div> pour garder le style sans être cliquable -->
+                                <div class="inline-flex items-center text-blue-600 font-medium text-sm">
                                     Lire la suite
-                                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                    </svg>
-                                </a>
+                                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </div>
                             </div>
                         </div>
+                        <!-- NOUVEAU : Le lien unique qui recouvre toute la carte -->
+                        <a href="{% url 'articles:detail' art.slug %}" class="absolute inset-0"><span class="sr-only">Lire l'article : {{ art.titre }}</span></a>
                     </article>
                     {% endfor %}
                 </div>
@@ -123,54 +117,44 @@
             <!-- Liste des autres articles -->
             {% if articles|length > 3 %}
             <section class="bg-white rounded-2xl shadow-lg p-8">
-                <h2 class="text-2xl font-bold text-gray-800 mb-8 pb-4 border-b border-gray-100">
-                    Plus d'articles
-                </h2>
-                
+                <h2 class="text-2xl font-bold text-gray-800 mb-8 pb-4 border-b border-gray-100">Plus d'articles</h2>
                 <div class="space-y-6">
                     {% for art in articles|slice:"3:" %}
-                    <article class="group flex flex-col md:flex-row gap-6 p-6 rounded-xl hover:bg-gray-50 transition-colors duration-200">
-                        <!-- Image -->
+                    <!-- NOUVEAU : Ajout de 'relative' pour que le lien absolu fonctionne -->
+                    <article class="group relative flex flex-col md:flex-row gap-6 p-6 rounded-xl hover:bg-gray-50 transition-colors duration-200">
                         <div class="md:w-48 flex-shrink-0">
-                            <a href="{% url 'articles:detail' art.slug %}" class="block aspect-[4/3] overflow-hidden rounded-lg">
+                            <!-- Le lien <a> a été remplacé par un <div> -->
+                            <div class="block aspect-[4/3] overflow-hidden rounded-lg">
                                 <img src="{% if art.image %}{{ art.image.url }}{% else %}https://picsum.photos/400/300?random={{ forloop.counter|add:3 }}{% endif %}" 
                                      alt="{{ art.titre }}" 
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
                                      loading="lazy">
-                            </a>
+                            </div>
                         </div>
                         
-                        <!-- Contenu -->
                         <div class="flex-1 min-w-0">
-                            <div class="flex items-center gap-4 mb-3">
-                                <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded">
-                                    {{ categorie|capfirst }}
-                                </span>
-                                <time class="text-sm text-gray-500">
-                                    {{ art.date_publication|date:"j F Y" }}
-                                </time>
-                                <span class="text-sm text-gray-400">•</span>
-                                <span class="text-sm text-gray-500">
-                                    {{ art.auteur.username }}
-                                </span>
+                            <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-3">
+                                <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded">{{ categorie|capfirst }}</span>
+                                <time class="text-sm text-gray-500">{{ art.date_publication|date:"j F Y" }}</time>
+                                <span class="text-sm text-gray-400 hidden sm:inline">•</span>
+                                <span class="text-sm text-gray-500">{{ art.auteur.username }}</span>
                             </div>
                             
+                            <!-- Le lien <a> a été retiré d'ici -->
                             <h3 class="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors mb-3">
-                                <a href="{% url 'articles:detail' art.slug %}">{{ art.titre }}</a>
+                                {{ art.titre }}
                             </h3>
                             
-                            <p class="text-gray-600 leading-relaxed mb-4">
-                                {{ art.contenu|truncatewords:25 }}
-                            </p>
+                            <p class="text-gray-600 leading-relaxed mb-4">{{ art.contenu|truncatewords:25 }}</p>
                             
-                            <a href="{% url 'articles:detail' art.slug %}" 
-                               class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors">
+                            <!-- Le lien <a> a été transformé en <div> -->
+                            <div class="inline-flex items-center text-blue-600 font-medium text-sm">
                                 Continuer la lecture
-                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                                </svg>
-                            </a>
+                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                            </div>
                         </div>
+                        <!-- NOUVEAU : Le lien unique qui recouvre toute la carte -->
+                        <a href="{% url 'articles:detail' art.slug %}" class="absolute inset-0"><span class="sr-only">Lire l'article : {{ art.titre }}</span></a>
                     </article>
                     {% endfor %}
                 </div>
@@ -178,24 +162,16 @@
             {% endif %}
 
         {% else %}
-            <!-- État vide -->
+            <!-- État vide (pas de changement nécessaire ici) -->
             <div class="text-center py-16">
                 <div class="bg-white rounded-2xl shadow-lg p-12 max-w-2xl mx-auto">
                     <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
-                        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
+                        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                     </div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">
-                        Aucun article disponible
-                    </h2>
-                    <p class="text-gray-600 text-lg mb-8">
-                        Il n'y a pas encore d'articles dans la catégorie "{{ categorie|capfirst }}" pour le moment.
-                    </p>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Aucun article disponible</h2>
+                    <p class="text-gray-600 text-lg mb-8">Il n'y a pas encore d'articles dans la catégorie "{{ categorie|capfirst }}" pour le moment.</p>
                     <a href="/" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                        </svg>
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                         Retour à l'accueil
                     </a>
                 </div>

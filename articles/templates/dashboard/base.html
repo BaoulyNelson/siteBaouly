@@ -41,7 +41,7 @@
         <!-- Logo et bouton de fermeture mobile -->
         <div class="px-6 py-5 border-b flex items-center justify-between">
           <a href="/" class="flex items-center gap-3">
-            <span class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-indigo-600 text-white font-bold">MJ</span>
+            <span class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-indigo-600 text-white font-bold">LB</span>
             <div>
               <h1 class="text-lg font-semibold leading-tight">LeBaouly</h1>
               <p class="text-xs text-gray-500">Tableau de bord</p>
@@ -55,27 +55,78 @@
 
         <!-- Navigation principale -->
         <nav id="sidebarNav" class="px-4 py-6 flex-1 overflow-y-auto">
-          <ul class="space-y-1">
-            <li>
-              <a href="{% url 'articles:articles_list' %}" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100">
-                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                <span>Articles</span>
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'articles:article_create' %}" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100">
-                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span>Nouvel article</span>
-              </a>
-            </li>
-            <li>
-              <a href="/" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100">
-                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                <span>Voir le site</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
+  <ul class="space-y-1">
+
+    <!-- Liens de navigation -->
+    <li>
+      <a href="{% url 'articles:articles_list' %}" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100">
+        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        <span>Articles</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="{% url 'articles:article_create' %}" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100">
+        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <span>Nouvel article</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="/" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100">
+        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+        </svg>
+        <span>Voir le site</span>
+      </a>
+    </li>
+
+    <!-- Statistiques avec icônes -->
+    <li class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100">
+      <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 3v18h18"/>
+      </svg>
+      <span class="flex-1">Articles</span>
+      <span class="font-bold">{{ total_articles }}</span>
+    </li>
+
+    <li class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100">
+      <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M5.121 17.804A7 7 0 1119 8.618"/>
+      </svg>
+      <span class="flex-1">Utilisateurs</span>
+      <span class="font-bold">{{ total_users }}</span>
+    </li>
+
+    <li class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100">
+      <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M7 8h10M7 12h4m1 8a9 9 0 110-18 9 9 0 010 18z"/>
+      </svg>
+      <span class="flex-1">Témoignages</span>
+      <span class="font-bold">{{ total_testimonials }}</span>
+    </li>
+
+    <li class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100">
+      <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M16 12a4 4 0 11-8 0 4 4 0 018 0zM12 14v7"/>
+      </svg>
+      <span class="flex-1">Abonnés newsletter</span>
+      <span class="font-bold">{{ total_subscribers }}</span>
+    </li>
+
+  </ul>
+</nav>
 
         <!-- Menu utilisateur (sidebar) -->
         <div class="px-4 py-4 border-t">

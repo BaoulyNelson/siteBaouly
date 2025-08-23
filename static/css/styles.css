@@ -132,3 +132,31 @@ img, svg {
     flex-wrap: wrap; /* permet au contenu de passer à la ligne */
     overflow-x: auto; /* scroll horizontal seulement si nécessaire */
 }
+
+
+
+
+   /* Classe d'accessibilité pour masquer un élément visuellement mais le garder pour les lecteurs d'écran */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+
+    /* Style optionnel pour affiner la barre de défilement de la navigation desktop */
+    .custom-scrollbar::-webkit-scrollbar {
+      height: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+    }

@@ -2,13 +2,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Article,Temoignage
+from .models import Article,Temoignage,NewsletterSubscriber
 from .forms import RegistrationForm, EditProfileForm,ContactForm,TemoignageForm
 from django.db.models import Q
 from django.core.mail import send_mail
 from django.conf import settings
 from .forms import NewsletterForm
-from .models import NewsletterSubscriber
+from django.contrib.auth.models import User
 from django.urls import reverse
 # yourapp/views.py
 from django.shortcuts import redirect
@@ -66,6 +66,9 @@ def detail(request, slug):
         template = "articles/detail.html"
 
     return render(request, template, {"article": article})
+
+
+
 class StaffRequiredMixin(UserPassesTestMixin):
     def test_func(self):
         return self.request.user.is_staff
@@ -86,8 +89,18 @@ class ArticleDashboardListView(LoginRequiredMixin, StaffRequiredMixin, ListView)
     paginate_by = 20
 
     def get_queryset(self):
-        # option: staff voit tous; si tu veux restreindre à ses propres articles, filter(auteur=self.request.user)
+        # le staff voit tous les articles ; tu peux filtrer si tu veux
         return Article.objects.all().order_by("-date_publication")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Statistiques / indicateurs clés
+        context["total_articles"] = Article.objects.count()
+        context["total_active_articles"] = Article.objects.filter(active=True).count()
+        context["total_users"] = User.objects.count()
+        context["total_testimonials"] = Temoignage.objects.count()
+        context["total_subscribers"] = NewsletterSubscriber.objects.count()
+        return context
 
 class ArticleCreateView(LoginRequiredMixin, StaffRequiredMixin, CreateView):
     model = Article
@@ -98,7 +111,10 @@ class ArticleCreateView(LoginRequiredMixin, StaffRequiredMixin, CreateView):
     def form_valid(self, form):
         # affecter l'auteur automatiquement
         form.instance.auteur = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        messages.success(self.request, "✅ L'article a été créé avec succès !")
+        return response
+
 
 class ArticleUpdateView(LoginRequiredMixin, StaffRequiredMixin, UpdateView):
     model = Article
@@ -106,6 +122,10 @@ class ArticleUpdateView(LoginRequiredMixin, StaffRequiredMixin, UpdateView):
     template_name = "dashboard/article_form.html"
     success_url = reverse_lazy("articles:articles_list")
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "✏️ L'article a été mis à jour avec succès !")
+        return response
 class ArticleDetailView(LoginRequiredMixin, StaffRequiredMixin, DetailView):
     model = Article
     template_name = "dashboard/article_detail.html"
@@ -235,7 +255,6 @@ def subscribe(request):
 
 # views.py
 
-from django.db.models import Q
 
 def recherche(request):
     query = request.GET.get('q', '')  # récupère le mot-clé

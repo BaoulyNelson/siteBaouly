@@ -1,182 +1,174 @@
-
-
-  <!-- Top thin bar -->
-  <div class="topbar bg-slate-800 text-white text-sm">
-    <div class="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
-      <div class="flex gap-6 text-xs sm:text-sm">
-        <a href="{% url 'articles:about_us' %}" class="hover:underline">Qui?</a>
-        <a href="{% url 'articles:contact' %}" class="hover:underline">Contactez</a>
-        <a href="{% url 'articles:temoignages' %}" class="hover:underline">Témoignage</a>
-      </div>
-      <div class="text-xs sm:text-sm text-yellow-500">
-  {% now "j F Y" %}
-</div>
-
+<!-- Top thin bar -->
+<div class="topbar bg-slate-800 text-white text-sm">
+  <div class="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
+    <div class="flex gap-6 text-xs sm:text-sm">
+      <a href="{% url 'articles:about_us' %}" class="hover:underline">Qui?</a>
+      <a href="{% url 'articles:contact' %}" class="hover:underline">Contactez</a>
+      <a href="{% url 'articles:temoignages' %}" class="hover:underline">Témoignage</a>
+    </div>
+    <div class="text-xs sm:text-sm text-yellow-500">
+      {% now "j F Y" %}
     </div>
   </div>
+</div>
 
-  <!-- Header with logo centered and small icons -->
-  <header class="mainnav bg-blue-700 text-white" role="banner">
-    <div class="max-w-7xl mx-auto px-4 py-6 flex items-center justify-between">
+<!-- Header with logo centered and small icons -->
+<header class="mainnav bg-blue-700 text-white" role="banner">
+  <div class="max-w-7xl mx-auto px-4 py-6 flex items-center justify-between">
 
-      <!-- left: menu icon + search -->
-      <div class="flex items-center gap-6">
-        <!-- menu button (mobile) -->
-        <button id="menuBtn" aria-controls="mobileMenu" aria-expanded="false" aria-label="Ouvrir le menu" class="md:hidden">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
+    <!-- left: menu icon + search -->
+    <div class="flex items-center gap-6">
+      <!-- menu button (mobile) -->
+      <button id="menuBtn" aria-controls="mobileMenu" aria-expanded="false" aria-label="Ouvrir le menu" class="md:hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
 
-        <!-- search button (desktop & tablette) -->
-        <button id="searchBtn" aria-controls="searchPanel" aria-expanded="false" aria-label="Rechercher" class="hidden md:inline-flex">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
-          </svg>
-        </button>
+      <!-- search button (desktop & tablette) -->
+      <button id="searchBtn" aria-controls="searchPanel" aria-expanded="false" aria-label="Rechercher" class="hidden md:inline-flex">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
+        </svg>
+      </button>
 
+    </div>
+
+    <!-- center: small languages row + logo -->
+    <div class="flex flex-col items-center pointer-events-none">
+      <!-- languages -->
+      <div class="text-xs font-medium text-yellow-200 mb-1 tracking-wide pointer-events-auto">
+        <a href="#" class="hover:underline">FRANÇAIS</a>
+        <span class="mx-2 text-white/60">|</span>
+        <a href="#" class="hover:underline">ENGLISH</a>
       </div>
 
-      <!-- center: small languages row + logo -->
-      <div class="flex flex-col items-center pointer-events-none">
-        <!-- languages -->
-        <div class="text-xs font-medium text-yellow-200 mb-1 tracking-wide pointer-events-auto">
-          <a href="#" class="hover:underline">FRANÇAIS</a>
-          <span class="mx-2 text-white/60">|</span>
-          <a href="#" class="hover:underline">ENGLISH</a>
-        </div>
-
-        <!-- SVG logo (fictif) - remplace par ton SVG réel si tu en as un -->
+      <!-- SVG logo (fictif) - remplace par ton SVG réel si tu en as un -->
         <div class="brand-logo text-center text-white">
-          <svg width="320" height="68" viewBox="0 0 320 68" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <rect width="320" height="68" fill="none" />
-            <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" font-family="UnifrakturCook, cursive" font-weight="700" font-size="36" fill="#ffffff" letter-spacing="-1">
-              Le Baouly
-            </text>
-          </svg>
+          <a href="{% url 'articles:index' %}" class="pointer-events-auto">
+            <svg width="280" height="60" viewBox="0 0 320 68" xmlns="http://www.w3.org/2000/svg" aria-label="Le Baouly">
+              <rect width="320" height="68" fill="none" />
+              <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" font-family="UnifrakturCook, cursive" font-weight="700" font-size="36" fill="#ffffff" letter-spacing="-1">
+                Le Baouly
+              </text>
+            </svg>
+          </a>
         </div>
-      </div>
-
-<!-- right: account icon -->
-<div class="flex items-center gap-4">
-    {% if user.is_authenticated %}
-        {% if user.is_superuser %}
-            <!-- Superuser : admin Django -->
-            <a href="{% url 'admin:index' %}" class="flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-500" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 12a5 5 0 100-10 5 5 0 000 10zM4 20a8 8 0 0116 0H4z" />
-              </svg>
-              <span class="hidden md:inline-block">Admin</span>
-            </a>
-        {% elif user.is_staff %}
-            <!-- Staff : dashboard custom -->
-            <a href="{% url 'articles:articles_list' %}" class="flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-400" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 12a5 5 0 100-10 5 5 0 000 10zM4 20a8 8 0 0116 0H4z" />
-              </svg>
-              <span class="hidden md:inline-block">Dashboard</span>
-            </a>
-        {% else %}
-            <!-- Utilisateur normal -->
-            <a href="{% url 'articles:profile' %}" class="flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-400" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 12a5 5 0 100-10 5 5 0 000 10zM4 20a8 8 0 0116 0H4z" />
-              </svg>
-              <span class="hidden md:inline-block">{{ user.username }}</span>
-            </a>
-        {% endif %}
-    {% else %}
-        <!-- Non connecté -->
-        <a href="{% url 'articles:login' %}" class="flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-300" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 12a5 5 0 100-10 5 5 0 000 10zM4 20a8 8 0 0116 0H4z" />
-          </svg>
-          <span class="hidden md:inline-block">Connexion</span>
-        </a>
-    {% endif %}
-</div>
-
-
-
     </div>
 
-    <!-- Navigation links -->
-    <nav class="bg-blue-600" aria-label="Navigation principale">
-      <div class="max-w-7xl mx-auto px-4">
-        <ul class="flex gap-6 text-white text-sm py-3 overflow-x-auto whitespace-nowrap">
-          <li class="px-2"><a class="font-medium uppercase tracking-wide border-b-4 border-white" href="{% url 'articles:index' %}">Accueil</a></li>
-          <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='une' %}">À la une</a></li>
-          <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='minute' %}">À la minute</a></li>
-          <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='annonces' %}">Annonces</a></li>
-          <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='culture' %}">Culture</a></li>
-          <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='economie' %}">Économie</a></li>
-          <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='emploi' %}">Emploi</a></li>
-          <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='editorial' %}">Éditorial</a></li>
-          <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='international' %}">International</a></li>
-          <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='national' %}">National</a></li>
-          <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='opinions' %}">Opinions</a></li>
-          <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='societe' %}">Société</a></li>
-          <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='sport' %}">Sport</a></li>
-        </ul>
-      </div>
-    </nav>
-  </header>
+    <!-- right: account icon -->
+    <div class="flex items-center gap-4">
+      {% if user.is_authenticated %}
+      {% if user.is_superuser %}
+      <!-- Superuser : admin Django -->
+      <a href="{% url 'admin:index' %}" class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-500" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 12a5 5 0 100-10 5 5 0 000 10zM4 20a8 8 0 0116 0H4z" />
+        </svg>
+        <span class="hidden md:inline-block">Admin</span>
+      </a>
+      {% elif user.is_staff %}
+      <!-- Staff : dashboard custom -->
+      <a href="{% url 'articles:articles_list' %}" class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-400" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 12a5 5 0 100-10 5 5 0 000 10zM4 20a8 8 0 0116 0H4z" />
+        </svg>
+        <span class="hidden md:inline-block">Dashboard</span>
+      </a>
+      {% else %}
+      <!-- Utilisateur normal -->
+      <a href="{% url 'articles:profile' %}" class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-400" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 12a5 5 0 100-10 5 5 0 000 10zM4 20a8 8 0 0116 0H4z" />
+        </svg>
+        <span class="hidden md:inline-block">{{ user.username }}</span>
+      </a>
+      {% endif %}
+      {% else %}
+      <!-- Non connecté -->
+      <a href="{% url 'articles:login' %}" class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-300" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 12a5 5 0 100-10 5 5 0 000 10zM4 20a8 8 0 0116 0H4z" />
+        </svg>
+        <span class="hidden md:inline-block">Connexion</span>
+      </a>
+      {% endif %}
+    </div>
 
-  <!-- --------- Mobile off-canvas menu (hidden by default) --------- -->
-  <!-- overlay -->
-  <div id="menuOverlay" class="fixed inset-0 bg-black bg-opacity-40 opacity-0 pointer-events-none transition-opacity duration-200 z-40" aria-hidden="true"></div>
-
-  <!-- panel -->
-  <aside id="mobileMenu" class="fixed inset-y-0 left-0 w-64 max-w-full bg-white shadow-lg transform -translate-x-full transition-transform duration-300 z-50" aria-hidden="true" role="dialog" aria-label="Menu mobile">
-    <div class="p-4">
-      <div class="flex items-center justify-between mb-4">
-        <div class="font-bold text-lg text-slate-800">Menu</div>
-        <button id="menuCloseBtn" aria-label="Fermer le menu">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-
-      <!-- MOBILE SEARCH (recommended: small form inside menu) -->
-    
-      <form id="mobileSearch" class="mb-4 block md:hidden flex justify-center" 
-      action="{% url 'articles:recherche' %}" method="get" role="search" aria-label="Recherche mobile">
-  <label for="q_mobile" class="sr-only">Recherche</label>
-  <div class="flex gap-2 w-full max-w-xs">
-    <input id="q_mobile" name="q" type="search" placeholder="Rechercher..."
-      class="flex-1 px-3 py-2 border rounded text-sm" />
-    <button type="submit" class="px-3 py-2 border rounded text-sm">OK</button>
   </div>
-</form>
 
-
-      <nav class="space-y-3 text-sm">
-        <a href="{% url 'articles:index' %}" class="block px-2 py-2 hover:bg-slate-100">Accueil</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='une' %}" class="block px-2 py-2 hover:bg-slate-100">À la une</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='minute' %}" class="block px-2 py-2 hover:bg-slate-100">À la minute</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='annonces' %}" class="block px-2 py-2 hover:bg-slate-100">Annonces</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='culture' %}" class="block px-2 py-2 hover:bg-slate-100">Culture</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='economie' %}" class="block px-2 py-2 hover:bg-slate-100">Économie</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='emploi' %}" class="block px-2 py-2 hover:bg-slate-100">Emploi</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='editorial' %}" class="block px-2 py-2 hover:bg-slate-100">Éditorial</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='international' %}" class="block px-2 py-2 hover:bg-slate-100">International</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='national' %}" class="block px-2 py-2 hover:bg-slate-100">National</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='opinions' %}" class="block px-2 py-2 hover:bg-slate-100">Opinions</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='societe' %}" class="block px-2 py-2 hover:bg-slate-100">Société</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='sport' %}" class="block px-2 py-2 hover:bg-slate-100">Sport</a>
-      </nav>
+  <!-- Navigation links -->
+  <nav class="bg-blue-600" aria-label="Navigation principale">
+    <div class="max-w-7xl mx-auto px-4">
+      <ul class="flex gap-6 text-white text-sm py-3 overflow-x-auto whitespace-nowrap">
+        <li class="px-2"><a class="font-medium uppercase tracking-wide border-b-4 border-white" href="{% url 'articles:index' %}">Accueil</a></li>
+        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='une' %}">À la une</a></li>
+        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='minute' %}">À la minute</a></li>
+        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='annonces' %}">Annonces</a></li>
+        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='culture' %}">Culture</a></li>
+        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='economie' %}">Économie</a></li>
+        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='emploi' %}">Emploi</a></li>
+        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='editorial' %}">Éditorial</a></li>
+        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='international' %}">International</a></li>
+        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='national' %}">National</a></li>
+        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='opinions' %}">Opinions</a></li>
+        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='societe' %}">Société</a></li>
+        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='sport' %}">Sport</a></li>
+      </ul>
     </div>
-  </aside>
+  </nav>
+</header>
 
-  <!-- --------- Search panel (togglable overlay on desktop) --------- -->
-  <div id="searchPanel" class="hidden md:block fixed right-4 z-40" aria-hidden="true" role="search">
-    <form id="searchForm" action="{% url 'articles:recherche' %}" method="get" class="bg-white rounded shadow p-3 w-80" aria-label="Formulaire de recherche">
-      <label for="q" class="sr-only">Recherche</label>
-      <div class="flex gap-2">
-        <input id="q" name="q" type="search" placeholder="Rechercher..." class="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring" />
-        <button type="submit" aria-label="Lancer la recherche" class="px-3 py-2 border rounded">OK</button>
+<!-- --------- Mobile off-canvas menu (hidden by default) --------- -->
+<!-- overlay -->
+<div id="menuOverlay" class="fixed inset-0 bg-black bg-opacity-40 opacity-0 pointer-events-none transition-opacity duration-200 z-40" aria-hidden="true"></div>
+
+<!-- panel -->
+<aside id="mobileMenu" class="fixed inset-y-0 left-0 w-64 max-w-full bg-white shadow-lg transform -translate-x-full transition-transform duration-300 z-50" aria-hidden="true" role="dialog" aria-label="Menu mobile">
+    <div class="p-4 flex items-center justify-between border-b">
+      <div class="font-bold text-lg text-slate-800">Menu</div>
+      <button id="menuCloseBtn" aria-label="Fermer le menu">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- MOBILE SEARCH (recommended: small form inside menu) -->
+    <div class="flex-1 overflow-y-auto p-4">
+    <form id="mobileSearch" class="mb-4 block md:hidden flex justify-center" action="{% url 'articles:recherche' %}" method="get" role="search" aria-label="Recherche mobile">
+      <label for="q_mobile" class="sr-only">Recherche</label>
+      <div class="flex gap-2 w-full max-w-xs">
+        <input id="q_mobile" name="q" type="search" placeholder="Rechercher..." class="flex-1 px-3 py-2 border rounded text-sm" />
+        <button type="submit" class="px-3 py-2 border rounded text-sm">OK</button>
       </div>
     </form>
-  </div>
 
+    <nav class="space-y-1 text-sm">
+      <a href="{% url 'articles:index' %}" class="block px-3 py-2 rounded font-semibold bg-blue-100 text-blue-800">Accueil</a>
+      <a href="{% url 'articles:articles_par_categorie' slug='une' %}" class="block px-3 py-2 rounded hover:bg-slate-100">À la une</a>
+        <a href="{% url 'articles:articles_par_categorie' slug='minute' %}" class="block px-3 py-2 rounded hover:bg-slate-100">À la minute</a>
+        <a href="{% url 'articles:articles_par_categorie' slug='annonces' %}" class="block px-3 py-2 rounded hover:bg-slate-100">Annonces</a>
+        <a href="{% url 'articles:articles_par_categorie' slug='culture' %}" class="block px-3 py-2 rounded hover:bg-slate-100">Culture</a>
+        <a href="{% url 'articles:articles_par_categorie' slug='economie' %}" class="block px-3 py-2 rounded hover:bg-slate-100">Économie</a>
+        <a href="{% url 'articles:articles_par_categorie' slug='emploi' %}" class="block px-3 py-2 rounded hover:bg-slate-100">Emploi</a>
+        <a href="{% url 'articles:articles_par_categorie' slug='editorial' %}" class="block px-3 py-2 rounded hover:bg-slate-100">Éditorial</a>
+        <a href="{% url 'articles:articles_par_categorie' slug='international' %}" class="block px-3 py-2 rounded hover:bg-slate-100">International</a>
+        <a href="{% url 'articles:articles_par_categorie' slug='national' %}" class="block px-3 py-2 rounded hover:bg-slate-100">National</a>
+        <a href="{% url 'articles:articles_par_categorie' slug='opinions' %}" class="block px-3 py-2 rounded hover:bg-slate-100">Opinions</a>
+        <a href="{% url 'articles:articles_par_categorie' slug='societe' %}" class="block px-3 py-2 rounded hover:bg-slate-100">Société</a>
+        <a href="{% url 'articles:articles_par_categorie' slug='sport' %}" class="block px-3 py-2 rounded hover:bg-slate-100">Sport</a>
+    </nav>
+  </div>
+</aside>
+
+<!-- --------- Search panel (togglable overlay on desktop) --------- -->
+<div id="searchPanel" class="hidden md:block fixed right-4 z-40" aria-hidden="true" role="search">
+  <form id="searchForm" action="{% url 'articles:recherche' %}" method="get" class="bg-white rounded shadow p-3 w-80" aria-label="Formulaire de recherche">
+    <label for="q" class="sr-only">Recherche</label>
+    <div class="flex gap-2">
+      <input id="q" name="q" type="search" placeholder="Rechercher..." class="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring" />
+      <button type="submit" aria-label="Lancer la recherche" class="px-3 py-2 border rounded">OK</button>
+    </div>
+  </form>
+</div>
