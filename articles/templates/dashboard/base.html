@@ -1,0 +1,291 @@
+{% load static %}
+
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{% block title %}Dashboard -- MonJournal{% endblock %}</title>
+
+  <!-- Dev: Tailwind CDN. En production, remplacez par votre build Tailwind. -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Style de focus personnalisé pour une meilleure accessibilité */
+    :focus-visible {
+      outline: 2px solid rgb(99 102 241);
+      outline-offset: 2px;
+      border-radius: .375rem;
+    }
+    /* Pour cacher la scrollbar de la sidebar sur certains navigateurs */
+    #sidebarNav::-webkit-scrollbar {
+        display: none;
+    }
+    #sidebarNav {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 antialiased">
+
+  <div class="relative min-h-screen md:flex">
+
+    <!-- Backdrop pour mobile (overlay) -->
+    <div id="backdrop" class="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out"></div>
+
+    <!-- Sidebar (off-canvas sur mobile, fixe sur desktop) -->
+    <aside id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-white border-r z-40 
+                               transform -translate-x-full transition-transform duration-300 ease-in-out 
+                               md:relative md:translate-x-0 md:flex-shrink-0">
+      <div class="h-full flex flex-col">
+        <!-- Logo et bouton de fermeture mobile -->
+        <div class="px-6 py-5 border-b flex items-center justify-between">
+          <a href="/" class="flex items-center gap-3">
+            <span class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-indigo-600 text-white font-bold">MJ</span>
+            <div>
+              <h1 class="text-lg font-semibold leading-tight">LeBaouly</h1>
+              <p class="text-xs text-gray-500">Tableau de bord</p>
+            </div>
+          </a>
+          <button id="mobile-close" class="md:hidden p-1 rounded-md hover:bg-gray-100">
+            <span class="sr-only">Fermer le menu</span>
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <!-- Navigation principale -->
+        <nav id="sidebarNav" class="px-4 py-6 flex-1 overflow-y-auto">
+          <ul class="space-y-1">
+            <li>
+              <a href="{% url 'articles:articles_list' %}" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100">
+                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <span>Articles</span>
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'articles:article_create' %}" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100">
+                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span>Nouvel article</span>
+              </a>
+            </li>
+            <li>
+              <a href="/" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100">
+                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                <span>Voir le site</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Menu utilisateur (sidebar) -->
+        <div class="px-4 py-4 border-t">
+          <a href="{% url 'articles:profile' %}" class="flex items-center gap-3 rounded-md p-2 hover:bg-gray-100">
+            <img alt="avatar" src="{% static 'images/favicon.ico' %}" class="w-9 h-9 rounded-full object-cover"/>
+            <div class="text-sm">
+              <div class="font-medium">{{ request.user.get_full_name|default:request.user.get_username }}</div>
+              <div class="text-xs text-gray-500">Staff</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Contenu principal -->
+    <main class="flex-1 flex flex-col">
+      <!-- Topbar (Header du contenu) -->
+      <header class="w-full bg-white border-b">
+        <div class="flex items-center justify-between px-4 sm:px-6 py-3">
+          <!-- Bouton hamburger (mobile) et titre de la page (desktop) -->
+          <div class="flex items-center gap-4">
+            <button id="mobile-open" class="md:hidden p-2 rounded-md hover:bg-gray-100">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+              <span class="sr-only">Ouvrir le menu</span>
+            </button>
+            <h2 class="text-2xl font-semibold hidden md:block">{% block header %}Tableau de bord{% endblock %}</h2>
+          </div>
+<!-- Search form (mobile small icon opens search input) -->
+  <button id="mobile-search-toggle"
+        aria-label="Rechercher"
+        class="p-2 rounded-md hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-indigo-500 md:hidden">
+  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"/>
+  </svg>
+</button>
+
+          <!-- Actions de la topbar : recherche, notifications, menu utilisateur -->
+          <div class="flex items-center gap-3">
+            <form id="searchForm" action="{% url 'articles:recherche' %}" method="get" class="hidden md:flex items-center">
+              <label for="search" class="sr-only">Rechercher</label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"/></svg>
+                </div>
+                <input id="search" name="q" type="search" placeholder="Rechercher..." class="w-48 lg:w-72 rounded-full border border-gray-200 pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"/>
+              </div>
+            </form>
+
+            <button aria-label="Notifications" class="p-2 rounded-full hover:bg-gray-100">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            </button>
+
+            <div class="relative">
+              <button id="userMenuButton" class="flex items-center gap-2 p-1 rounded-full hover:bg-gray-100">
+                <img alt="avatar" src="{% static 'images/favicon.ico' %}" class="w-8 h-8 rounded-full object-cover" />
+              </button>
+              <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg py-1 z-20" role="menu">
+                <div class="px-4 py-2 border-b">
+                  <p class="text-sm font-medium truncate">{{ request.user.get_full_name|default:request.user.get_username }}</p>
+                  <p class="text-xs text-gray-500 truncate">{{ request.user.email }}</p>
+                </div>
+                <a href="{% url 'articles:profile' %}" class="block px-4 py-2 text-sm hover:bg-gray-100" role="menuitem">Profil</a>
+                <a href="{% url 'articles:confirmer_deconnexion' %}" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100" role="menuitem">Se déconnecter</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+<!-- Formulaire mobile (caché par défaut) -->
+<form id="mobile-search" action="{% url 'articles:recherche' %}" method="get"
+      class="hidden md:hidden mt-2">
+  <label for="mobileSearchInput" class="sr-only">Rechercher</label>
+  <div class="relative">
+    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+      <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"/>
+      </svg>
+    </div>
+    <input id="mobileSearchInput" name="q" type="search" placeholder="Rechercher..."
+           class="w-full rounded-full border border-gray-200 pl-10 pr-4 py-2 text-sm
+                  focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"/>
+  </div>
+</form>
+      <!-- Contenu de la page -->
+      <div class="p-4 sm:p-6 lg:p-8 flex-1">
+        {% block content %}
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <div class="bg-white border rounded-lg p-5 shadow-sm">
+            <div class="text-sm text-gray-500">Articles publiés</div>
+            <div class="mt-2 text-3xl font-semibold">128</div>
+          </div>
+          <div class="bg-white border rounded-lg p-5 shadow-sm">
+            <div class="text-sm text-gray-500">Brouillons</div>
+            <div class="mt-2 text-3xl font-semibold">7</div>
+          </div>
+          <div class="bg-white border rounded-lg p-5 shadow-sm">
+            <div class="text-sm text-gray-500">Commentaires en attente</div>
+            <div class="mt-2 text-3xl font-semibold">23</div>
+          </div>
+        </section>
+
+        <section class="bg-white border rounded-lg p-6 shadow-sm">
+          <h3 class="text-lg font-medium mb-4">Articles récents</h3>
+          <div class="w-full overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead class="text-xs text-gray-500 uppercase bg-gray-50">
+                <tr>
+                  <th class="px-4 py-3">Titre</th>
+                  <th class="px-4 py-3">Auteur</th>
+                  <th class="px-4 py-3">Statut</th>
+                  <th class="px-4 py-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y">
+                {% for article in recent_articles %}
+                <tr>
+                  <td class="px-4 py-3 font-medium">{{ article.title }}</td>
+                  <td class="px-4 py-3 text-gray-600">{{ article.author.get_full_name }}</td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">{{ article.get_status_display }}</span>
+                  </td>
+                  <td class="px-4 py-3 text-right">
+                    <a href="{% url 'articles:article_update' article.pk %}" class="font-medium text-indigo-600 hover:text-indigo-800">Éditer</a>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr><td class="px-4 py-4 text-center text-gray-500" colspan="4">Aucun article pour le moment.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+        {% endblock %}
+      </div>
+    </main>
+
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // --- Gestion de la Sidebar ---
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('backdrop');
+      const openBtn = document.getElementById('mobile-open');
+      const closeBtn = document.getElementById('mobile-close');
+
+      const openSidebar = () => {
+        sidebar.classList.remove('-translate-x-full');
+        backdrop.classList.remove('opacity-0', 'pointer-events-none');
+        document.body.style.overflow = 'hidden'; // Empêche le scroll du body
+      };
+
+      const closeSidebar = () => {
+        sidebar.classList.add('-translate-x-full');
+        backdrop.classList.add('opacity-0', 'pointer-events-none');
+        document.body.style.overflow = '';
+      };
+
+      openBtn.addEventListener('click', openSidebar);
+      closeBtn.addEventListener('click', closeSidebar);
+      backdrop.addEventListener('click', closeSidebar);
+
+      // --- Gestion du menu utilisateur ---
+      const userMenuButton = document.getElementById('userMenuButton');
+      const userMenu = document.getElementById('userMenu');
+
+      userMenuButton.addEventListener('click', (e) => {
+        e.stopPropagation(); // Empêche la fermeture immédiate par le listener 'document'
+        userMenu.classList.toggle('hidden');
+      });
+
+      // --- Fermeture des menus au clic extérieur ou avec la touche 'Echap' ---
+      document.addEventListener('click', (e) => {
+        // Ferme le menu utilisateur si le clic est à l'extérieur
+        if (!userMenu.classList.contains('hidden') && !userMenu.contains(e.target) && !userMenuButton.contains(e.target)) {
+          userMenu.classList.add('hidden');
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          // Ferme la sidebar si elle est ouverte
+          if (!sidebar.classList.contains('-translate-x-full')) {
+            closeSidebar();
+          }
+          // Ferme le menu utilisateur s'il est ouvert
+          if (!userMenu.classList.contains('hidden')) {
+            userMenu.classList.add('hidden');
+          }
+        }
+      });
+    });
+
+
+
+    // Mobile search toggle
+      const mobileSearchToggle = document.getElementById('mobile-search-toggle');
+      const mobileSearch = document.getElementById('mobile-search');
+      mobileSearchToggle?.addEventListener('click', () => {
+        mobileSearch.classList.toggle('hidden');
+        const input = document.getElementById('mobileSearchInput');
+        if (!mobileSearch.classList.contains('hidden')) {
+          setTimeout(() => input?.focus(), 50);
+        }
+      });
+  </script>
+
+  {% include "partials/footer.html" %}
+
+</body>
+</html>

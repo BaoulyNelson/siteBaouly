@@ -5,8 +5,22 @@ from django.contrib import messages
 from .models import Article,Temoignage
 from .forms import RegistrationForm, EditProfileForm,ContactForm,TemoignageForm
 from django.db.models import Q
-
-
+from django.core.mail import send_mail
+from django.conf import settings
+from .forms import NewsletterForm
+from .models import NewsletterSubscriber
+from django.urls import reverse
+# yourapp/views.py
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, UpdateView, ListView, DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from .models import Article
+from .forms import ArticleForm
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.db.models import Q
+from django.urls import reverse
 
 
 def index(request):
@@ -45,9 +59,60 @@ def articles_par_categorie(request, slug):
 
 def detail(request, slug):
     article = get_object_or_404(Article, slug=slug)
-    return render(request, "articles/detail.html", {"article": article})
 
+    if request.user.is_authenticated and request.user.is_staff:
+        template = "dashboard/article_detail.html"
+    else:
+        template = "articles/detail.html"
 
+    return render(request, template, {"article": article})
+class StaffRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_staff
+
+    def handle_no_permission(self):
+        # rediriger vers login si pas connecté, sinon 403 (ou custom)
+        if not self.request.user.is_authenticated:
+            from django.contrib.auth.views import redirect_to_login
+            return redirect_to_login(self.request.get_full_path())
+        from django.http import HttpResponseForbidden
+        return HttpResponseForbidden("Accès réservé au personnel.")
+
+# Liste des articles du dashboard (pour le staff)
+class ArticleDashboardListView(LoginRequiredMixin, StaffRequiredMixin, ListView):
+    model = Article
+    template_name = "dashboard/articles_list.html"
+    context_object_name = "articles"
+    paginate_by = 20
+
+    def get_queryset(self):
+        # option: staff voit tous; si tu veux restreindre à ses propres articles, filter(auteur=self.request.user)
+        return Article.objects.all().order_by("-date_publication")
+
+class ArticleCreateView(LoginRequiredMixin, StaffRequiredMixin, CreateView):
+    model = Article
+    form_class = ArticleForm
+    template_name = "dashboard/article_form.html"
+    success_url = reverse_lazy("articles:articles_list")
+
+    def form_valid(self, form):
+        # affecter l'auteur automatiquement
+        form.instance.auteur = self.request.user
+        return super().form_valid(form)
+
+class ArticleUpdateView(LoginRequiredMixin, StaffRequiredMixin, UpdateView):
+    model = Article
+    form_class = ArticleForm
+    template_name = "dashboard/article_form.html"
+    success_url = reverse_lazy("articles:articles_list")
+
+class ArticleDetailView(LoginRequiredMixin, StaffRequiredMixin, DetailView):
+    model = Article
+    template_name = "dashboard/article_detail.html"
+    context_object_name = "article"
+    
+    
+    
 def register(request):
     if request.user.is_authenticated:
         return redirect("articles:index")
@@ -114,13 +179,14 @@ def temoignages(request):
         form = TemoignageForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("articles:temoignages")
+            return render(request, "temoignages/confirmation.html")
     else:
         form = TemoignageForm()
 
-    # ✅ afficher uniquement les témoignages approuvés
     liste = Temoignage.objects.filter(approuve=True).order_by("-date")
     return render(request, "temoignages/temoignages.html", {"form": form, "temoignages": liste})
+
+
 
 
 def about_us(request):
@@ -142,6 +208,35 @@ def privacy_policy(request):
 def cookies_policy(request):
     return render(request, "partials/cookies_policy.html")
 
+def subscribe(request):
+    if request.method == "POST":
+        form = NewsletterForm(request.POST)
+        if form.is_valid():
+            subscriber = form.save()
+            # envoyer email de bienvenue
+            send_mail(
+                "Bienvenue dans notre newsletter 🎉",
+                "Merci de vous être abonné ! Vous recevrez bientôt nos actualités.",
+                settings.DEFAULT_FROM_EMAIL,
+                [subscriber.email],
+                fail_silently=True,
+            )
+            messages.success(request, "✅ Merci ! Votre adresse a bien été enregistrée.")
+        else:
+            # Django affichera le message d’erreur du form (email déjà inscrit ou invalide)
+            messages.error(request, form.errors.get("email")[0])
+
+        next_url = request.POST.get("next") or request.META.get("HTTP_REFERER") or reverse("home")
+        return redirect(next_url)
+
+    return redirect("index")
+
+
+
+# views.py
+
+from django.db.models import Q
+
 def recherche(request):
     query = request.GET.get('q', '')  # récupère le mot-clé
     results = []
@@ -151,10 +246,12 @@ def recherche(request):
             Q(titre__icontains=query) |
             Q(contenu__icontains=query) |
             Q(resume__icontains=query) |
-            Q(categorie__icontains=query)  # <-- ajoute recherche dans la catégorie
+            Q(categorie__icontains=query) |
+            Q(auteur__username__icontains=query)  # 🔑 recherche par nom d'utilisateur
         ).order_by('-date_publication')
 
     return render(request, 'search/recherche.html', {
         'query': query,
         'results': results
     })
+

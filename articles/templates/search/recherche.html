@@ -5,6 +5,15 @@
 
 {% block content %}
 <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
+
+  <!-- Mini-formulaire local (soumet sur la même URL : action="") -->
+  <form id="localSearchForm" action="" method="get" class="mb-8 flex gap-2">
+    <label for="q" class="sr-only">Rechercher</label>
+    <input id="q" name="q" type="search" value="{{ query }}" placeholder="Rechercher un article, auteur, catégorie..."
+           class="flex-1 rounded-full border border-gray-200 px-4 py-2 text-sm focus-visible:ring-2 focus-visible:ring-indigo-500" />
+    <button type="submit" class="px-4 py-2 rounded-full bg-indigo-600 text-white text-sm">Rechercher</button>
+  </form>
+
   <header class="mb-8">
     <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900">
       Résultats pour&nbsp;: <span class="text-indigo-600">"{{ query }}"</span>
@@ -14,125 +23,254 @@
     </p>
   </header>
 
-  {% if results %}
-    <ul class="space-y-6">
-      {% for article in results %}
-        <li class="bg-white shadow-sm ring-1 ring-gray-100 rounded-2xl overflow-hidden">
-          <a href="{% url 'articles:detail' article.slug %}" class="block group">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 p-6">
-              <!-- Left: thumbnail (optional) -->
-              <div class="md:col-span-1 flex items-center justify-center">
-                {% if article.image %}
-                  <div class="w-full h-36 md:h-28 rounded-xl overflow-hidden">
-                    <img src="{{ article.image.url }}" alt="{{ article.titre }}" class="object-cover w-full h-full transform transition-transform duration-300 group-hover:scale-105">
+  <!-- Conteneur principal pour résultats (server-rendered OR JS replacement) -->
+  <div id="searchResultsContainer">
+    {% if results %}
+      <ul class="space-y-6">
+        {% for article in results %}
+          <li class="bg-white shadow-sm ring-1 ring-gray-100 rounded-2xl overflow-hidden">
+            <a href="{% url 'articles:detail' article.slug %}" class="block group">
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-6 p-6">
+                <div class="md:col-span-1 flex items-center justify-center">
+                  {% if article.image %}
+                    <div class="w-full h-36 md:h-28 rounded-xl overflow-hidden">
+                      <img src="{{ article.image.url }}" alt="{{ article.titre }}" class="object-cover w-full h-full transform transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                  {% else %}
+                    <div class="w-full h-36 md:h-28 rounded-xl bg-gradient-to-br from-gray-100 to-gray-50 flex items-center justify-center text-gray-400">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7M7 7l5 6 5-6" />
+                      </svg>
+                    </div>
+                  {% endif %}
+                </div>
+
+                <div class="md:col-span-3">
+                  <div class="flex items-start justify-between">
+                    <div class="min-w-0">
+                      <h2 class="text-lg sm:text-xl font-semibold text-gray-900 leading-tight">
+                        {{ article.titre }}
+                      </h2>
+                      <p class="mt-2 text-sm text-gray-600 line-clamp-3">
+                        {{ article.resume|default:article.contenu|truncatewords:30 }}
+                      </p>
+                    </div>
+                    <div class="ml-4 flex-shrink-0 text-right">
+                      <span class="text-sm text-gray-500 block">{{ article.date_publication|date:"j F Y" }}</span>
+                    </div>
                   </div>
-                {% else %}
-                  <div class="w-full h-36 md:h-28 rounded-xl bg-gradient-to-br from-gray-100 to-gray-50 flex items-center justify-center text-gray-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7M7 7l5 6 5-6" />
-                    </svg>
+
+                  <div class="mt-4 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                      <div class="flex items-center">
+                        {% if article.auteur.profile.avatar.url %}
+                          <img src="{{ article.auteur.profile.avatar.url }}" alt="{{ article.auteur.get_full_name|default:article.auteur.username }}" class="w-9 h-9 rounded-full object-cover mr-3">
+                        {% else %}
+                          <div class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5.121 17.804A9 9 0 1118.88 6.196 9 9 0 015.12 17.804z" />
+                            </svg>
+                          </div>
+                        {% endif %}
+                        <div class="text-sm">
+                          <div class="font-medium text-gray-800">
+                            {{ article.auteur.get_full_name|default:article.auteur.username }}
+                          </div>
+                          <div class="text-xs text-gray-500">Auteur</div>
+                        </div>
+                      </div>
+
+                      {% if article.tags.exists %}
+                        <div class="flex flex-wrap items-center gap-2">
+                          {% for tag in article.tags.all %}
+                            <span class="text-xs px-2 py-0.5 rounded-full border border-gray-200 bg-gray-50 text-gray-600">{{ tag.name }}</span>
+                          {% endfor %}
+                        </div>
+                      {% endif %}
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                      <span class="text-xs text-gray-400">·</span>
+                      <span class="text-xs text-gray-500">{{ article.vues|default:"—" }} vues</span>
+                      <span class="text-xs text-gray-400">·</span>
+                      <span class="text-sm">
+                        <a href="{% url 'articles:detail' article.slug %}" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-full shadow-sm text-indigo-600 bg-indigo-50 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                          Lire la suite
+                          <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7" />
+                          </svg>
+                        </a>
+                      </span>
+                    </div>
                   </div>
-                {% endif %}
+                </div>
+              </div>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+
+      {% if is_paginated %}
+        <nav class="mt-8 flex items-center justify-between" role="navigation" aria-label="Pagination">
+          <div>
+            {% if page_obj.has_previous %}
+              <a href="?q={{ query }}&page={{ page_obj.previous_page_number }}" class="inline-flex items-center px-3 py-2 border rounded-md text-sm font-medium bg-white hover:bg-gray-50">← Précédent</a>
+            {% endif %}
+          </div>
+          <div class="text-sm text-gray-500">Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}</div>
+          <div>
+            {% if page_obj.has_next %}
+              <a href="?q={{ query }}&page={{ page_obj.next_page_number }}" class="inline-flex items-center px-3 py-2 border rounded-md text-sm font-medium bg-white hover:bg-gray-50">Suivant →</a>
+            {% endif %}
+          </div>
+        </nav>
+      {% endif %}
+
+    {% else %}
+      <section class="mt-10 bg-white border border-dashed border-gray-200 rounded-2xl p-8 text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <h3 class="mt-4 text-lg font-semibold text-gray-900">Aucun article trouvé</h3>
+        <p class="mt-2 text-sm text-gray-500">Essayez d'autres mots-clés ou vérifiez l'orthographe. Vous pouvez aussi parcourir les articles récents ci-dessous.</p>
+        <div class="mt-6">
+          <a href="{% url 'articles:index' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Voir les articles récents</a>
+        </div>
+      </section>
+    {% endif %}
+  </div> <!-- /#searchResultsContainer -->
+
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+/*
+  Fonction JS utilitaire pour remplacer dynamiquement le contenu des résultats
+  Quand le backend renvoie JSON: { results: [{ title, author, url, status, published, ... }, ...] }
+*/
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/[&<>"']/g, (m) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+}
+
+function renderSearchResults(results) {
+  const container = document.getElementById('searchResultsContainer');
+  if (!container) return;
+
+  if (!results || results.length === 0) {
+    container.innerHTML = `
+      <section class="mt-10 bg-white border border-dashed border-gray-200 rounded-2xl p-8 text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <h3 class="mt-4 text-lg font-semibold text-gray-900">Aucun article trouvé</h3>
+        <p class="mt-2 text-sm text-gray-500">Essayez d'autres mots-clés ou vérifiez l'orthographe.</p>
+      </section>
+    `;
+    return;
+  }
+
+  const rows = results.map(r => {
+    const title = escapeHtml(r.title || 'Sans titre');
+    const url = escapeHtml(r.url || '#');
+    const author = escapeHtml(r.author || '');
+    const published = r.published ? new Date(r.published).toLocaleDateString() : '';
+    const excerpt = escapeHtml(r.excerpt || '');
+    return `
+      <li class="bg-white shadow-sm ring-1 ring-gray-100 rounded-2xl overflow-hidden">
+        <a href="${url}" class="block group">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-6 p-6">
+            <div class="md:col-span-1 flex items-center justify-center">
+              <div class="w-full h-36 md:h-28 rounded-xl bg-gray-50 flex items-center justify-center text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7M7 7l5 6 5-6" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="md:col-span-3">
+              <div class="flex items-start justify-between">
+                <div class="min-w-0">
+                  <h2 class="text-lg sm:text-xl font-semibold text-gray-900 leading-tight">${title}</h2>
+                  <p class="mt-2 text-sm text-gray-600 line-clamp-3">${excerpt}</p>
+                </div>
+                <div class="ml-4 flex-shrink-0 text-right">
+                  <span class="text-sm text-gray-500 block">${published}</span>
+                </div>
               </div>
 
-              <!-- Right: body -->
-              <div class="md:col-span-3">
-                <div class="flex items-start justify-between">
-                  <div class="min-w-0">
-                    <h2 class="text-lg sm:text-xl font-semibold text-gray-900 leading-tight">
-                      {{ article.titre }}
-                    </h2>
-                    <p class="mt-2 text-sm text-gray-600 line-clamp-3">
-                      {{ article.resume|default:article.contenu|truncatewords:30 }}
-                    </p>
-                  </div>
-                  <div class="ml-4 flex-shrink-0 text-right">
-                    <span class="text-sm text-gray-500 block">{{ article.date_publication|date:"j F Y" }}</span>
+              <div class="mt-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="flex items-center">
+                    <div class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5.121 17.804A9 9 0 1118.88 6.196 9 9 0 015.12 17.804z" />
+                      </svg>
+                    </div>
+                    <div class="text-sm">
+                      <div class="font-medium text-gray-800">${author}</div>
+                      <div class="text-xs text-gray-500">Auteur</div>
+                    </div>
                   </div>
                 </div>
 
-                <div class="mt-4 flex items-center justify-between">
-                  <div class="flex items-center gap-3">
-                    <!-- author -->
-                    <div class="flex items-center">
-                      {% if article.auteur.profile.avatar.url %}
-                        <img src="{{ article.auteur.profile.avatar.url }}" alt="{{ article.auteur.get_full_name|default:article.auteur.username }}" class="w-9 h-9 rounded-full object-cover mr-3">
-                      {% else %}
-                        <div class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 mr-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5.121 17.804A9 9 0 1118.88 6.196 9 9 0 015.12 17.804z" />
-                          </svg>
-                        </div>
-                      {% endif %}
-                      <div class="text-sm">
-                        <div class="font-medium text-gray-800">
-                          {{ article.auteur.get_full_name|default:article.auteur.username }}
-                        </div>
-                        <div class="text-xs text-gray-500">Auteur</div>
-                      </div>
-                    </div>
-
-                    <!-- tags -->
-                    {% if article.tags.exists %}
-                      <div class="flex flex-wrap items-center gap-2">
-                        {% for tag in article.tags.all %}
-                          <span class="text-xs px-2 py-0.5 rounded-full border border-gray-200 bg-gray-50 text-gray-600">{{ tag.name }}</span>
-                        {% endfor %}
-                      </div>
-                    {% endif %}
-                  </div>
-
-                  <div class="flex items-center gap-3">
-                    <span class="text-xs text-gray-400">·</span>
-                    <span class="text-xs text-gray-500">{{ article.vues|default:"—" }} vues</span>
-                    <span class="text-xs text-gray-400">·</span>
-                    <span class="text-sm">
-                      <a href="{% url 'articles:detail' article.slug %}" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-full shadow-sm text-indigo-600 bg-indigo-50 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        Lire la suite
-                        <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7" />
-                        </svg>
-                      </a>
-                    </span>
-                  </div>
+                <div class="flex items-center gap-3">
+                  <span class="text-xs text-gray-400">·</span>
+                  <span class="text-xs text-gray-500">— vues</span>
+                  <span class="text-xs text-gray-400">·</span>
+                  <span class="text-sm">
+                    <a href="${url}" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-full shadow-sm text-indigo-600 bg-indigo-50 hover:bg-indigo-100">
+                      Lire la suite
+                      <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </a>
+                  </span>
                 </div>
               </div>
             </div>
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
+          </div>
+        </a>
+      </li>
+    `;
+  }).join('');
 
-    <!-- pagination placeholder (if you use pagination in view) -->
-    {% if is_paginated %}
-      <nav class="mt-8 flex items-center justify-between" role="navigation" aria-label="Pagination">
-        <div>
-          {% if page_obj.has_previous %}
-            <a href="?q={{ query }}&page={{ page_obj.previous_page_number }}" class="inline-flex items-center px-3 py-2 border rounded-md text-sm font-medium bg-white hover:bg-gray-50">← Précédent</a>
-          {% endif %}
-        </div>
-        <div class="text-sm text-gray-500">Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}</div>
-        <div>
-          {% if page_obj.has_next %}
-            <a href="?q={{ query }}&page={{ page_obj.next_page_number }}" class="inline-flex items-center px-3 py-2 border rounded-md text-sm font-medium bg-white hover:bg-gray-50">Suivant →</a>
-          {% endif %}
-        </div>
-      </nav>
-    {% endif %}
+  container.innerHTML = `<ul class="space-y-6">${rows}</ul>`;
+}
 
-  {% else %}
-    <section class="mt-10 bg-white border border-dashed border-gray-200 rounded-2xl p-8 text-center">
-      <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-      </svg>
-      <h3 class="mt-4 text-lg font-semibold text-gray-900">Aucun article trouvé</h3>
-      <p class="mt-2 text-sm text-gray-500">Essayez d'autres mots-clés ou vérifiez l'orthographe. Vous pouvez aussi parcourir les articles récents ci-dessous.</p>
-      <div class="mt-6">
-        <a href="{% url 'articles:index' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Voir les articles récents</a>
-  
-    </div>
-    </section>
-  {% endif %}
-</main>
+// Hook local form to attempt JSON fetch, fallback to normal GET
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('localSearchForm');
+  if (!form) return;
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const q = (new FormData(form)).get('q') || '';
+    const action = form.action || window.location.pathname;
+
+    // try server JSON first (Accept: application/json)
+    try {
+      const url = new URL(action, window.location.origin);
+      url.searchParams.set('q', q);
+      const resp = await fetch(url.toString(), { headers: { 'Accept': 'application/json' } });
+      const ct = resp.headers.get('content-type') || '';
+      if (resp.ok && ct.includes('application/json')) {
+        const data = await resp.json();
+        renderSearchResults(data.results || []);
+        // update URL in address bar (progressive enhancement)
+        if (history && history.replaceState) {
+          history.replaceState({}, '', `${action}?q=${encodeURIComponent(q)}`);
+        }
+        return;
+      }
+    } catch (err) {
+      // ignore and let fallback happen
+    }
+
+    // fallback : full page GET (no JS JSON available)
+    form.submit();
+  });
+});
+</script>
 {% endblock %}
-```

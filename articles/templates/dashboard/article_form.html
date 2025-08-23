@@ -1,0 +1,45 @@
+{% extends "dashboard/base.html" %}
+{% block title %}{{ view.object.titre|default:"Nouvel article" }} — Dashboard{% endblock %}
+{% block header %}{{ view.object.titre|default:"Créer un article" }}{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data" class="bg-white p-6 rounded shadow">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="grid grid-cols-1 gap-4">
+    <div>
+      {{ form.titre.label_tag }} {{ form.titre }}
+      {{ form.titre.errors }}
+    </div>
+    <div>
+      {{ form.resume.label_tag }} {{ form.resume }}
+      {{ form.resume.errors }}
+    </div>
+    <div>
+      {{ form.contenu.label_tag }} {{ form.contenu }}
+      {{ form.contenu.errors }}
+    </div>
+    <div>
+      {{ form.image.label_tag }} {{ form.image }}
+      {% if view.object and view.object.image %}
+        <p class="text-sm text-gray-500">Image actuelle: <img src="{{ view.object.image.url }}" alt="" class="inline-block h-12"></p>
+      {% endif %}
+      {{ form.image.errors }}
+    </div>
+    <div class="flex items-center space-x-4">
+      <div class="flex-1">
+        {{ form.categorie.label_tag }} {{ form.categorie }}
+        {{ form.categorie.errors }}
+      </div>
+      <div class="flex items-center">
+        {{ form.active }} {{ form.active.label_tag }}
+        {{ form.active.errors }}
+      </div>
+    </div>
+    <div class="pt-4">
+      <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Enregistrer</button>
+      <a href="{% url 'articles:articles_list' %}" class="ml-2 text-sm text-gray-600">Annuler</a>
+    </div>
+  </div>
+</form>
+{% endblock %}

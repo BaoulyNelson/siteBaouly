@@ -1,0 +1,65 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Articles — Dashboard{% endblock %}
+{% block header %}Articles{% endblock %}
+
+{% block content %}
+<div class="mb-4 flex justify-between items-center flex-wrap">
+  <h3 class="text-lg font-medium">Tous les articles</h3>
+  <a href="{% url 'articles:article_create' %}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-2 sm:mt-0">+ Nouvel article</a>
+</div>
+
+<div class="overflow-x-auto">
+  <table class="min-w-full bg-white rounded-lg shadow border border-gray-200 divide-y divide-gray-200">
+    <thead class="bg-gray-100 border-b border-gray-200">
+      <tr class="hidden sm:table-row">
+        <th class="p-3 text-left border-r border-gray-200">Titre</th>
+        <th class="p-3 text-left border-r border-gray-200">Auteur</th>
+        <th class="p-3 text-left border-r border-gray-200">Catégorie</th>
+        <th class="p-3 text-left border-r border-gray-200">Publié</th>
+        <th class="p-3 text-left">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200">
+      {% for article in articles %}
+      <tr class="block sm:table-row mb-4 sm:mb-0 hover:bg-gray-50 transition-colors">
+        <td class="block sm:table-cell p-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+          <span class="font-semibold sm:hidden">Titre: </span>{{ article.titre }}
+        </td>
+        <td class="block sm:table-cell p-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+          <span class="font-semibold sm:hidden">Auteur: </span>{{ article.auteur.username }}
+        </td>
+        <td class="block sm:table-cell p-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+          <span class="font-semibold sm:hidden">Catégorie: </span>{{ article.get_categorie_display }}
+        </td>
+        <td class="block sm:table-cell p-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+          <span class="font-semibold sm:hidden">Publié: </span>{{ article.date_publication|date:"Y-m-d H:i" }}
+        </td>
+        <td class="block sm:table-cell p-3">
+          <span class="font-semibold sm:hidden">Actions: </span>
+          <a class="text-white bg-blue-600 px-2 py-1 rounded hover:bg-blue-700 text-sm mr-1" href="{% url 'articles:article_edit' article.slug %}">Éditer</a>
+          <a class="text-white bg-gray-600 px-2 py-1 rounded hover:bg-gray-700 text-sm" href="{{ article.get_absolute_url }}" target="_blank">Voir</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr class="block sm:table-row">
+        <td class="p-3 border-b sm:border-b-0" colspan="5">Aucun article.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="mt-4 flex justify-between items-center flex-wrap">
+  {% if is_paginated %}
+    <div class="mb-2 sm:mb-0">Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}</div>
+    <div class="flex gap-2">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 border rounded hover:bg-gray-100">Préc</a>
+      {% endif %}
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 border rounded hover:bg-gray-100">Suiv</a>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

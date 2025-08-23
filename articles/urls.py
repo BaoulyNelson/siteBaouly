@@ -2,7 +2,12 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
 from .forms import CustomAuthForm
-
+from .views import (
+    ArticleDashboardListView,
+    ArticleCreateView,
+    ArticleUpdateView,
+    ArticleDetailView,
+)
 
 app_name = "articles"
 
@@ -58,6 +63,7 @@ urlpatterns = [
     path("profile/edit/", views.edit_profile, name="edit_profile"),
     
     path('recherche/', views.recherche, name='recherche'),
+    path('recherche/', views.recherche, name='search'),
     path("contact/", views.contact, name="contact"),
     path("temoignages/", views.temoignages, name="temoignages"),
     
@@ -67,6 +73,13 @@ urlpatterns = [
     path('mentions-legales/', views.legal_notice, name='legal_notice'),
     path('politique-confidentialite/', views.privacy_policy, name='privacy_policy'),
     path('cookies/', views.cookies_policy, name='cookies_policy'),
+    path("subscribe/", views.subscribe, name="subscribe"),
+    
+    # --- Dashboard Staff (dans le même fichier) ---
+    path("dashboard/articles/", views.ArticleDashboardListView.as_view(), name="articles_list"),
+    path("dashboard/articles/new/", views.ArticleCreateView.as_view(), name="article_create"),
+    path("dashboard/articles/<slug:slug>/edit/", views.ArticleUpdateView.as_view(), name="article_edit"),
+    path("dashboard/articles/<slug:slug>/", views.ArticleDetailView.as_view(), name="article_detail"),
 
     # Articles par catégorie et détail
     path("categorie/<str:slug>/", views.articles_par_categorie, name="articles_par_categorie"),

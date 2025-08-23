@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{% block title %}Dashboard — MonJournal{% endblock %}</title>
+
+  <!-- Dev: Tailwind CDN. En production, remplacez par votre build Tailwind. -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :focus { outline: none; }
+    :focus-visible { box-shadow: 0 0 0 4px rgba(99,102,241,0.15); border-radius: .375rem; }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-50 text-gray-900 antialiased">
+  <div id="app" class="flex h-full">
+
+    <!-- Mobile topbar -->
+    <header class="w-full bg-white border-b md:hidden">
+      <div class="flex items-center justify-between px-4 py-3">
+        <div class="flex items-center gap-3">
+          <button id="mobile-open" aria-controls="sidebar" aria-expanded="false"
+                  class="p-2 rounded-md hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-indigo-500">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+            <span class="sr-only">Ouvrir le menu</span>
+          </button>
+
+          <div>
+            <a href="/" class="flex items-center gap-2">
+              <span class="inline-block w-8 h-8 bg-indigo-600 text-white rounded-md flex items-center justify-center font-bold">MJ</span>
+              <div class="text-sm leading-tight">
+                <div class="font-semibold">MonJournal</div>
+                <div class="text-xs text-gray-500">Dashboard staff</div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <!-- Search form (mobile small icon opens search input) -->
+          <button id="mobile-search-toggle" aria-label="Rechercher" class="p-2 rounded-md hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-indigo-500">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"/></svg>
+          </button>
+
+          <div class="relative">
+            <button id="mobile-userbtn" class="p-1 rounded-full hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-indigo-500">
+              <img alt="avatar" src="{% static 'img/avatar-placeholder.png' %}" class="w-8 h-8 rounded-full object-cover" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- mobile search expanded -->
+      <div id="mobile-search" class="px-4 pb-4 hidden">
+        <form id="mobileSearchForm" action="{% url 'articles:search' %}" method="get" class="flex gap-2">
+          <input name="q" id="mobileSearchInput" type="search" autocomplete="off" placeholder="Rechercher un article, auteur..."
+                 class="flex-1 rounded-full border border-gray-200 px-4 py-2 text-sm focus-visible:ring-2 focus-visible:ring-indigo-500" />
+          <button type="submit" class="px-4 py-2 rounded-full bg-indigo-600 text-white text-sm">Rechercher</button>
+        </form>
+      </div>
+    </header>
+
+    <!-- Sidebar (offcanvas on mobile, persistent on md+) -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 transform -translate-x-full md:translate-x-0 md:static md:shadow-none transition-transform bg-white border-r"
+           aria-label="Navigation principale" aria-hidden="true">
+      <div class="h-full flex flex-col">
+        <div class="px-6 py-5 border-b flex items-center gap-3">
+          <a href="/" class="flex items-center gap-3">
+            <span class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-indigo-600 text-white font-bold">MJ</span>
+            <div>
+              <h1 class="text-lg font-semibold leading-tight">MonJournal</h1>
+              <p class="text-xs text-gray-500">Tableau de bord</p>
+            </div>
+          </a>
+          <button id="mobile-close" aria-controls="sidebar" aria-expanded="true" class="ml-auto md:hidden p-1 rounded-md hover:bg-gray-100">
+            <span class="sr-only">Fermer le menu</span>
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <nav id="sidebarNav" class="px-4 py-6 flex-1 overflow-y-auto">
+          <ul class="space-y-1">
+            <li>
+              <a href="{% url 'articles:articles_list' %}" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-indigo-500">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16h8M8 12h8M8 8h8"/></svg>
+                <span>Articles</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="{% url 'articles:article_create' %}" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-indigo-500">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                <span>Nouvel article</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="/" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-indigo-500">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6"/></svg>
+                <span>Voir le site</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="px-4 py-4 border-t">
+          <a href="{% url 'account:profile' %}" class="flex items-center gap-3 rounded-md p-2 hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-indigo-500">
+            <img alt="avatar" src="{% static 'img/avatar-placeholder.png' %}" class="w-9 h-9 rounded-full object-cover"/>
+            <div class="text-sm">
+              <div class="font-medium">{{ request.user.get_full_name|default:request.user.get_username }}</div>
+              <div class="text-xs text-gray-500">Staff</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Backdrop for mobile when sidebar open -->
+    <div id="backdrop" class="fixed inset-0 bg-black bg-opacity-30 z-30 hidden" aria-hidden="true"></div>
+
+    <!-- Main content area -->
+    <main class="flex-1 min-h-screen md:pl-64">
+      <!-- Topbar (desktop) -->
+      <div class="sticky top-0 z-20 bg-white border-b">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <h2 class="text-2xl font-semibold">{% block header %}Tableau de bord{% endblock %}</h2>
+            <p class="hidden md:block text-sm text-gray-500">Gérer les articles et la publication</p>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <!-- search (desktop) -->
+            <form id="searchForm" action="{% url 'articles:search' %}" method="get" class="hidden md:flex items-center gap-2">
+              <label for="search" class="sr-only">Rechercher</label>
+              <input id="search" name="q" type="search" placeholder="Rechercher un article, auteur..." 
+                     class="w-72 rounded-full border border-gray-200 px-4 py-2 text-sm focus-visible:ring-2 focus-visible:ring-indigo-500" />
+              <button type="submit" class="px-4 py-2 rounded-full bg-indigo-600 text-white text-sm">OK</button>
+            </form>
+
+            <!-- notifications -->
+            <button aria-label="Notifications" class="p-2 rounded-md hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-indigo-500">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            </button>
+
+            <!-- user menu -->
+            <div class="relative">
+              <button id="userMenuButton" aria-haspopup="true" aria-expanded="false" class="flex items-center gap-2 p-1 rounded-md hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-indigo-500">
+                <img alt="avatar" src="{% static 'img/avatar-placeholder.png' %}" class="w-8 h-8 rounded-full object-cover" />
+                <span class="hidden md:inline text-sm">{{ request.user.get_username }}</span>
+              </button>
+
+              <div id="userMenu" class="hidden absolute right-0 mt-2 w-44 bg-white border rounded-md shadow-lg py-1" role="menu" aria-label="User options">
+                <a href="{% url 'account:profile' %}" class="block px-4 py-2 text-sm hover:bg-gray-50" role="menuitem">Profil</a>
+                <a href="{% url 'account:logout' %}" class="block px-4 py-2 text-sm hover:bg-gray-50" role="menuitem">Se déconnecter</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Page content -->
+      <div class="max-w-7xl mx-auto px-6 py-8">
+        {% block content %}
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <div class="bg-white border rounded-lg p-5 shadow-sm">
+            <div class="text-sm text-gray-500">Articles publiés</div>
+            <div class="mt-2 text-2xl font-semibold">128</div>
+            <div class="mt-3 text-xs text-gray-400">+12% ce mois-ci</div>
+          </div>
+          <div class="bg-white border rounded-lg p-5 shadow-sm">
+            <div class="text-sm text-gray-500">Brouillons</div>
+            <div class="mt-2 text-2xl font-semibold">7</div>
+            <div class="mt-3 text-xs text-gray-400">Dernière modification il y a 3 jours</div>
+          </div>
+          <div class="bg-white border rounded-lg p-5 shadow-sm">
+            <div class="text-sm text-gray-500">Commentaires en attente</div>
+            <div class="mt-2 text-2xl font-semibold">23</div>
+            <div class="mt-3 text-xs text-gray-400">Action requise</div>
+          </div>
+        </section>
+
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white border rounded-lg p-6 shadow-sm">
+            <h3 class="text-lg font-medium mb-4">Articles récents</h3>
+            <div class="w-full overflow-auto">
+              <table id="articlesTable" class="w-full text-left text-sm">
+                <thead class="text-xs text-gray-500 uppercase">
+                  <tr>
+                    <th class="px-3 py-2">Titre</th>
+                    <th class="px-3 py-2">Auteur</th>
+                    <th class="px-3 py-2">Statut</th>
+                    <th class="px-3 py-2">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y">
+                  {% for article in recent_articles %}
+                  <tr>
+                    <td class="px-3 py-3 title-cell">{{ article.title }}</td>
+                    <td class="px-3 py-3 text-sm text-gray-600 author-cell">{{ article.author.get_full_name }}</td>
+                    <td class="px-3 py-3 text-sm">
+                      <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-50 text-green-700">{{ article.get_status_display }}</span>
+                    </td>
+                    <td class="px-3 py-3">
+                      <a href="{% url 'articles:article_update' article.pk %}" class="text-indigo-600 hover:underline">Éditer</a>
+                    </td>
+                  </tr>
+                  {% empty %}
+                  <tr><td class="px-3 py-3" colspan="4">Aucun article pour le moment.</td></tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="bg-white border rounded-lg p-6 shadow-sm">
+            <h3 class="text-lg font-medium mb-4">Activité récente</h3>
+            <ul class="space-y-3 text-sm text-gray-700">
+              {% for event in activity_feed %}
+                <li class="flex items-start gap-3">
+                  <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs text-gray-600">A</div>
+                  <div>
+                    <div class="text-sm">{{ event.summary }}</div>
+                    <div class="text-xs text-gray-400">{{ event.timestamp|timesince }} ago</div>
+                  </div>
+                </li>
+              {% empty %}
+                <li class="text-gray-500">Aucune activité récente.</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </section>
+        {% endblock %}
+      </div>
+    </main>
+  </div>
+
+  <!-- JS pour toggles et recherche progressive -->
+  <script>
+    (function () {
+      const sidebar = document.getElementById('sidebar');
+      const openBtn = document.getElementById('mobile-open');
+      const closeBtn = document.getElementById('mobile-close');
+      const backdrop = document.getElementById('backdrop');
+      const navLinks = document.querySelectorAll('.nav-link');
+      const userBtn = document.getElementById('userMenuButton');
+      const userMenu = document.getElementById('userMenu');
+
+      // Utilities: open/close sidebar with explicit class toggles
+      function openSidebar() {
+        sidebar.classList.remove('-translate-x-full');
+        sidebar.classList.add('translate-x-0');
+        sidebar.setAttribute('aria-hidden', 'false');
+        openBtn?.setAttribute('aria-expanded', 'true');
+        backdrop.classList.remove('hidden');
+        // prevent body scroll on mobile when sidebar open
+        document.body.style.overflow = 'hidden';
+      }
+      function closeSidebar() {
+        sidebar.classList.remove('translate-x-0');
+        sidebar.classList.add('-translate-x-full');
+        sidebar.setAttribute('aria-hidden', 'true');
+        openBtn?.setAttribute('aria-expanded', 'false');
+        backdrop.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+
+      openBtn?.addEventListener('click', (e) => {
+        openSidebar();
+      });
+      closeBtn?.addEventListener('click', (e) => {
+        closeSidebar();
+      });
+      backdrop?.addEventListener('click', () => {
+        closeSidebar();
+      });
+
+      // Close sidebar when clicking a nav link (mobile)
+      navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          // only close on small screens (if we are translated)
+          if (window.getComputedStyle(backdrop).display !== 'none') {
+            closeSidebar();
+          }
+        });
+      });
+
+      // user menu toggle
+      userBtn?.addEventListener('click', (e) => {
+        const expanded = userBtn.getAttribute('aria-expanded') === 'true';
+        userBtn.setAttribute('aria-expanded', String(!expanded));
+        userMenu.classList.toggle('hidden');
+      });
+
+      // Close menus on escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          userMenu?.classList.add('hidden');
+          closeSidebar();
+        }
+      });
+
+      // Close user menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!userBtn?.contains(e.target) && !userMenu?.contains(e.target)) {
+          userMenu?.classList.add('hidden');
+          userBtn?.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      // Mobile search toggle
+      const mobileSearchToggle = document.getElementById('mobile-search-toggle');
+      const mobileSearch = document.getElementById('mobile-search');
+      mobileSearchToggle?.addEventListener('click', () => {
+        mobileSearch.classList.toggle('hidden');
+        const input = document.getElementById('mobileSearchInput');
+        if (!mobileSearch.classList.contains('hidden')) {
+          setTimeout(() => input?.focus(), 50);
+        }
+      });
+
+      // Progressive search: try server JSON, fallback to client-side filter of #articlesTable
+      function clientFilterArticles(query) {
+        const q = query.trim().toLowerCase();
+        const table = document.getElementById('articlesTable');
+        if (!table) return;
+        const rows = table.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+          // if row contains "Aucun article..." colspan etc, keep show/hide logic simple
+          const titleCell = row.querySelector('.title-cell');
+          const authorCell = row.querySelector('.author-cell');
+          const title = titleCell ? titleCell.textContent.trim().toLowerCase() : '';
+          const author = authorCell ? authorCell.textContent.trim().toLowerCase() : '';
+          const matches = q === '' || title.includes(q) || author.includes(q);
+          row.style.display = matches ? '' : 'none';
+        });
+      }
+
+      async function progressiveSearch(action, q) {
+        // try fetch JSON from server (Accept: application/json)
+        try {
+          const url = new URL(action, window.location.origin);
+          url.searchParams.set('q', q);
+          const resp = await fetch(url.toString(), { headers: { 'Accept': 'application/json' } });
+          const ct = resp.headers.get('content-type') || '';
+          if (resp.ok && ct.includes('application/json')) {
+            const data = await resp.json();
+            // expected JSON structure: { results: [{title, author, url, status}, ...] }
+            // If server returns such JSON, render a basic results list under search form
+            renderSearchResults(data.results || []);
+            return;
+          }
+        } catch (err) {
+          // ignore fetch errors -> fallback to client filter
+        }
+        // fallback
+        clientFilterArticles(q);
+      }
+
+      function renderSearchResults(results) {
+        // remove old results if any
+        let container = document.getElementById('searchResultsContainer');
+        if (!container) {
+          container = document.createElement('div');
+          container.id = 'searchResultsContainer';
+          container.className = 'max-w-7xl mx-auto px-6 py-4';
+          const main = document.querySelector('main');
+          main.insertBefore(container, main.querySelector('.max-w-7xl')?.nextSibling || null);
+        }
+        // simple list
+        if (!results || results.length === 0) {
+          container.innerHTML = '<div class="bg-white border rounded-lg p-4">Aucun résultat trouvé.</div>';
+          return;
+        }
+        const html = results.map(r => `
+          <a href="${r.url}" class="block bg-white border rounded-lg p-4 mb-3 hover:shadow">
+            <div class="font-medium">${escapeHtml(r.title)}</div>
+            <div class="text-xs text-gray-500">${escapeHtml(r.author || '')} • ${escapeHtml(r.status || '')}</div>
+          </a>
+        `).join('');
+        container.innerHTML = html;
+      }
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>"']/g, (m) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+      }
+
+      // Hook search forms (desktop + mobile)
+      const forms = [document.getElementById('searchForm'), document.getElementById('mobileSearchForm')].filter(Boolean);
+      forms.forEach(form => {
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const q = (new FormData(form)).get('q') || '';
+          // If user expects server-side behavior (regular GET), still try progressive search:
+          progressiveSearch(form.action, String(q).trim());
+          // On mobile, hide sidebar/backdrop if open
+          closeSidebar();
+        });
+      });
+
+    })();
+  </script>
+</body>
+</html>

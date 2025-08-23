@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # =========================
 # 🔑 Sécurité & configuration
 # =========================
-SECRET_KEY = config("DJANGO_SECRET_KEY")
+SECRET_KEY = config("DJANGO_SECRET_KEY", default="django-insecure-@jqdjx99c+^@wl@hqfga=vzcufq^dw8#61i48y2&5il-9uf6+y")
 DEBUG = config("DJANGO_DEBUG", default=True, cast=bool)
 ALLOWED_HOSTS = config("DJANGO_ALLOWED_HOSTS", default="").split(",")
 
@@ -112,6 +112,8 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+# pour collectstatic (prod)
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'

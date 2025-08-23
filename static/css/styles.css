@@ -89,3 +89,46 @@
 #mobileSearch {
   display: none;
 }
+
+
+/* Empêche le débordement global */
+body, html {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Conteneur principal de navigation */
+.topbar, .mainnav {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Flexbox responsive pour la nav */
+.mainnav > .nav-items, 
+.topbar > .nav-items {
+    display: flex;
+    flex-wrap: wrap; /* permet aux éléments de passer à la ligne si trop larges */
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Logo et éléments flexibles */
+.brand-logo, .logo {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis; /* coupe le texte trop long avec "..." */
+    white-space: nowrap;
+}
+
+/* Images et icônes */
+img, svg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Menu compact (mobile) */
+.nav-compact {
+    flex-wrap: wrap; /* permet au contenu de passer à la ligne */
+    overflow-x: auto; /* scroll horizontal seulement si nécessaire */
+}

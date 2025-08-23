@@ -57,33 +57,46 @@
         </div>
       </div>
 
-      <!-- right: account icon -->
-      <div class="flex items-center gap-4">
-        {% if user.is_authenticated %}
-            {% if user.is_staff %}
-                <a href="{% url 'admin:index' %}" class="flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-400" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M12 12a5 5 0 100-10 5 5 0 000 10zM4 20a8 8 0 0116 0H4z" />
-                  </svg>
-                  <span class="hidden md:inline-block">Admin</span>
-                </a>
-            {% else %}
-                <a href="{% url 'articles:profile' %}" class="flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-400" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M12 12a5 5 0 100-10 5 5 0 000 10zM4 20a8 8 0 0116 0H4z" />
-                  </svg>
-                  <span class="hidden md:inline-block">{{ user.username }}</span>
-                </a>
-            {% endif %}
-        {% else %}
-            <a href="{% url 'articles:login' %}" class="flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-300" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+<!-- right: account icon -->
+<div class="flex items-center gap-4">
+    {% if user.is_authenticated %}
+        {% if user.is_superuser %}
+            <!-- Superuser : admin Django -->
+            <a href="{% url 'admin:index' %}" class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-500" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12 12a5 5 0 100-10 5 5 0 000 10zM4 20a8 8 0 0116 0H4z" />
               </svg>
-              <span class="hidden md:inline-block">Connexion</span>
+              <span class="hidden md:inline-block">Admin</span>
+            </a>
+        {% elif user.is_staff %}
+            <!-- Staff : dashboard custom -->
+            <a href="{% url 'articles:articles_list' %}" class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-400" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 12a5 5 0 100-10 5 5 0 000 10zM4 20a8 8 0 0116 0H4z" />
+              </svg>
+              <span class="hidden md:inline-block">Dashboard</span>
+            </a>
+        {% else %}
+            <!-- Utilisateur normal -->
+            <a href="{% url 'articles:profile' %}" class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-400" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 12a5 5 0 100-10 5 5 0 000 10zM4 20a8 8 0 0116 0H4z" />
+              </svg>
+              <span class="hidden md:inline-block">{{ user.username }}</span>
             </a>
         {% endif %}
-      </div>
+    {% else %}
+        <!-- Non connecté -->
+        <a href="{% url 'articles:login' %}" class="flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-300" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 12a5 5 0 100-10 5 5 0 000 10zM4 20a8 8 0 0116 0H4z" />
+          </svg>
+          <span class="hidden md:inline-block">Connexion</span>
+        </a>
+    {% endif %}
+</div>
+
+
 
     </div>
 

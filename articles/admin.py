@@ -33,3 +33,14 @@ class TemoignageAdmin(admin.ModelAdmin):
 
     def approuver(self, request, queryset):
         queryset.update(approuve=True)
+
+
+from .models import NewsletterSubscriber
+
+
+@admin.register(NewsletterSubscriber)
+class NewsletterSubscriberAdmin(admin.ModelAdmin):
+    list_display = ("email", "date_subscribed")   # colonnes affichées dans la liste
+    search_fields = ("email",)                    # barre de recherche
+    ordering = ("-date_subscribed",)              # tri par défaut : plus récents en premier
+    list_filter = ("date_subscribed",)            # filtre par date dans la sidebar

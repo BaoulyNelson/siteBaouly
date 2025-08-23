@@ -2,7 +2,8 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm,UserCreationForm
 from django.contrib.auth.models import User
-from .models import Contact, Temoignage
+from .models import Contact, Temoignage,NewsletterSubscriber
+from .models import Article
 
 
 class CustomAuthForm(AuthenticationForm):
@@ -135,3 +136,51 @@ class TemoignageForm(forms.ModelForm):
     class Meta:
         model = Temoignage
         fields = ["nom", "message"]
+
+
+
+class NewsletterForm(forms.ModelForm):
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={
+            "placeholder": "Votre email",
+            "class": "w-full px-3 py-2 rounded-l-md focus:outline-none text-gray-900 bg-white border border-gray-300",
+            "autocomplete": "email",
+            "id": "newsletter-email"
+        })
+    )
+
+    class Meta:
+        model = NewsletterSubscriber
+        fields = ["email"]
+
+    def clean_email(self):
+        email = self.cleaned_data["email"].lower()
+        if NewsletterSubscriber.objects.filter(email=email).exists():
+            raise forms.ValidationError("ℹ️ Cette adresse est déjà inscrite à la newsletter.")
+        return email
+
+
+
+
+
+class ArticleForm(forms.ModelForm):
+    class Meta:
+        model = Article
+        fields = ["titre", "resume", "contenu", "image", "categorie", "active"]
+        widgets = {
+            "titre": forms.TextInput(attrs={"class": "block w-full rounded-md p-2 border", "placeholder": "Titre de l'article"}),
+            "resume": forms.Textarea(attrs={"class": "block w-full rounded-md p-2 border", "rows": 3, "placeholder": "Résumé"}),
+            "contenu": forms.Textarea(attrs={"class": "block w-full rounded-md p-2 border", "rows": 10, "placeholder": "Contenu (Markdown/HTML selon ton usage)"}),
+            "categorie": forms.Select(attrs={"class": "block w-full rounded-md p-2 border"}),
+            "active": forms.CheckboxInput(attrs={"class": "h-4 w-4"}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Optionnel : labels francisés
+        self.fields["titre"].label = "Titre"
+        self.fields["resume"].label = "Résumé (facultatif)"
+        self.fields["contenu"].label = "Contenu"
+        self.fields["image"].label = "Image de couverture"
+        self.fields["categorie"].label = "Catégorie"
+        self.fields["active"].label = "Publier (actif)"
