@@ -160,3 +160,17 @@ img, svg {
       background-color: rgba(255, 255, 255, 0.3);
       border-radius: 20px;
     }
+
+
+    /* Blocage de la sélection de texte */
+body {
+    -webkit-user-select: none; /* Chrome, Safari */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* IE/Edge */
+    user-select: none;         /* Standard */
+}
+
+/* Optionnel : blocage du glisser-déposer du texte */
+body {
+    -webkit-user-drag: none;
+}

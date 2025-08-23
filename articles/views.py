@@ -143,7 +143,7 @@ def register(request):
             user = form.save()
             login(request, user)
             # Ajouter un message de succès
-            messages.success(request, "Inscription réussie ! Bienvenue sur Mon Journal.")
+            messages.success(request, "Inscription réussie ! Bienvenue sur le Journal Le Baouly.")
             return redirect("articles:index")
     else:
         form = RegistrationForm()

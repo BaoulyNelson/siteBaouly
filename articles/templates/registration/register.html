@@ -18,6 +18,14 @@ body{ background:var(--page-bg) }
 .error{ color:#b00020; font-size:0.95rem; margin-bottom:12px }
 .helper{ color:var(--muted); font-size:14px; margin-bottom:18px }
 .small-link{ color:var(--accent); text-decoration:none; font-weight:500 }
+    .google-word {
+      font-weight: 700;
+      font-size: 28px;
+    }
+    .google-word .g1 { color: #4285F4; }
+    .g2 { color: #EA4335; }
+    .g3 { color: #FBBC05; }
+    .g4 { color: #34A853; }
 </style>
 {% endblock %}
 
@@ -25,12 +33,11 @@ body{ background:var(--page-bg) }
 <main class="card" role="main" aria-labelledby="title">
   <div class="logo" aria-hidden="true">
     <div class="google-word" aria-hidden="true">
-      <span style="color:#4285F4">B</span><span style="color:#EA4335">a</span><span style="color:#FBBC05">o</span><span style="color:#34A853">u</span><span style="color:#4285F4">l</span><span style="color:#EA4335">y</span>
+      <span class="g1">B</span><span class="g2">a</span><span class="g3">o</span><span class="g4">u</span><span class="g1">l</span><span class="g2">y</span>
     </div>
   </div>
 
   <h1 id="title">Créer un compte</h1>
-  <div class="subtitle" style="text-align:center; color:var(--muted); margin-bottom:14px">Inscrivez-vous pour publier et commenter</div>
 
   <form method="post" action="{% url 'articles:register' %}">
     {% csrf_token %}

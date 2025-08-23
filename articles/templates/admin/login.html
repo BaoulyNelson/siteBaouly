@@ -1,0 +1,31 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block branding %}
+<div style="display:flex; align-items:center;">
+    <img src="{% static 'images/favicon.ico' %}" alt="Mon Journal" style="height:40px; margin-right:10px;">
+    <h1 id="site-name">Le Baouly - Connexion</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
+  <div class="form-row">
+    {{ form.username.errors }}
+    {{ form.username.label_tag }} {{ form.username }}
+  </div>
+  <div class="form-row">
+    {{ form.password.errors }}
+    {{ form.password.label_tag }} {{ form.password }}
+    <input type="hidden" name="next" value="{{ next }}">
+  </div>
+  <div class="submit-row">
+    <input type="submit" value="{% translate 'Se connecter' %}">
+  </div>
+</form>
+{% endblock %}

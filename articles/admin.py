@@ -1,7 +1,5 @@
 from django.contrib import admin
-from .models import Article,Temoignage,Contact
-
-
+from .models import Article,Temoignage,Contact,NewsletterSubscriber
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
@@ -14,9 +12,6 @@ class ArticleAdmin(admin.ModelAdmin):
         if obj and obj.categorie == "annonces":  # ✅ ajouter le champ uniquement si "annonces"
             fields.append("active")
         return fields
-
-
-
 
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
@@ -35,7 +30,6 @@ class TemoignageAdmin(admin.ModelAdmin):
         queryset.update(approuve=True)
 
 
-from .models import NewsletterSubscriber
 
 
 @admin.register(NewsletterSubscriber)
@@ -44,3 +38,11 @@ class NewsletterSubscriberAdmin(admin.ModelAdmin):
     search_fields = ("email",)                    # barre de recherche
     ordering = ("-date_subscribed",)              # tri par défaut : plus récents en premier
     list_filter = ("date_subscribed",)            # filtre par date dans la sidebar
+    
+    
+    
+    
+
+admin.site.site_header = "Mon Journal - Administration"
+admin.site.site_title = "Mon Journal"
+admin.site.index_title = "Bienvenue dans l'espace d'administration"
