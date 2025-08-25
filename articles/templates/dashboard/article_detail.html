@@ -11,15 +11,14 @@
     <a href="{% url 'articles:article_edit' article.slug %}" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">✏️ Éditer</a>
   </div>
 
+<div class="mb-4">
   {% if article.image %}
-    <div class="mb-4">
-      <img src="{{ article.image.url }}" alt="{{ article.titre }}" class="rounded-lg w-full max-h-64 object-cover" loading="lazy">
-    </div>
+    <img src="{{ article.image.url }}" alt="{{ article.titre }}" class="rounded-lg w-full max-h-64 object-cover" loading="lazy">
   {% else %}
-    <div class="mb-4">
-      <img src="{% static 'images/favicon.ico' %}" alt="Logo par défaut" class="rounded-lg w-full max-h-64 object-contain bg-gray-50 p-4" loading="lazy">
-    </div>
+    <img src="{% static 'images/favicon.ico' %}" alt="Image par défaut" class="rounded-lg w-full max-h-64 object-cover" loading="lazy">
   {% endif %}
+</div>
+
 
   <div class="text-sm text-gray-500 mb-6">
     <span>Catégorie : {{ article.get_categorie_display }}</span> • 

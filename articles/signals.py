@@ -3,6 +3,10 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
 from django.conf import settings
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+from .models import Article
+
 
 
 @receiver(post_save, sender=User)
@@ -24,4 +28,16 @@ def notify_admin_on_new_user(sender, instance, created, **kwargs):
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[settings.ADMIN_EMAIL],
             fail_silently=False,
+        )
+
+@receiver(post_save, sender=Article)
+def notify_new_article(sender, instance, created, **kwargs):
+    if created:
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            "articles",
+            {
+                "type": "article_posted",
+                "message": f"📰 Nouvel article : {instance.titre}"
+            }
         )

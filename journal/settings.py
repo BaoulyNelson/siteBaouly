@@ -35,9 +35,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'articles',
+    "articles.apps.ArticlesConfig",  # pas juste "articles"
     "widget_tweaks",
     "django.contrib.humanize",
+    "channels",
 ]
 
 MIDDLEWARE = [
@@ -68,7 +69,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'journal.wsgi.application'
-
+ASGI_APPLICATION = "journal.asgi.application"
+# Pour gérer les connexions (ici, en mémoire. En prod : Redis !)
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
 # =========================
 # 🗄️ Base de données (MySQL)
 # =========================

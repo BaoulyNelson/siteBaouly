@@ -353,12 +353,15 @@
     </div>
   </header>
 
+<div class="article-image-container">
   {% if article.image %}
-  <div class="article-image-container">
     <img src="{{ article.image.url }}" alt="{{ article.titre }}" class="article-image">
-    <div class="image-overlay"></div>
-  </div>
+  {% else %}
+    <img src="https://picsum.photos/1200/600?random=1" alt="Image par défaut" class="article-image">
   {% endif %}
+  <div class="image-overlay"></div>
+</div>
+
 
   <div class="article-content">
     {{ article.contenu|safe }}

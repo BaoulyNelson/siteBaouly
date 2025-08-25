@@ -2,13 +2,8 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
 from .forms import CustomAuthForm
-from .views import (
-    ArticleDashboardListView,
-    ArticleCreateView,
-    ArticleUpdateView,
-    ArticleDetailView,
-)
 
+from django.views.generic import TemplateView
 app_name = "articles"
 
 urlpatterns = [
@@ -80,7 +75,8 @@ urlpatterns = [
     path("dashboard/articles/new/", views.ArticleCreateView.as_view(), name="article_create"),
     path("dashboard/articles/<slug:slug>/edit/", views.ArticleUpdateView.as_view(), name="article_edit"),
     path("dashboard/articles/<slug:slug>/", views.ArticleDetailView.as_view(), name="article_detail"),
-
+    path("googlef954842a7ede02af.html",TemplateView.as_view(template_name="googlef954842a7ede02af.html"),name="google_verify",
+),
     # Articles par catégorie et détail
     path("categorie/<str:slug>/", views.articles_par_categorie, name="articles_par_categorie"),
     path("<slug:slug>/", views.detail, name="detail"),
