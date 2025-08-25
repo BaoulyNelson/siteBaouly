@@ -1,9 +1,9 @@
 (function () {
   // Blocage du clic droit
-  // document.addEventListener("contextmenu", function (e) {
-  //   e.preventDefault();
-  //   alert("Contenu protégé par Le Baouly !");
-  // });
+  document.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+    alert("Contenu protégé par Le Baouly !");
+  });
 
   // Blocage des touches Ctrl+C, Ctrl+S, Ctrl+X
   document.addEventListener("keydown", function (e) {
