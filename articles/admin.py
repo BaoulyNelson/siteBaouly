@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Article,Temoignage,Contact,NewsletterSubscriber
+from .models import MembreEquipe
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
@@ -8,10 +9,11 @@ class ArticleAdmin(admin.ModelAdmin):
     search_fields = ("titre", "contenu")
 
     def get_fields(self, request, obj=None):
-        fields = ["titre", "resume", "contenu", "image", "categorie", "auteur"]
-        if obj and obj.categorie == "annonces":  # ✅ ajouter le champ uniquement si "annonces"
+        fields = ["titre", "contenu", "image", "categorie", "auteur"]
+        if obj and obj.categorie == "annonces":
             fields.append("active")
         return fields
+
 
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
@@ -41,7 +43,13 @@ class NewsletterSubscriberAdmin(admin.ModelAdmin):
     
     
     
-    
+
+@admin.register(MembreEquipe)
+class MembreEquipeAdmin(admin.ModelAdmin):
+    list_display = ("__str__", "role", "ordre", "est_actif")
+    list_editable = ("ordre", "est_actif")
+    search_fields = ("prenom", "nom", "role")
+
 
 admin.site.site_header = "Mon Journal - Administration"
 admin.site.site_title = "Mon Journal"

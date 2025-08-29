@@ -1,0 +1,495 @@
+{% load static %}
+
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}{{ article.titre }} | Mon Journal{% endblock %}</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;700&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="{{ article.titre }}" />
+  <meta property="og:description" content="{{ article.contenu|truncatechars:150|striptags }}" />
+  <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+  {% if article.image %}
+    <meta property="og:image" content="{{ article.image.url }}" />
+  {% else %}
+    <meta property="og:image" content="https://picsum.photos/1200/600?random=1" />
+  {% endif %}
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{{ article.titre }}" />
+  <meta name="twitter:description" content="{{ article.contenu|truncatechars:150|striptags }}" />
+  {% if article.image %}
+    <meta name="twitter:image" content="{{ article.image.url }}" />
+  {% else %}
+    <meta name="twitter:image" content="https://picsum.photos/1200/600?random=1" />
+  {% endif %}
+
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body class="bg-white text-gray-800">
+<main class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden bg-white">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div class="text-center">
+                <h1 class="text-5xl md:text-6xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent mb-6">
+                    Notre Équipe
+                </h1>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    Une équipe passionnée de journalistes, créateurs et développeurs unis par une mission commune : 
+                    vous offrir une information de qualité, accessible et fiable.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="py-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white/80 backdrop-blur-sm shadow-xl rounded-3xl p-8 lg:p-12 border border-gray-200/50">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-6">Le Quotidien Numérique</h2>
+                        <div class="space-y-4 text-gray-600 leading-relaxed">
+                            <p>
+                                Fondé en 2020, <strong class="text-gray-900">Le Quotidien Numérique</strong> est un média indépendant 
+                                dédié à l'actualité nationale et internationale. Notre ambition est d'informer, d'analyser et de 
+                                décrypter les grands événements qui façonnent notre société.
+                            </p>
+                            <p>
+                                Nous couvrons une large variété de thématiques : <em class="text-blue-600">politique, économie, 
+                                culture, sport, environnement, technologie</em>. Chaque article est pensé pour offrir une 
+                                information claire, vérifiée et respectueuse des faits.
+                            </p>
+                            <p>
+                                Notre mission est simple : <strong class="text-gray-900">informer sans détour</strong>, donner la 
+                                parole à tous et bâtir un espace numérique où l'information contribue à l'enrichissement collectif 
+                                et à la réflexion critique.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div class="aspect-square bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl shadow-2xl transform rotate-3 opacity-20"></div>
+                        <div class="absolute inset-4 bg-white rounded-3xl shadow-xl flex items-center justify-center">
+                            <div class="text-center">
+                                <div class="text-6xl mb-4">📰</div>
+                                <p class="text-gray-600 font-medium">Excellence journalistique</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Rencontrez Notre Équipe</h2>
+                <p class="text-xl text-gray-600">Les talents qui donnent vie à notre vision</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Team Member 1 - Directeur de la Rédaction -->
+                <div class="group">
+                    <div class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2">
+                        <div class="relative overflow-hidden">
+                            <div class="aspect-square bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                                <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center text-4xl font-bold text-blue-600">
+                                    MA
+                                </div>
+                            </div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-1">Marie Dubois</h3>
+                            <p class="text-blue-600 font-semibold mb-3">Directrice de la Rédaction</p>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                                Journaliste depuis 15 ans, Marie supervise l'équipe éditoriale et garantit 
+                                la qualité de nos contenus. Spécialisée en politique internationale.
+                            </p>
+                            <div class="flex space-x-3">
+                                <a href="#" class="text-gray-400 hover:text-blue-600 transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                                    </svg>
+                                </a>
+                                <a href="#" class="text-gray-400 hover:text-blue-600 transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Member 2 - Rédacteur en Chef -->
+                <div class="group">
+                    <div class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2">
+                        <div class="relative overflow-hidden">
+                            <div class="aspect-square bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
+                                <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center text-4xl font-bold text-purple-600">
+                                    JM
+                                </div>
+                            </div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-1">Jean Martin</h3>
+                            <p class="text-purple-600 font-semibold mb-3">Rédacteur en Chef</p>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                                Expert en économie et nouvelles technologies, Jean coordonne nos équipes 
+                                rédactionnelles et veille à la cohérence éditoriale de nos publications.
+                            </p>
+                            <div class="flex space-x-3">
+                                <a href="#" class="text-gray-400 hover:text-purple-600 transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                                    </svg>
+                                </a>
+                                <a href="#" class="text-gray-400 hover:text-purple-600 transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Member 3 - Journaliste Senior -->
+                <div class="group">
+                    <div class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2">
+                        <div class="relative overflow-hidden">
+                            <div class="aspect-square bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center">
+                                <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center text-4xl font-bold text-emerald-600">
+                                    SL
+                                </div>
+                            </div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-1">Sophie Laurent</h3>
+                            <p class="text-emerald-600 font-semibold mb-3">Journaliste Senior</p>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                                Correspondante internationale avec 12 ans d'expérience. Sophie couvre 
+                                les actualités européennes et les grands événements diplomatiques.
+                            </p>
+                            <div class="flex space-x-3">
+                                <a href="#" class="text-gray-400 hover:text-emerald-600 transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                                    </svg>
+                                </a>
+                                <a href="#" class="text-gray-400 hover:text-emerald-600 transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Member 4 - Développeur Lead -->
+                <div class="group">
+                    <div class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2">
+                        <div class="relative overflow-hidden">
+                            <div class="aspect-square bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+                                <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center text-4xl font-bold text-orange-600">
+                                    LB
+                                </div>
+                            </div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-1">Lucas Bernard</h3>
+                            <p class="text-orange-600 font-semibold mb-3">Développeur Lead</p>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                                Architecte de notre plateforme numérique, Lucas développe les outils 
+                                qui permettent à notre équipe de publier et diffuser l'information efficacement.
+                            </p>
+                            <div class="flex space-x-3">
+                                <a href="#" class="text-gray-400 hover:text-orange-600 transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                                    </svg>
+                                </a>
+                                <a href="#" class="text-gray-400 hover:text-orange-600 transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Member 5 - Photographe -->
+                <div class="group">
+                    <div class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2">
+                        <div class="relative overflow-hidden">
+                            <div class="aspect-square bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center">
+                                <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center text-4xl font-bold text-pink-600">
+                                    CR
+                                </div>
+                            </div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-1">Claire Rousseau</h3>
+                            <p class="text-pink-600 font-semibold mb-3">Photographe</p>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                                Photographe documentaire passionnée, Claire capture l'essence de 
+                                l'actualité à travers son objectif et enrichit nos articles d'un contenu visuel percutant.
+                            </p>
+                            <div class="flex space-x-3">
+                                <a href="#" class="text-gray-400 hover:text-pink-600 transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                                    </svg>
+                                </a>
+                                <a href="#" class="text-gray-400 hover:text-pink-600 transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12.017 11.995l6.624-3.424c.406 1.197.406 2.506 0 3.704l-6.624-3.424-.053-.028-.051.028-6.574 3.397c-.406-1.198-.406-2.507 0-3.705l6.678-3.369zm0-7.025l-6.678 3.369c-1.544.778-1.544 2.888 0 3.666l6.678 3.369 6.624-3.424c1.544-.778 1.544-2.888 0-3.666l-6.624-3.314z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Member 6 - Analyste Politique -->
+                <div class="group">
+                    <div class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2">
+                        <div class="relative overflow-hidden">
+                            <div class="aspect-square bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center">
+                                <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center text-4xl font-bold text-indigo-600">
+                                    AD
+                                </div>
+                            </div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-1">Antoine Durand</h3>
+                            <p class="text-indigo-600 font-semibold mb-3">Analyste Politique</p>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                                Docteur en sciences politiques, Antoine décrypte les enjeux politiques 
+                                complexes et offre des analyses approfondies sur les mutations de notre démocratie.
+                            </p>
+                            <div class="flex space-x-3">
+                                <a href="#" class="text-gray-400 hover:text-indigo-600 transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                                    </svg>
+                                </a>
+                                <a href="#" class="text-gray-400 hover:text-indigo-600 transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Member 7 - Designer UX/UI -->
+                <div class="group">
+                    <div class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2">
+                        <div class="relative overflow-hidden">
+                            <div class="aspect-square bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center">
+                                <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center text-4xl font-bold text-teal-600">
+                                    EM
+                                </div>
+                            </div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-1">Emma Moreau</h3>
+                            <p class="text-teal-600 font-semibold mb-3">Designer UX/UI</p>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                                Créatrice de l'expérience utilisateur de notre plateforme, Emma conçoit 
+                                des interfaces intuitives pour rendre l'information accessible à tous.
+                            </p>
+                            <div class="flex space-x-3">
+                                <a href="#" class="text-gray-400 hover:text-teal-600 transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                                    </svg>
+                                </a>
+                                <a href="#" class="text-gray-400 hover:text-teal-600 transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M3 0v24h18v-24h-18zm13.5 12c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Member 8 - Community Manager -->
+                <div class="group">
+                    <div class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2">
+                        <div class="relative overflow-hidden">
+                            <div class="aspect-square bg-gradient-to-br from-rose-500 to-rose-600 flex items-center justify-center">
+                                <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center text-4xl font-bold text-rose-600">
+                                    NF
+                                </div>
+                            </div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-1">Nina Ferrand</h3>
+                            <p class="text-rose-600 font-semibold mb-3">Community Manager</p>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                                Responsable de notre présence sur les réseaux sociaux, Nina anime notre 
+                                communauté et maintient le lien privilégié avec nos lecteurs.
+                            </p>
+                            <div class="flex space-x-3">
+                                <a href="#" class="text-gray-400 hover:text-rose-600 transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                                    </svg>
+                                </a>
+                                <a href="#" class="text-gray-400 hover:text-rose-600 transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="py-20 bg-white/50 backdrop-blur-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Nos Valeurs</h2>
+                <p class="text-gray-600">Les principes qui guident notre travail au quotidien</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center group">
+                    <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl mx-auto mb-6 flex items-center justify-center transform group-hover:rotate-6 transition-transform duration-300">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.031 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Intégrité</h3>
+                    <p class="text-gray-600">Une information vérifiée, sourcée et respectueuse des faits</p>
+                </div>
+                
+                <div class="text-center group">
+                    <div class="w-16 h-16 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl mx-auto mb-6 flex items-center justify-center transform group-hover:rotate-6 transition-transform duration-300">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Proximité</h3>
+                    <p class="text-gray-600">À l'écoute de nos lecteurs et de leurs préoccupations</p>
+                </div>
+                
+                <div class="text-center group">
+                    <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl mx-auto mb-6 flex items-center justify-center transform group-hover:rotate-6 transition-transform duration-300">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Innovation</h3>
+                    <p class="text-gray-600">Des formats modernes pour une information du futur</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="py-16 bg-gray-900">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-bold text-white mb-6">Rejoignez l'Aventure</h2>
+            <p class="text-gray-300 mb-8 text-lg">
+                Vous partagez notre vision du journalisme ? Nous sommes toujours à la recherche de talents passionnés.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">
+                    Nous Contacter
+                </a>
+                <a href="#" class="border-2 border-gray-600 text-gray-300 px-8 py-3 rounded-xl font-semibold hover:bg-gray-800 hover:border-gray-500 transition-all duration-300">
+                    Candidatures Spontanées
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<style>
+/* Animations personnalisées */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.group:nth-child(1) { animation: fadeInUp 0.6s ease-out 0.1s both; }
+.group:nth-child(2) { animation: fadeInUp 0.6s ease-out 0.2s both; }
+.group:nth-child(3) { animation: fadeInUp 0.6s ease-out 0.3s both; }
+.group:nth-child(4) { animation: fadeInUp 0.6s ease-out 0.4s both; }
+.group:nth-child(5) { animation: fadeInUp 0.6s ease-out 0.5s both; }
+.group:nth-child(6) { animation: fadeInUp 0.6s ease-out 0.6s both; }
+
+/* Effet de hover sur les cartes */
+.group:hover .aspect-square {
+    transform: scale(1.02);
+}
+
+/* Effet de parallax subtil */
+@media (prefers-reduced-motion: no-preference) {
+    .bg-gradient-to-br {
+        transition: transform 0.3s ease;
+    }
+}
+
+/* Responsive optimisé */
+@media (max-width: 768px) {
+    .text-5xl { font-size: 2.5rem; }
+    .text-6xl { font-size: 3rem; }
+    .py-20 { padding-top: 3rem; padding-bottom: 3rem; }
+}
+</style>
+</body>
+</html>

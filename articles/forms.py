@@ -184,3 +184,51 @@ class ArticleForm(forms.ModelForm):
         self.fields["image"].label = "Image de couverture"
         self.fields["categorie"].label = "Catégorie"
         self.fields["active"].label = "Publier (actif)"
+
+
+from django import forms
+from .models import MembreEquipe
+
+class MembreEquipeForm(forms.ModelForm):
+    class Meta:
+        model = MembreEquipe
+        fields = [
+            "prenom",
+            "nom",
+            "role",
+            "bio",
+            "image",
+            "linkedin",
+            "twitter",
+            "github",
+            "couleur",
+            "est_actif",
+            "ordre",
+        ]
+        widgets = {
+            "prenom": forms.TextInput(attrs={"class": "block w-full rounded-md p-2 border", "placeholder": "Prénom"}),
+            "nom": forms.TextInput(attrs={"class": "block w-full rounded-md p-2 border", "placeholder": "Nom"}),
+            "role": forms.TextInput(attrs={"class": "block w-full rounded-md p-2 border", "placeholder": "Rôle dans l’équipe"}),
+            "bio": forms.Textarea(attrs={"class": "block w-full rounded-md p-2 border", "rows": 4, "placeholder": "Brève biographie"}),
+            "linkedin": forms.URLInput(attrs={"class": "block w-full rounded-md p-2 border", "placeholder": "Lien LinkedIn"}),
+            "twitter": forms.URLInput(attrs={"class": "block w-full rounded-md p-2 border", "placeholder": "Lien Twitter/X"}),
+            "github": forms.URLInput(attrs={"class": "block w-full rounded-md p-2 border", "placeholder": "Lien GitHub"}),
+            "couleur": forms.TextInput(attrs={"class": "block w-full rounded-md p-2 border", "placeholder": "Classe Tailwind (ex: bg-indigo-500)"}),
+            "ordre": forms.NumberInput(attrs={"class": "block w-full rounded-md p-2 border", "placeholder": "Ordre d’affichage"}),
+            "est_actif": forms.CheckboxInput(attrs={"class": "h-4 w-4"}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Labels francisés
+        self.fields["prenom"].label = "Prénom"
+        self.fields["nom"].label = "Nom"
+        self.fields["role"].label = "Rôle"
+        self.fields["bio"].label = "Biographie"
+        self.fields["image"].label = "Photo de profil"
+        self.fields["linkedin"].label = "Profil LinkedIn"
+        self.fields["twitter"].label = "Profil Twitter/X"
+        self.fields["github"].label = "Profil GitHub"
+        self.fields["couleur"].label = "Couleur (fond avatar)"
+        self.fields["ordre"].label = "Ordre"
+        self.fields["est_actif"].label = "Actif (affiché sur le site)"

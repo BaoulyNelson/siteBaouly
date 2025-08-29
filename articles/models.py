@@ -85,3 +85,45 @@ class NewsletterSubscriber(models.Model):
 
     def __str__(self):
         return self.email
+    
+    
+
+class MembreEquipe(models.Model):
+    prenom = models.CharField(max_length=80)
+    nom = models.CharField(max_length=80, blank=True)
+    role = models.CharField(max_length=120)
+    bio = models.TextField(blank=True)
+    image = models.ImageField(upload_to="equipe/", blank=True, null=True)
+    couleur = models.CharField(
+        max_length=50,
+        default="from-blue-500 to-blue-600",
+        help_text="Classes gradient Tailwind, ex: 'from-blue-500 to-blue-600'"
+    )
+    linkedin = models.URLField(blank=True, null=True)
+    twitter = models.URLField(blank=True, null=True)
+    github = models.URLField(blank=True, null=True)
+    ordre = models.PositiveIntegerField(default=0)
+    est_actif = models.BooleanField(default=True)
+    slug = models.SlugField(max_length=120, blank=True, unique=True)
+
+    class Meta:
+        ordering = ["ordre", "prenom"]
+
+    def __str__(self):
+        return f"{self.prenom} {self.nom}".strip()
+
+    @property
+    def initiales(self):
+        # Renvoie les initiales (ex: "MA")
+        parties = (self.prenom or "").split() + (self.nom or "").split()
+        if not parties:
+            return ""
+        if len(parties) == 1:
+            return parties[0][:2].upper()
+        return (parties[0][0] + parties[1][0]).upper()
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base = f"{self.prenom}-{self.nom}" if self.nom else self.prenom
+            self.slug = slugify(base)[:120]
+        super().save(*args, **kwargs)

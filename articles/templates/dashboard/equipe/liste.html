@@ -1,0 +1,68 @@
+{% extends "dashboard/base.html" %}
+
+{% load static %}
+{% block content %}
+
+  <!-- Section Équipe -->
+  <section class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold text-gray-900 mb-4">Rencontrez Notre Équipe</h2>
+        <p class="text-xl text-gray-600">Les talents qui donnent vie à notre vision</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for membre in membres_equipe %}
+        <div class="group">
+          <div class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2">
+            <div class="relative overflow-hidden">
+              <div class="aspect-square bg-gradient-to-br {{ membre.couleur }} flex items-center justify-center">
+                {% if membre.image %}
+                  <img src="{{ membre.image.url }}" alt="{{ membre.prenom }} {{ membre.nom }}" class="w-32 h-32 rounded-full object-cover" />
+                {% else %}
+                  <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center text-4xl font-bold text-current" style="color:inherit;">
+                    {{ membre.initiales }}
+                  </div>
+                {% endif %}
+              </div>
+              <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-1">{{ membre.prenom }}{% if membre.nom %} {{ membre.nom }}{% endif %}</h3>
+              <p class="font-semibold mb-3">
+                <span>{{ membre.role }}</span>
+              </p>
+              <p class="text-gray-600 text-sm leading-relaxed mb-4">{{ membre.bio }}</p>
+              <div class="flex space-x-3">
+                {% if membre.linkedin %}
+                <a href="{{ membre.linkedin }}" class="text-gray-400 hover:text-blue-600 transition-colors" target="_blank" rel="noopener noreferrer">
+                  <!-- icône LinkedIn -->
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                </a>
+                {% endif %}
+                {% if membre.twitter %}
+                <a href="{{ membre.twitter }}" class="text-gray-400 hover:text-blue-600 transition-colors" target="_blank" rel="noopener noreferrer">
+                  <!-- icône Twitter -->
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827"/></svg>
+                </a>
+                {% endif %}
+                {% if membre.github %}
+                <a href="{{ membre.github }}" class="text-gray-400 hover:text-gray-800 transition-colors" target="_blank" rel="noopener noreferrer">
+                  <!-- icône GitHub -->
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416"/></svg>
+                </a>
+                {% endif %}
+              </div>
+              <div class="flex space-x-4 text-sm">
+              <a href="{% url 'articles:modifier_membre' membre.pk %}" class="text-blue-600 hover:underline">Modifier</a>
+            </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+{% endblock %}
+

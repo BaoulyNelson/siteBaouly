@@ -2,8 +2,10 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
 from .forms import CustomAuthForm
-
+from .views import ListeEquipeView, equipe_json
 from django.views.generic import TemplateView
+
+
 app_name = "articles"
 
 urlpatterns = [
@@ -75,8 +77,12 @@ urlpatterns = [
     path("dashboard/articles/new/", views.ArticleCreateView.as_view(), name="article_create"),
     path("dashboard/articles/<slug:slug>/edit/", views.ArticleUpdateView.as_view(), name="article_edit"),
     path("dashboard/articles/<slug:slug>/", views.ArticleDetailView.as_view(), name="article_detail"),
-    path("googlef954842a7ede02af.html",TemplateView.as_view(template_name="googlef954842a7ede02af.html"),name="google_verify",
-),
+    path("googlef954842a7ede02af.html",TemplateView.as_view(template_name="googlef954842a7ede02af.html"),name="google_verify",),
+    path("dashboard/equipe", ListeEquipeView.as_view(), name="liste-equipe"),
+    path("dashboard/equipe/ajouter", views.MembreEquipeCreateView.as_view(), name="ajouter_membre"),
+    path("dashboard/equipe/<int:pk>/modifier/", views.MembreEquipeUpdateView.as_view(), name="modifier_membre"),
+    path("api/equipe/", equipe_json, name="api-equipe"),
+
     # Articles par catégorie et détail
     path("categorie/<str:slug>/", views.articles_par_categorie, name="articles_par_categorie"),
     path("<slug:slug>/", views.detail, name="detail"),

@@ -3,7 +3,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Article,Temoignage,NewsletterSubscriber
-from .forms import RegistrationForm, EditProfileForm,ContactForm,TemoignageForm
+from .forms import RegistrationForm, EditProfileForm,ContactForm,TemoignageForm,MembreEquipeForm
 from django.db.models import Q
 from django.core.mail import send_mail
 from django.conf import settings
@@ -21,6 +21,9 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.db.models import Q
 from django.urls import reverse
+from django.utils.html import strip_tags
+from django.http import JsonResponse
+from .models import MembreEquipe
 
 
 def index(request):
@@ -29,7 +32,12 @@ def index(request):
     autres = Article.objects.exclude(categorie="une").order_by("-date_publication")[:20]
     populaires = Article.objects.exclude(categorie="annonces").order_by("-date_publication")[:6]
     annonces = Article.objects.filter(categorie="annonces").order_by("-date_publication")[:3]
-    temoignages = Temoignage.objects.filter(approuve=True).order_by("-date")[:3]  # les 3 derniers témoignages
+    temoignages = Temoignage.objects.filter(approuve=True).order_by("-date")[:6]
+
+    # Préparation de l'image pour OpenGraph (page d'accueil)
+    absolute_image_url = None
+    if a_la_une and a_la_une.image:
+        absolute_image_url = request.build_absolute_uri(a_la_une.image.url)
 
     return render(request, "index.html", {
         "a_la_une": a_la_une,
@@ -37,8 +45,10 @@ def index(request):
         "autres": autres,
         "populaires": populaires,
         "annonces": annonces,
-        "temoignages": temoignages,  # ✅ ajout
+        "temoignages": temoignages,
+        "absolute_image_url": absolute_image_url,  # ✅ envoyé au template
     })
+
 
 
 def articles_par_categorie(request, slug):
@@ -60,13 +70,72 @@ def articles_par_categorie(request, slug):
 def detail(request, slug):
     article = get_object_or_404(Article, slug=slug)
 
+    # Construire l’URL absolue de l’image si dispo
+    absolute_image_url = None
+    if article.image:
+        absolute_image_url = request.build_absolute_uri(article.image.url)
+
     if request.user.is_authenticated and request.user.is_staff:
         template = "dashboard/article_detail.html"
     else:
         template = "articles/detail.html"
 
-    return render(request, template, {"article": article})
+    return render(request, template, {
+        "article": article,
+        "absolute_image_url": absolute_image_url
+    })
 
+
+
+def about_us(request):
+    membres = MembreEquipe.objects.filter(est_actif=True).order_by("ordre")
+    return render(request, "partials/about_us.html", {"membres_equipe": membres})
+
+class ListeEquipeView(ListView):
+    model = MembreEquipe
+    template_name = "dashboard/equipe/liste.html"
+    context_object_name = "membres_equipe"
+
+    def get_queryset(self):
+        return MembreEquipe.objects.filter(est_actif=True).order_by("ordre")
+    
+    
+# Mixins pour restreindre l'accès aux staffs
+class StaffRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_staff
+
+class MembreEquipeCreateView(LoginRequiredMixin, StaffRequiredMixin, CreateView):
+    model = MembreEquipe
+    form_class = MembreEquipeForm
+    template_name = "dashboard/equipe/form.html"
+    success_url = reverse_lazy("liste_equipe")
+
+class MembreEquipeUpdateView(LoginRequiredMixin, StaffRequiredMixin, UpdateView):
+    model = MembreEquipe
+    form_class = MembreEquipeForm
+    template_name = "dashboard/equipe/form.html"
+    success_url = reverse_lazy("liste_equipe")
+
+
+
+def equipe_json(request):
+    """Endpoint JSON si tu veux charger la liste côté client via fetch."""
+    qs = MembreEquipe.objects.filter(est_actif=True).order_by("ordre")
+    donnees = [{
+        "nom_complet": f"{m.prenom} {m.nom}".strip(),
+        "prenom": m.prenom,
+        "nom": m.nom,
+        "role": m.role,
+        "bio": m.bio,
+        "image": m.image.url if m.image else None,
+        "initiales": m.initiales,
+        "couleur": m.couleur,
+        "linkedin": m.linkedin,
+        "twitter": m.twitter,
+        "github": m.github,
+    } for m in qs]
+    return JsonResponse(donnees, safe=False, json_dumps_params={"ensure_ascii": False})
 
 
 class StaffRequiredMixin(UserPassesTestMixin):
@@ -209,8 +278,7 @@ def temoignages(request):
 
 
 
-def about_us(request):
-    return render(request, "partials/about_us.html")
+
 
 def advertising(request):
     return render(request, "partials/advertising.html")

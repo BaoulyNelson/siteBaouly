@@ -1,331 +1,28 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}{{ article.titre }} — Mon Journal{% endblock %}
 
-{% block extra_css %}
-<style>
-  :root {
-    --primary-color: #2563eb;
-    --secondary-color: #64748b;
-    --accent-color: #0ea5e9;
-    --text-primary: #1e293b;
-    --text-secondary: #64748b;
-    --text-muted: #94a3b8;
-    --bg-primary: #ffffff;
-    --bg-secondary: #f8fafc;
-    --border-color: #e2e8f0;
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  }
-
-  .article-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem 1rem;
-    background: var(--bg-primary);
-  }
-
-  .article-header {
-    margin-bottom: 3rem;
-    text-align: center;
-    position: relative;
-  }
-
-  .article-title {
-    font-size: 2.5rem;
-    font-weight: 800;
-    line-height: 1.2;
-    color: var(--text-primary);
-    margin-bottom: 1.5rem;
-    letter-spacing: -0.025em;
-    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .article-meta {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-  }
-
-  .author-info {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.5rem 1rem;
-    background: var(--bg-secondary);
-    border-radius: 9999px;
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .author-avatar {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: 600;
-    font-size: 0.875rem;
-  }
-
-  .author-name {
-    color: var(--text-primary);
-    font-weight: 600;
-    font-size: 0.875rem;
-  }
-
-  .publication-date {
-    color: var(--text-muted);
-    font-size: 0.875rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .date-icon {
-    width: 1rem;
-    height: 1rem;
-    opacity: 0.7;
-  }
-
-  .article-image-container {
-    margin: 2rem 0;
-    border-radius: 1rem;
-    overflow: hidden;
-    box-shadow: var(--shadow-lg);
-    position: relative;
-  }
-
-  .article-image {
-    width: 100%;
-    height: auto;
-    max-height: 400px;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-  }
-
-  .article-image:hover {
-    transform: scale(1.02);
-  }
-
-  .image-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, rgba(37, 99, 235, 0.1), rgba(14, 165, 233, 0.1));
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .article-image-container:hover .image-overlay {
-    opacity: 1;
-  }
-
-  .article-content {
-    line-height: 1.8;
-    color: var(--text-primary);
-    font-size: 1.125rem;
-  }
-
-  .article-content p {
-    margin-bottom: 1.5rem;
-  }
-
-  .article-content h2 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin: 2.5rem 0 1.5rem 0;
-    position: relative;
-    padding-left: 1rem;
-  }
-
-  .article-content h2::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-    border-radius: 2px;
-  }
-
-  .article-content h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin: 2rem 0 1rem 0;
-  }
-
-  .article-content blockquote {
-    border-left: 4px solid var(--primary-color);
-    padding-left: 1.5rem;
-    margin: 2rem 0;
-    font-style: italic;
-    color: var(--text-secondary);
-    background: var(--bg-secondary);
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    position: relative;
-  }
-
-  .article-content blockquote::before {
-    content: '"';
-    font-size: 4rem;
-    color: var(--primary-color);
-    opacity: 0.3;
-    position: absolute;
-    top: -0.5rem;
-    left: 1rem;
-    font-family: serif;
-  }
-
-  .article-content code {
-    background: var(--bg-secondary);
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.875rem;
-    color: var(--primary-color);
-    border: 1px solid var(--border-color);
-  }
-
-  .article-content pre {
-    background: #1e293b;
-    color: #e2e8f0;
-    padding: 1.5rem;
-    border-radius: 0.75rem;
-    overflow-x: auto;
-    margin: 2rem 0;
-    box-shadow: var(--shadow-md);
-  }
-
-  .article-content pre code {
-    background: none;
-    border: none;
-    padding: 0;
-    color: inherit;
-  }
-
-  .reading-progress {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: var(--bg-secondary);
-    z-index: 1000;
-  }
-
-  .reading-progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
-    width: 0%;
-    transition: width 0.1s ease;
-  }
-
-  .article-footer {
-    margin-top: 4rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--border-color);
-    text-align: center;
-  }
-
-  .share-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-
-  .share-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
-    text-decoration: none;
-    color: var(--text-secondary);
-    font-weight: 500;
-    transition: all 0.2s ease;
-    background: var(--bg-primary);
-  }
-
-  .share-btn:hover {
-    background: var(--primary-color);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-    border-color: var(--primary-color);
-  }
-
-  @media (max-width: 768px) {
-    .article-container {
-      padding: 1rem;
-    }
-
-    .article-title {
-      font-size: 2rem;
-    }
-
-    .article-meta {
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
-    .article-content {
-      font-size: 1rem;
-    }
-
-    .share-buttons {
-      flex-direction: column;
-      align-items: center;
-    }
-  }
-
-  /* Animation d'apparition */
-  .article-container {
-    animation: fadeInUp 0.6s ease-out;
-  }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Effet de survol sophistiqué */
-  .article-header::before {
-    content: '';
-    position: absolute;
-    top: -50px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100px;
-    height: 4px;
-    background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
-    border-radius: 2px;
-  }
-</style>
+{% block meta %}
+  <meta property="og:title" content="{{ article.titre }}">
+  <meta property="og:description" content="{{ article.contenu|striptags|truncatewords:30 }}">
+  {% if absolute_image_url %}
+    <meta property="og:image" content="{{ absolute_image_url }}">
+  {% else %}
+    <meta property="og:image" content="https://picsum.photos/1200/600?random=1">
+  {% endif %}
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:type" content="article">
 {% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/detail.css' %}">
+{% endblock %}
+
+
+
+
+
 
 {% block content %}
 <div class="reading-progress">
@@ -353,15 +50,14 @@
     </div>
   </header>
 
-<div class="article-image-container">
-  {% if article.image %}
-    <img src="{{ article.image.url }}" alt="{{ article.titre }}" class="article-image">
-  {% else %}
-    <img src="https://picsum.photos/1200/600?random=1" alt="Image par défaut" class="article-image">
-  {% endif %}
-  <div class="image-overlay"></div>
-</div>
-
+  <div class="article-image-container">
+    {% if article.image %}
+      <img src="{{ article.image.url }}" alt="{{ article.titre }}" class="article-image">
+    {% else %}
+      <img src="https://picsum.photos/1200/600?random=1" alt="Image par défaut" class="article-image">
+    {% endif %}
+    <div class="image-overlay"></div>
+  </div>
 
   <div class="article-content">
     {{ article.contenu|safe }}
@@ -384,6 +80,8 @@
     </div>
   </footer>
 </article>
+
+
 
 <script>
   // Barre de progression de lecture
