@@ -12,6 +12,7 @@ urlpatterns = [
     # Page d'accueil
     path("", views.index, name="index"),
 
+
     # Authentification
     path(
         "login/",
@@ -78,8 +79,8 @@ urlpatterns = [
     path("dashboard/articles/<slug:slug>/edit/", views.ArticleUpdateView.as_view(), name="article_edit"),
     path("dashboard/articles/<slug:slug>/", views.ArticleDetailView.as_view(), name="article_detail"),
     path("googlef954842a7ede02af.html",TemplateView.as_view(template_name="googlef954842a7ede02af.html"),name="google_verify",),
-    path("dashboard/equipe", ListeEquipeView.as_view(), name="liste-equipe"),
-    path("dashboard/equipe/ajouter", views.MembreEquipeCreateView.as_view(), name="ajouter_membre"),
+    path("dashboard/equipe/", ListeEquipeView.as_view(), name="liste-equipe"),
+    path("dashboard/equipe/ajouter/", views.MembreEquipeCreateView.as_view(), name="ajouter_membre"),
     path("dashboard/equipe/<int:pk>/modifier/", views.MembreEquipeUpdateView.as_view(), name="modifier_membre"),
     path("api/equipe/", equipe_json, name="api-equipe"),
 

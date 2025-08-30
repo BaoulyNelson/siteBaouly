@@ -13,7 +13,8 @@
 </div>
 
 <!-- Header with logo centered and small icons -->
-<header class="mainnav bg-blue-700 text-white" role="banner">
+  <header class="bg-[color:var(--brand-blue)] text-white relative">
+
   <div class="max-w-7xl mx-auto px-4 py-6 flex items-center justify-between">
 
     <!-- left: menu icon + search -->
@@ -45,14 +46,12 @@
 
       <!-- SVG logo (fictif) - remplace par ton SVG réel si tu en as un -->
         <div class="brand-logo text-center text-white">
-          <a href="{% url 'articles:index' %}" class="pointer-events-auto">
             <svg width="280" height="60" viewBox="0 0 320 68" xmlns="http://www.w3.org/2000/svg" aria-label="Le Baouly">
               <rect width="320" height="68" fill="none" />
-              <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" font-family="UnifrakturCook, cursive" font-weight="700" font-size="36" fill="#ffffff" letter-spacing="-1">
+              <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" font-family="Cinzel Decorative, cursive" font-weight="700" font-size="36" fill="#ffffff" letter-spacing="-1">
                 Le Baouly
               </text>
             </svg>
-          </a>
         </div>
     </div>
 
@@ -118,6 +117,7 @@
     </div>
   </nav>
 </header>
+
 
 <!-- --------- Mobile off-canvas menu (hidden by default) --------- -->
 <!-- overlay -->

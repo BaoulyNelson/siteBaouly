@@ -7,3 +7,12 @@
     <h1 id="site-name">Le Baouly - Administration</h1>
   </div>
 {% endblock %}
+
+{% block user-tools %}
+  {% if user.is_authenticated %}
+    <div id="user-tools">
+        Bonjour {{ user.get_username }} |
+        <a href="{% url 'admin:logout' %}">Se déconnecter</a>
+    </div>
+  {% endif %}
+{% endblock %}

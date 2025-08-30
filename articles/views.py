@@ -91,6 +91,14 @@ def about_us(request):
     membres = MembreEquipe.objects.filter(est_actif=True).order_by("ordre")
     return render(request, "partials/about_us.html", {"membres_equipe": membres})
 
+
+    
+# Mixins pour restreindre l'accès aux staffs
+class StaffRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_staff
+    
+    
 class ListeEquipeView(ListView):
     model = MembreEquipe
     template_name = "dashboard/equipe/liste.html"
@@ -99,23 +107,17 @@ class ListeEquipeView(ListView):
     def get_queryset(self):
         return MembreEquipe.objects.filter(est_actif=True).order_by("ordre")
     
-    
-# Mixins pour restreindre l'accès aux staffs
-class StaffRequiredMixin(UserPassesTestMixin):
-    def test_func(self):
-        return self.request.user.is_staff
-
 class MembreEquipeCreateView(LoginRequiredMixin, StaffRequiredMixin, CreateView):
     model = MembreEquipe
     form_class = MembreEquipeForm
     template_name = "dashboard/equipe/form.html"
-    success_url = reverse_lazy("liste_equipe")
+    success_url = reverse_lazy("articles:liste-equipe")
 
 class MembreEquipeUpdateView(LoginRequiredMixin, StaffRequiredMixin, UpdateView):
     model = MembreEquipe
     form_class = MembreEquipeForm
     template_name = "dashboard/equipe/form.html"
-    success_url = reverse_lazy("liste_equipe")
+    success_url = reverse_lazy("articles:liste-equipe")
 
 
 
@@ -161,15 +163,7 @@ class ArticleDashboardListView(LoginRequiredMixin, StaffRequiredMixin, ListView)
         # le staff voit tous les articles ; tu peux filtrer si tu veux
         return Article.objects.all().order_by("-date_publication")
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Statistiques / indicateurs clés
-        context["total_articles"] = Article.objects.count()
-        context["total_active_articles"] = Article.objects.filter(active=True).count()
-        context["total_users"] = User.objects.count()
-        context["total_testimonials"] = Temoignage.objects.count()
-        context["total_subscribers"] = NewsletterSubscriber.objects.count()
-        return context
+
 
 class ArticleCreateView(LoginRequiredMixin, StaffRequiredMixin, CreateView):
     model = Article
@@ -228,9 +222,12 @@ def profile(request):
 
 def confirmer_deconnexion(request):
     if request.method == "POST":
+        # L'utilisateur a confirmé, on le déconnecte
         logout(request)
         messages.success(request, "Vous avez été déconnecté avec succès.")
-        return redirect("articles:index")
+        return redirect("articles:index")  # Ou une autre page après déconnexion
+
+    # Si c'est un GET (ou si l'utilisateur n'a pas confirmé), on affiche la confirmation
     return render(request, "registration/confirmer_deconnexion.html")
 
 @login_required

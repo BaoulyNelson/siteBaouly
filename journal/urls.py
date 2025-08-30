@@ -18,8 +18,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
+from articles import views
 
 urlpatterns = [
+    # Confirmation de déconnexion pour l'admin
+    path("logout/confirm/", views.confirmer_deconnexion, name="confirmer_deconnexion"),
+
+
     path("admin/", admin.site.urls),
     path("", include("articles.urls")),  # on délègue à l'app "articles"
     path("accounts/", include("django.contrib.auth.urls")),  # 👈 ajoute ça
