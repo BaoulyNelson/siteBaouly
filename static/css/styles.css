@@ -1,15 +1,23 @@
-    :root{
-      --nav-dark: #042a4a;     /* top thin bar */
-      --brand-blue: #0e73ff;   /* main blue */
-      --brand-blue-dark: #0960d9;
-      --accent-yellow: #ffd23f;
-    }
+:root {
+  --nav-dark: #042a4a; /* top thin bar */
+  --brand-blue: #0e73ff; /* main blue */
+  --brand-blue-dark: #0960d9;
+  --accent-yellow: #ffd23f;
+}
 
-    /* small helpers to match the screenshot */
-    .brand-logo { font-family: "Cinzel Decorative", serif; letter-spacing: -1px; }
-    .nav-compact { white-space: nowrap; -webkit-overflow-scrolling: touch; }
-    /* visual: slightly rotate ticket like the screenshot */
-    .ticket-rot { transform: rotate(-12deg); }
+/* small helpers to match the screenshot */
+.brand-logo {
+  font-family: "Cinzel Decorative", serif;
+  letter-spacing: -1px;
+}
+.nav-compact {
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+/* visual: slightly rotate ticket like the screenshot */
+.ticket-rot {
+  transform: rotate(-12deg);
+}
 
 /* Minimal CSS to handle overlay positioning + motion preferences */
 #searchPanel {
@@ -35,12 +43,12 @@
 
 #searchPanel {
   position: absolute;
-  top: 100%;   /* juste sous la nav */
+  top: 100%; /* juste sous la nav */
   left: 0;
   width: 100%;
   background: white;
   padding: 1rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: center;
 }
@@ -48,8 +56,6 @@
   width: 100%;
   max-width: 800px; /* limite élégante */
 }
-
-
 
 /* mobileSearch visible quand le menu est ouvert (pas translate-x-full) */
 #mobileMenu:not(.-translate-x-full) #mobileSearch {
@@ -61,87 +67,102 @@
   display: none;
 }
 
-
 /* Empêche le débordement global */
-body, html {
-    max-width: 100%;
-    overflow-x: hidden;
+body,
+html {
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* Conteneur principal de navigation */
-.topbar, .mainnav {
-    max-width: 100%;
-    overflow-x: hidden;
+.topbar,
+.mainnav {
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* Flexbox responsive pour la nav */
-.mainnav > .nav-items, 
+.mainnav > .nav-items,
 .topbar > .nav-items {
-    display: flex;
-    flex-wrap: wrap; /* permet aux éléments de passer à la ligne si trop larges */
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  flex-wrap: wrap; /* permet aux éléments de passer à la ligne si trop larges */
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* Logo et éléments flexibles */
-.brand-logo, .logo {
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis; /* coupe le texte trop long avec "..." */
-    white-space: nowrap;
+.brand-logo,
+.logo {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis; /* coupe le texte trop long avec "..." */
+  white-space: nowrap;
 }
 
 /* Images et icônes */
-img, svg {
-    max-width: 100%;
-    height: auto;
-    display: block;
+img,
+svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 /* Menu compact (mobile) */
 .nav-compact {
-    flex-wrap: wrap; /* permet au contenu de passer à la ligne */
-    overflow-x: auto; /* scroll horizontal seulement si nécessaire */
+  flex-wrap: wrap; /* permet au contenu de passer à la ligne */
+  overflow-x: auto; /* scroll horizontal seulement si nécessaire */
 }
 
+/* Classe d'accessibilité pour masquer un élément visuellement mais le garder pour les lecteurs d'écran */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
 
+/* Style optionnel pour affiner la barre de défilement de la navigation desktop */
+.custom-scrollbar::-webkit-scrollbar {
+  height: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+}
 
-
-   /* Classe d'accessibilité pour masquer un élément visuellement mais le garder pour les lecteurs d'écran */
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border-width: 0;
-    }
-
-    /* Style optionnel pour affiner la barre de défilement de la navigation desktop */
-    .custom-scrollbar::-webkit-scrollbar {
-      height: 4px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background-color: rgba(255, 255, 255, 0.3);
-      border-radius: 20px;
-    }
-
-
-    /* Blocage de la sélection de texte */
+/* Blocage de la sélection de texte */
 body {
-    -webkit-user-select: none; /* Chrome, Safari */
-    -moz-user-select: none;    /* Firefox */
-    -ms-user-select: none;     /* IE/Edge */
-    user-select: none;         /* Standard */
+  -webkit-user-select: none; /* Chrome, Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+  user-select: none; /* Standard */
 }
 
 /* Optionnel : blocage du glisser-déposer du texte */
 body {
-    -webkit-user-drag: none;
+  -webkit-user-drag: none;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1; /* prend tout l'espace restant */
+}
+
+footer {
+  margin-top: auto; /* pousse le footer en bas */
 }

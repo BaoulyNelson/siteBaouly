@@ -1,85 +1,148 @@
-{% extends "base.html" %}
-{% load static %}
-
-{% block title %}Inscription — Mon Journal{% endblock %}
-
-{% block extra_css %}
+{% extends "base.html" %} {% load static %} {% block title %}Inscription — Mon
+Journal{% endblock %} {% block extra_css %}
 <!-- Tu peux inclure le même CSS que pour login ou extraire en static/css/auth.css -->
 <style>
-/* copie ici le CSS card / input-box que tu utilises pour login */
-:root{ --page-bg:#f7f8fa; --accent:#1a73e8; --muted:#5f6b73; --border:#e6e7ea }
-body{ background:var(--page-bg) }
-.card{ width:520px; max-width:94vw; background:#fff; border-radius:14px; padding:34px 56px; margin:40px auto; border:1px solid var(--border) }
-.logo{ text-align:center; margin-bottom:6px }
-.google-word{ font-weight:700; font-size:28px }
-.input-box{ border:1px solid var(--border); border-radius:6px; padding:14px; margin-bottom:12px; min-height:56px; display:flex; align-items:center }
-.input-box input{ border:0; outline:none; font-size:16px; width:100%; background:transparent }
-.btn-join{ background:#16a34a; color:#fff; padding:10px 18px; border-radius:8px; border:none; font-weight:600; cursor:pointer }
-.error{ color:#b00020; font-size:0.95rem; margin-bottom:12px }
-.helper{ color:var(--muted); font-size:14px; margin-bottom:18px }
-.small-link{ color:var(--accent); text-decoration:none; font-weight:500 }
-    .google-word {
-      font-weight: 700;
-      font-size: 28px;
-    }
-    .google-word .g1 { color: #4285F4; }
-    .g2 { color: #EA4335; }
-    .g3 { color: #FBBC05; }
-    .g4 { color: #34A853; }
+  /* copie ici le CSS card / input-box que tu utilises pour login */
+  :root {
+    --page-bg: #f7f8fa;
+    --accent: #1a73e8;
+    --muted: #5f6b73;
+    --border: #e6e7ea;
+  }
+  body {
+    background: var(--page-bg);
+  }
+  .card {
+    width: 520px;
+    max-width: 94vw;
+    background: #fff;
+    border-radius: 14px;
+    padding: 34px 56px;
+    margin: 40px auto;
+    border: 1px solid var(--border);
+  }
+  .logo {
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  .google-word {
+    font-weight: 700;
+    font-size: 28px;
+  }
+  .input-box {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+    margin-bottom: 12px;
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+  }
+  .input-box input {
+    border: 0;
+    outline: none;
+    font-size: 16px;
+    width: 100%;
+    background: transparent;
+  }
+  .btn-join {
+    background: #16a34a;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .error {
+    color: #b00020;
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+  }
+  .helper {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 18px;
+  }
+  .small-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .google-word {
+    font-weight: 700;
+    font-size: 28px;
+  }
+  .google-word .g1 {
+    color: #4285f4;
+  }
+  .g2 {
+    color: #ea4335;
+  }
+  .g3 {
+    color: #fbbc05;
+  }
+  .g4 {
+    color: #34a853;
+  }
 </style>
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
 <main class="card" role="main" aria-labelledby="title">
   <div class="logo" aria-hidden="true">
     <div class="google-word" aria-hidden="true">
-      <span class="g1">B</span><span class="g2">a</span><span class="g3">o</span><span class="g4">u</span><span class="g1">l</span><span class="g2">y</span>
+      <span class="g1">B</span><span class="g2">a</span><span class="g3">o</span
+      ><span class="g4">u</span><span class="g1">l</span
+      ><span class="g2">y</span>
     </div>
   </div>
 
   <h1 id="title">Créer un compte</h1>
 
   <form method="post" action="{% url 'articles:register' %}">
-    {% csrf_token %}
-
-    {% if form.non_field_errors %}
-      <div class="error">
-        {% for err in form.non_field_errors %}{{ err }}{% endfor %}
-      </div>
+    {% csrf_token %} {% if form.non_field_errors %}
+    <div class="error">
+      {% for err in form.non_field_errors %}{{ err }}{% endfor %}
+    </div>
     {% endif %}
 
-    <div class="input-box">
-      {{ form.username }}
-    </div>
+    <div class="input-box">{{ form.username }}</div>
     {% if form.username.errors %}
-      <div class="error">{% for e in form.username.errors %}{{ e }}{% endfor %}</div>
+    <div class="error">
+      {% for e in form.username.errors %}{{ e }}{% endfor %}
+    </div>
     {% endif %}
 
-    <div class="input-box">
-      {{ form.email }}
-    </div>
+    <div class="input-box">{{ form.email }}</div>
     {% if form.email.errors %}
-      <div class="error">{% for e in form.email.errors %}{{ e }}{% endfor %}</div>
+    <div class="error">{% for e in form.email.errors %}{{ e }}{% endfor %}</div>
     {% endif %}
 
-    <div class="input-box">
-      {{ form.password1 }}
-    </div>
+    <div class="input-box">{{ form.password1 }}</div>
     {% if form.password1.errors %}
-      <div class="error">{% for e in form.password1.errors %}{{ e }}{% endfor %}</div>
-    {% endif %}
-
-    <div class="input-box">
-      {{ form.password2 }}
+    <div class="error">
+      {% for e in form.password1.errors %}{{ e }}{% endfor %}
     </div>
-    {% if form.password2.errors %}
-      <div class="error">{% for e in form.password2.errors %}{{ e }}{% endfor %}</div>
     {% endif %}
 
-    <p class="helper" style="text-align:center">En créant un compte, vous acceptez nos <a class="small-link" href="#">Conditions</a> et notre <a class="small-link" href="#">Politique de confidentialité</a>.</p>
+    <div class="input-box">{{ form.password2 }}</div>
+    {% if form.password2.errors %}
+    <div class="error">
+      {% for e in form.password2.errors %}{{ e }}{% endfor %}
+    </div>
+    {% endif %}
 
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <a href="{% url 'articles:login' %}" class="small-link">Déjà un compte ?</a>
+    <p class="helper" style="text-align: center">
+      En créant un compte, vous acceptez nos
+      <a class="small-link" href="#">Conditions</a> et notre
+      <a class="small-link" href="#">Politique de confidentialité</a>.
+    </p>
+
+    <div
+      style="display: flex; justify-content: space-between; align-items: center"
+    >
+      <a href="{% url 'articles:login' %}" class="small-link"
+        >Déjà un compte ?</a
+      >
       <button class="btn-join" type="submit">S’inscrire</button>
     </div>
   </form>

@@ -73,8 +73,7 @@
         src="{% if annonce.image %}{{ annonce.image.url }}{% else %}https://picsum.photos/60/40?random={{ forloop.counter }}{% endif %}" 
         alt="{{ annonce.titre }}" 
         class="w-20 h-14 object-cover rounded" 
-        loading="lazy" 
-      />
+        loading="lazy"/>
 
       <div>
         <!-- Titre -->

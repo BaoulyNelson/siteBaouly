@@ -14,20 +14,8 @@ urlpatterns = [
 
 
     # Authentification
-    path(
-        "login/",
-        auth_views.LoginView.as_view(
-            template_name="registration/login.html",
-            authentication_form=CustomAuthForm,
-            redirect_authenticated_user=True
-        ),
-        name="login"
-    ),
-    path(
-        "logout/",
-        auth_views.LogoutView.as_view(next_page="articles:index"),
-        name="logout"
-    ),
+    path("login/",auth_views.LoginView.as_view(template_name="registration/login.html",authentication_form=CustomAuthForm,redirect_authenticated_user=True),name="login"),
+    path("logout/",auth_views.LogoutView.as_view(next_page="articles:index"),name="logout"),
     # Déconnexion avec confirmation personnalisée
     path("logout/confirm/", views.confirmer_deconnexion, name="confirmer_deconnexion"),
     

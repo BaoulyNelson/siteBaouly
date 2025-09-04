@@ -6,6 +6,18 @@ from django.conf import settings
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from .models import Article
+from django.contrib.auth.signals import user_logged_in
+from django.contrib import messages
+
+
+@receiver(user_logged_in)
+def welcome_user(sender, request, user, **kwargs):
+    # Si l'utilisateur vient de s'inscrire, on évite un doublon
+    if request.session.pop("from_register", False):
+        return
+
+    messages.success(request, f"👋 Bonjour {user.username}, heureux de vous retrouver parmi nous 🌟")
+
 
 
 

@@ -31,7 +31,7 @@ def index(request):
     a_la_minute = Article.objects.filter(categorie="minute").order_by("-date_publication")[:10]
     autres = Article.objects.exclude(categorie="une").order_by("-date_publication")[:20]
     populaires = Article.objects.exclude(categorie="annonces").order_by("-date_publication")[:6]
-    annonces = Article.objects.filter(categorie="annonces").order_by("-date_publication")[:3]
+    annonces = Article.objects.filter(categorie="annonces").order_by("-date_publication")[:10]
     temoignages = Temoignage.objects.filter(approuve=True).order_by("-date")[:6]
 
     # Préparation de l'image pour OpenGraph (page d'accueil)
@@ -112,12 +112,25 @@ class MembreEquipeCreateView(LoginRequiredMixin, StaffRequiredMixin, CreateView)
     form_class = MembreEquipeForm
     template_name = "dashboard/equipe/form.html"
     success_url = reverse_lazy("articles:liste-equipe")
+    
+    def form_valid(self, form):
+        # affecter l'auteur automatiquement
+        form.instance.auteur = self.request.user
+        response = super().form_valid(form)
+        messages.success(self.request, "✅ L'equipe a été créé avec succès !")
+        return response
 
 class MembreEquipeUpdateView(LoginRequiredMixin, StaffRequiredMixin, UpdateView):
     model = MembreEquipe
     form_class = MembreEquipeForm
     template_name = "dashboard/equipe/form.html"
     success_url = reverse_lazy("articles:liste-equipe")
+    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "✏️ L'equipe a été mis à jour avec succès !")
+        return response
+    
 
 
 
@@ -189,6 +202,8 @@ class ArticleUpdateView(LoginRequiredMixin, StaffRequiredMixin, UpdateView):
         response = super().form_valid(form)
         messages.success(self.request, "✏️ L'article a été mis à jour avec succès !")
         return response
+    
+    
 class ArticleDetailView(LoginRequiredMixin, StaffRequiredMixin, DetailView):
     model = Article
     template_name = "dashboard/article_detail.html"
@@ -197,22 +212,30 @@ class ArticleDetailView(LoginRequiredMixin, StaffRequiredMixin, DetailView):
     
     
 def register(request):
+    # Empêcher un utilisateur déjà connecté de voir la page d'inscription
     if request.user.is_authenticated:
         return redirect("articles:index")
 
     if request.method == "POST":
         form = RegistrationForm(request.POST)
         if form.is_valid():
+            # Créer l'utilisateur
             user = form.save()
+
+            # Connecter l'utilisateur immédiatement après inscription
             login(request, user)
-            # Ajouter un message de succès
-            messages.success(request, "Inscription réussie ! Bienvenue sur le Journal Le Baouly.")
+
+            # Ajouter un flag pour signaler que c'est une inscription
+            request.session["from_register"] = True
+
+            # Message de succès pour l'inscription
+            messages.success(request, "✅ Inscription réussie ! Bienvenue sur le Journal Le Baouly.")
+
             return redirect("articles:index")
     else:
         form = RegistrationForm()
 
     return render(request, "registration/register.html", {"form": form})
-
 
 
 @login_required
