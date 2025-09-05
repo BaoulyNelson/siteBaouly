@@ -50,8 +50,7 @@
   {% block extra_css %}{% endblock %}
 </head>
 
-<body class="min-h-screen flex flex-col bg-white text-gray-800">
-
+<body class="bg-white text-gray-800">
   {% include "partials/header.html" %}
 {% if messages %}
 <div class="flex justify-center mt-4">
@@ -84,6 +83,7 @@
 
 
   <main class="flex-1 max-w-7xl mx-auto px-4 py-8">
+    
 
     <script>
     const socket = new WebSocket(

@@ -6,8 +6,6 @@
 
 {% block extra_css %}
 <style>
-  /* (Colle ici le CSS de ta maquette, ou charge-le depuis un fichier static) */
-  /* Je garde un CSS minimal reprenant ta maquette. */
   :root {
     --page-bg: #f7f8fa;
     --accent: #1a73e8;
@@ -39,21 +37,10 @@
     font-size: 28px;
   }
 
-  .google-word .g1 {
-    color: #4285F4
-  }
-
-  .g2 {
-    color: #EA4335
-  }
-
-  .g3 {
-    color: #FBBC05
-  }
-
-  .g4 {
-    color: #34A853
-  }
+  .google-word .g1 { color: #4285F4 }
+  .g2 { color: #EA4335 }
+  .g3 { color: #FBBC05 }
+  .g4 { color: #34A853 }
 
   h1 {
     text-align: center;
@@ -70,11 +57,12 @@
   .input-box {
     border: 1px solid var(--border);
     border-radius: 6px;
-    padding: 14px;
+    padding: 0 14px;
     margin-bottom: 12px;
     display: flex;
     align-items: center;
     min-height: 56px;
+    position: relative;
   }
 
   .input-box input {
@@ -83,6 +71,17 @@
     font-size: 16px;
     width: 100%;
     background: transparent;
+  }
+
+  .toggle-password {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 6px;
+    display: flex;
+    align-items: center;
+    color: var(--muted);
   }
 
   .btn {
@@ -129,16 +128,16 @@
   <form method="post" action="{% url 'articles:login' %}" aria-label="Connexion">
     {% csrf_token %}
 
-    {# erreurs globales (ex: identifiants invalides) #}
+    {# erreurs globales #}
     {% if form.non_field_errors %}
     <div class="error">
       {% for err in form.non_field_errors %}
-      {{ err }}
+        {{ err }}
       {% endfor %}
     </div>
     {% endif %}
 
-    {# champ username (widget configuré dans CustomAuthForm) #}
+    {# champ username #}
     <div class="input-box">
       {{ form.username }}
     </div>
@@ -148,9 +147,19 @@
     </div>
     {% endif %}
 
-    {# champ password #}
+    {# champ password avec bouton œil #}
     <div class="input-box">
       {{ form.password }}
+      <button type="button" class="toggle-password" id="togglePassword" tabindex="-1">
+        <!-- Icône œil -->
+        <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" 
+             class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="22" height="22">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+        </svg>
+      </button>
     </div>
     {% if form.password.errors %}
     <div class="error">
@@ -176,4 +185,32 @@
     </div>
   </div>
 </main>
+
+<script>
+  const passwordField = document.querySelector("#id_password");
+  const togglePassword = document.querySelector("#togglePassword");
+  const eyeIcon = document.querySelector("#eyeIcon");
+
+  togglePassword.addEventListener("click", () => {
+    const isPassword = passwordField.type === "password";
+    passwordField.type = isPassword ? "text" : "password";
+
+    // Changer l'icône
+    eyeIcon.innerHTML = isPassword
+      ? // œil barré (visible)
+      `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+             d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7
+                a10.05 10.05 0 012.23-3.95m3.362-2.58A9.956 9.956 0 0112 5c4.477 0
+                8.268 2.943 9.542 7a9.963 9.963 0 01-4.363 5.409M15 12a3 3 0
+                11-6 0 3 3 0 016 0z"/>`
+      : // œil ouvert (masqué)
+      `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+             d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+             d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0
+                8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542
+                7-4.477 0-8.268-2.943-9.542-7z"/>`;
+  });
+</script>
+
 {% endblock %}

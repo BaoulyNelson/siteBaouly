@@ -6,9 +6,8 @@
     
     <!-- Profil utilisateur -->
     <div class="bg-white rounded-2xl shadow p-6 text-center">
-        <img src="https://picsum.photos/300/180?random=12' %}" 
-             alt="Photo de Profil" 
-             class="w-28 h-28 rounded-full mx-auto object-cover mb-4 border-4 border-blue-500">
+        <img src="https://picsum.photos/300/180?random={{ user.id }}" alt="Photo de Profil" class="w-28 h-28 rounded-full mx-auto object-cover mb-4 border-4 border-blue-500">
+
         <h3 class="text-xl font-bold text-gray-800">{{ user.username }}</h3>
         <p class="text-gray-500 text-sm">{{ user.email }}</p>
         <a href="{% url 'articles:confirmer_deconnexion' %}" 

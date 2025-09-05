@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Accueil -- Mon Journal{% endblock %}
+{% block title %}Accueil -- LeBaouly{% endblock %}
 {% block extra_meta %}
   <meta property="og:title" content="Mon Journal — Accueil">
   <meta property="og:description" content="Découvrez les dernières actualités : {{ a_la_une.titre }} et plus encore...">
@@ -148,12 +148,13 @@
       {% endif %}
 
       <div class="grid grid-cols-1 gap-8">
-        {% for article in autres|slice:":2" %}
+        {% for article in autres|slice:":10" %}
         <article class="mb-8">
           {% if article.image %}
           <img src="{{ article.image.url }}" alt="{{ article.titre }}" class="w-full rounded-lg object-cover shadow-md" loading="lazy" />
           {% else %}
-          <img src="https://picsum.photos/900/520?random={{ forloop.counter }}" alt="{{ article.titre }}" class="w-full rounded-lg object-cover shadow-md" loading="lazy" />
+          <img src="https://picsum.photos/900/520?random={{ article.slug }}" alt="{{ article.titre }}" class="w-full rounded-lg object-cover shadow-md" loading="lazy" />
+
           {% endif %}
           <div class="mt-4">
             <div class="flex items-center gap-3">

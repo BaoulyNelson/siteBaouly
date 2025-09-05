@@ -29,10 +29,11 @@ from .models import MembreEquipe
 def index(request):
     a_la_une = Article.objects.filter(categorie="une").order_by("-date_publication").first()
     a_la_minute = Article.objects.filter(categorie="minute").order_by("-date_publication")[:10]
-    autres = Article.objects.exclude(categorie="une").order_by("-date_publication")[:20]
-    populaires = Article.objects.exclude(categorie="annonces").order_by("-date_publication")[:6]
+    # autres = Article.objects.exclude(categorie="une").order_by("-date_publication")[:20]
+    autres = (Article.objects.exclude(categorie__in=["une", "annonces"]).order_by("-date_publication")[:20])
+    populaires = Article.objects.exclude(categorie="annonces").order_by("-date_publication")[:10]
     annonces = Article.objects.filter(categorie="annonces").order_by("-date_publication")[:10]
-    temoignages = Temoignage.objects.filter(approuve=True).order_by("-date")[:6]
+    temoignages = Temoignage.objects.filter(approuve=True).order_by("-date")[:10]
 
     # Préparation de l'image pour OpenGraph (page d'accueil)
     absolute_image_url = None

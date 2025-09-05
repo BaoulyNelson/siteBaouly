@@ -1,8 +1,10 @@
-{% extends "base.html" %} {% load static %} {% block title %}Inscription — Mon
-Journal{% endblock %} {% block extra_css %}
-<!-- Tu peux inclure le même CSS que pour login ou extraire en static/css/auth.css -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Inscription — Mon Journal{% endblock %}
+
+{% block extra_css %}
 <style>
-  /* copie ici le CSS card / input-box que tu utilises pour login */
   :root {
     --page-bg: #f7f8fa;
     --accent: #1a73e8;
@@ -32,11 +34,12 @@ Journal{% endblock %} {% block extra_css %}
   .input-box {
     border: 1px solid var(--border);
     border-radius: 6px;
-    padding: 14px;
+    padding: 0 14px;
     margin-bottom: 12px;
     min-height: 56px;
     display: flex;
     align-items: center;
+    position: relative;
   }
   .input-box input {
     border: 0;
@@ -44,6 +47,16 @@ Journal{% endblock %} {% block extra_css %}
     font-size: 16px;
     width: 100%;
     background: transparent;
+  }
+  .toggle-password {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 6px;
+    display: flex;
+    align-items: center;
+    color: var(--muted);
   }
   .btn-join {
     background: #16a34a;
@@ -69,37 +82,27 @@ Journal{% endblock %} {% block extra_css %}
     text-decoration: none;
     font-weight: 500;
   }
-  .google-word {
-    font-weight: 700;
-    font-size: 28px;
-  }
-  .google-word .g1 {
-    color: #4285f4;
-  }
-  .g2 {
-    color: #ea4335;
-  }
-  .g3 {
-    color: #fbbc05;
-  }
-  .g4 {
-    color: #34a853;
-  }
+  .google-word .g1 { color: #4285f4; }
+  .g2 { color: #ea4335; }
+  .g3 { color: #fbbc05; }
+  .g4 { color: #34a853; }
 </style>
-{% endblock %} {% block content %}
+{% endblock %}
+
+{% block content %}
 <main class="card" role="main" aria-labelledby="title">
   <div class="logo" aria-hidden="true">
     <div class="google-word" aria-hidden="true">
-      <span class="g1">B</span><span class="g2">a</span><span class="g3">o</span
-      ><span class="g4">u</span><span class="g1">l</span
-      ><span class="g2">y</span>
+      <span class="g1">B</span><span class="g2">a</span><span class="g3">o</span><span class="g4">u</span><span class="g1">l</span><span class="g2">y</span>
+
     </div>
   </div>
 
   <h1 id="title">Créer un compte</h1>
 
   <form method="post" action="{% url 'articles:register' %}">
-    {% csrf_token %} {% if form.non_field_errors %}
+    {% csrf_token %}
+    {% if form.non_field_errors %}
     <div class="error">
       {% for err in form.non_field_errors %}{{ err }}{% endfor %}
     </div>
@@ -107,9 +110,7 @@ Journal{% endblock %} {% block extra_css %}
 
     <div class="input-box">{{ form.username }}</div>
     {% if form.username.errors %}
-    <div class="error">
-      {% for e in form.username.errors %}{{ e }}{% endfor %}
-    </div>
+    <div class="error">{% for e in form.username.errors %}{{ e }}{% endfor %}</div>
     {% endif %}
 
     <div class="input-box">{{ form.email }}</div>
@@ -117,18 +118,38 @@ Journal{% endblock %} {% block extra_css %}
     <div class="error">{% for e in form.email.errors %}{{ e }}{% endfor %}</div>
     {% endif %}
 
-    <div class="input-box">{{ form.password1 }}</div>
-    {% if form.password1.errors %}
-    <div class="error">
-      {% for e in form.password1.errors %}{{ e }}{% endfor %}
+    {# Password 1 avec bouton œil #}
+    <div class="input-box">
+      {{ form.password1 }}
+      <button type="button" class="toggle-password" data-target="id_password1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 eye-icon" fill="none" 
+             viewBox="0 0 24 24" stroke="currentColor" width="22" height="22">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+        </svg>
+      </button>
     </div>
+    {% if form.password1.errors %}
+    <div class="error">{% for e in form.password1.errors %}{{ e }}{% endfor %}</div>
     {% endif %}
 
-    <div class="input-box">{{ form.password2 }}</div>
-    {% if form.password2.errors %}
-    <div class="error">
-      {% for e in form.password2.errors %}{{ e }}{% endfor %}
+    {# Password 2 avec bouton œil #}
+    <div class="input-box">
+      {{ form.password2 }}
+      <button type="button" class="toggle-password" data-target="id_password2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 eye-icon" fill="none" 
+             viewBox="0 0 24 24" stroke="currentColor" width="22" height="22">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+        </svg>
+      </button>
     </div>
+    {% if form.password2.errors %}
+    <div class="error">{% for e in form.password2.errors %}{{ e }}{% endfor %}</div>
     {% endif %}
 
     <p class="helper" style="text-align: center">
@@ -137,14 +158,37 @@ Journal{% endblock %} {% block extra_css %}
       <a class="small-link" href="#">Politique de confidentialité</a>.
     </p>
 
-    <div
-      style="display: flex; justify-content: space-between; align-items: center"
-    >
-      <a href="{% url 'articles:login' %}" class="small-link"
-        >Déjà un compte ?</a
-      >
+    <div style="display: flex; justify-content: space-between; align-items: center">
+      <a href="{% url 'articles:login' %}" class="small-link">Déjà un compte ?</a>
       <button class="btn-join" type="submit">S’inscrire</button>
     </div>
   </form>
 </main>
+
+<script>
+  document.querySelectorAll(".toggle-password").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const targetId = btn.getAttribute("data-target");
+      const input = document.getElementById(targetId);
+      const icon = btn.querySelector(".eye-icon");
+
+      const isPassword = input.type === "password";
+      input.type = isPassword ? "text" : "password";
+
+      // Icône œil ↔ œil barré
+      icon.innerHTML = isPassword
+        ? `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                 d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7
+                    a10.05 10.05 0 012.23-3.95m3.362-2.58A9.956 9.956 0 0112 5c4.477 0
+                    8.268 2.943 9.542 7a9.963 9.963 0 01-4.363 5.409M15 12a3 3 0
+                    11-6 0 3 3 0 016 0z"/>`
+        : `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                 d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                 d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0
+                    8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542
+                    7-4.477 0-8.268-2.943-9.542-7z"/>`;
+    });
+  });
+</script>
 {% endblock %}
