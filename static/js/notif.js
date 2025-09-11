@@ -12,3 +12,5 @@ const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
     socket.onclose = function(e) {
         console.error("WebSocket fermé de façon inattendue");
     };
+
+    

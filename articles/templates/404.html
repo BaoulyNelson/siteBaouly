@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="error-404" style="text-align:center; margin-top:80px;">
+    <h1 style="font-size:72px; color:#d9534f;">404</h1>
+    <h2>Page introuvable</h2>
+    <p>L’article que vous cherchez n’existe plus ou a été déplacé.</p>
+    <a href="{% url 'index' %}" style="color:#337ab7; text-decoration:none;">← Retour à l’accueil</a>
+</div>
+{% endblock %}

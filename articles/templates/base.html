@@ -7,109 +7,105 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{% block title %}{{ article.titre }} | LeBaouly{% endblock %}</title>
 
-  <!-- Favicon -->
+  <!-- ==============================
+       Favicon & Polices
+  ============================== -->
   <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
-
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;700&family=Montserrat:wght@600&display=swap" rel="stylesheet">
 
-  <!-- CSS principal -->
+
+  
+    <!-- On inclut une police pour le logo, comme dans votre exemple -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+
+  <!-- ==============================
+       Styles
+  ============================== -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-
-  <!-- Swiper CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
-  <!-- Swiper JS -->
-  <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="article" />
-  <meta property="og:title" content="{{ article.titre }}" />
-  <meta property="og:description" content="{{ article.contenu|truncatechars:150|striptags }}" />
-  <meta property="og:url" content="{{ request.build_absolute_uri }}" />
-  {% if article.image %}
-    <meta property="og:image" content="{{ article.image.url }}" />
-  {% else %}
-    <meta property="og:image" content="https://picsum.photos/1200/600?random=1" />
-  {% endif %}
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
+  <!-- ==============================
+       Open Graph / Twitter Card
+  ============================== -->
+  {% with img=article.image.url|default:"https://picsum.photos/1200/600?random=1" %}
+    <!-- Open Graph -->
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="{{ article.titre }}" />
+    <meta property="og:description" content="{{ article.contenu|truncatechars:150|striptags }}" />
+    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+    <meta property="og:image" content="{{ img }}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="{{ article.titre }}" />
-  <meta name="twitter:description" content="{{ article.contenu|truncatechars:150|striptags }}" />
-  {% if article.image %}
-    <meta name="twitter:image" content="{{ article.image.url }}" />
-  {% else %}
-    <meta name="twitter:image" content="https://picsum.photos/1200/600?random=1" />
-  {% endif %}
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ article.titre }}" />
+    <meta name="twitter:description" content="{{ article.contenu|truncatechars:150|striptags }}" />
+    <meta name="twitter:image" content="{{ img }}" />
+  {% endwith %}
 
   {% block extra_css %}{% endblock %}
 </head>
 
 <body class="bg-white text-gray-800">
   {% include "partials/header.html" %}
-{% if messages %}
-<div class="flex justify-center mt-4">
-  <div class="w-full max-w-xl space-y-3">
-    {% for message in messages %}
-      {% if message.tags == "success" %}
-        <div class="bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-lg text-center">
-          {{ message }}
-        </div>
-      {% elif message.tags == "error" %}
-        <div class="bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded-lg text-center">
-          {{ message }}
-        </div>
-      {% elif message.tags == "warning" %}
-        <div class="bg-yellow-100 border border-yellow-300 text-yellow-700 px-4 py-3 rounded-lg text-center">
-          {{ message }}
-        </div>
-      {% else %}
-        <div class="bg-blue-100 border border-blue-300 text-blue-700 px-4 py-3 rounded-lg text-center">
-          {{ message }}
-        </div>
-      {% endif %}
-    {% endfor %}
-  </div>
-</div>
-{% endif %}
-<!-- Bloquer clic droit, sélection et Ctrl+C -->
 
+  <!-- ==============================
+       Messages flash
+  ============================== -->
+  {% if messages %}
+    <div class="flex justify-center mt-4">
+      <div class="w-full max-w-xl space-y-3">
+        {% for message in messages %}
+          <div class="
+            px-4 py-3 rounded-lg text-center border
+            {% if message.tags == 'success' %}
+              bg-green-100 border-green-300 text-green-700
+            {% elif message.tags == 'error' %}
+              bg-red-100 border-red-300 text-red-700
+            {% elif message.tags == 'warning' %}
+              bg-yellow-100 border-yellow-300 text-yellow-700
+            {% else %}
+              bg-blue-100 border-blue-300 text-blue-700
+            {% endif %}
+          ">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
 
-
-
+  <!-- ==============================
+       Contenu principal
+  ============================== -->
   <main class="flex-1 max-w-7xl mx-auto px-4 py-8">
-    
-
-    <script>
-    const socket = new WebSocket(
-        "ws://" + window.location.host + "/ws/articles/"
-    );
-
-    socket.onmessage = function(e) {
-        const data = JSON.parse(e.data);
-        alert(data.message); // Ici, tu pourrais ajouter dynamiquement l’article au DOM
-    };
-</script>
     {% block content %}{% endblock %}
   </main>
 
   {% include "partials/footer.html" %}
-<script src="{% static 'js/script.js' %}"></script>
-<script src="{% static 'js/caroussel.js' %}"></script>
-<script src="{% static 'js/monter.js' %}"></script>
-<script src="{% static 'js/traduction.js' %}"></script>
-<script src="{% static 'js/notif.js' %}"></script>
 
-<div id="google_translate_element" style="display:none;"></div> <!-- caché -->
+  <!-- ==============================
+       Scripts
+  ============================== -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+  <script src="{% static 'js/script.js' %}"></script>
+  <script src="{% static 'js/caroussel.js' %}"></script>
+  <script src="{% static 'js/monter.js' %}"></script>
+  <script src="{% static 'js/traduction.js' %}"></script>
+  <script src="{% static 'js/notif.js' %}"></script>
+  <script src="{% static 'js/protection.js' %}"></script>
+  <script src="{% static 'js/mobileMenu.js' %}"></script>
+  <script src="{% static 'js/searchOverlay.js' %}"></script>
 
 
+  <!-- Google Translate (caché) -->
+  <div id="google_translate_element" style="display:none;"></div>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
+  {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -13,7 +13,7 @@
 </div>
 
 <!-- Header with logo centered and small icons -->
-  <header class="bg-[color:var(--brand-blue)] text-white relative">
+<header class="bg-[color:var(--brand-blue)] text-white relative">
 
   <div class="max-w-7xl mx-auto px-4 py-6 flex items-center justify-between">
 
@@ -38,22 +38,21 @@
     <!-- center: small languages row + logo -->
     <div class="flex flex-col items-center pointer-events-none">
       <!-- languages -->
-        <div class="text-xs font-medium text-yellow-200 mb-1 tracking-wide pointer-events-auto">
-          <a href="#" onclick="translateLanguage('fr')" class="hover:underline">FRANÇAIS</a>
-          <span class="mx-2 text-white/60">|</span>
-          <a href="#" onclick="translateLanguage('en')" class="hover:underline">ENGLISH</a>
-        </div>
-
+      <div class="text-xs font-medium text-yellow-200 mb-1 tracking-wide pointer-events-auto">
+        <a href="#" onclick="translateLanguage('fr')" class="hover:underline">FRANÇAIS</a>
+        <span class="mx-2 text-white/60">|</span>
+        <a href="#" onclick="translateLanguage('en')" class="hover:underline">ENGLISH</a>
+      </div>
 
       <!-- SVG logo (fictif) - remplace par ton SVG réel si tu en as un -->
-        <div class="brand-logo text-center text-white">
-            <svg width="280" height="60" viewBox="0 0 320 68" xmlns="http://www.w3.org/2000/svg" aria-label="Le Baouly">
-              <rect width="320" height="68" fill="none" />
-              <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" font-family="Cinzel Decorative, cursive" font-weight="700" font-size="36" fill="#ffffff" letter-spacing="-1">
-                Le Baouly
-              </text>
-            </svg>
-        </div>
+      <div class="brand-logo text-center text-white">
+        <svg width="280" height="60" viewBox="0 0 320 68" xmlns="http://www.w3.org/2000/svg" aria-label="Le Baouly">
+          <rect width="320" height="68" fill="none" />
+          <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" class="font-unifraktur" font-weight="700" font-size="36" fill="#ffffff" letter-spacing="-1">
+            Le Baouly
+          </text>
+        </svg>
+      </div>
     </div>
 
     <!-- right: account icon -->
@@ -101,24 +100,103 @@
   <nav class="bg-blue-600" aria-label="Navigation principale">
     <div class="max-w-7xl mx-auto px-4">
       <ul class="flex gap-6 text-white text-sm py-3 overflow-x-auto whitespace-nowrap">
-        <li class="px-2"><a class="font-medium uppercase tracking-wide border-b-4 border-white" href="{% url 'articles:index' %}">Accueil</a></li>
-        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='une' %}">À la une</a></li>
-        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='minute' %}">À la minute</a></li>
-        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='annonces' %}">Annonces</a></li>
-        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='culture' %}">Culture</a></li>
-        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='economie' %}">Économie</a></li>
-        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='emploi' %}">Emploi</a></li>
-        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='editorial' %}">Éditorial</a></li>
-        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='international' %}">International</a></li>
-        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='national' %}">National</a></li>
-        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='opinions' %}">Opinions</a></li>
-        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='societe' %}">Société</a></li>
-        <li class="px-2"><a class="uppercase tracking-wide" href="{% url 'articles:articles_par_categorie' slug='sport' %}">Sport</a></li>
+
+        <!-- Accueil -->
+        <li class="px-2">
+          <a href="{% url 'articles:index' %}" class="uppercase tracking-wide {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
+            Accueil
+          </a>
+        </li>
+
+        <!-- À la une -->
+        <li class="px-2">
+          <a href="{% url 'articles:articles_par_categorie' slug='une' %}" class="uppercase tracking-wide {% if request.resolver_match.kwargs.slug == 'une' %}active{% endif %}">
+            À la une
+          </a>
+        </li>
+
+        <!-- À la minute -->
+        <li class="px-2">
+          <a href="{% url 'articles:articles_par_categorie' slug='minute' %}" class="uppercase tracking-wide {% if request.resolver_match.kwargs.slug == 'minute' %}active{% endif %}">
+            À la minute
+          </a>
+        </li>
+
+        <!-- Annonces -->
+        <li class="px-2">
+          <a href="{% url 'articles:articles_par_categorie' slug='annonces' %}" class="uppercase tracking-wide {% if request.resolver_match.kwargs.slug == 'annonces' %}active{% endif %}">
+            Annonces
+          </a>
+        </li>
+
+        <!-- Culture -->
+        <li class="px-2">
+          <a href="{% url 'articles:articles_par_categorie' slug='culture' %}" class="uppercase tracking-wide {% if request.resolver_match.kwargs.slug == 'culture' %}active{% endif %}">
+            Culture
+          </a>
+        </li>
+
+        <!-- Économie -->
+        <li class="px-2">
+          <a href="{% url 'articles:articles_par_categorie' slug='economie' %}" class="uppercase tracking-wide {% if request.resolver_match.kwargs.slug == 'economie' %}active{% endif %}">
+            Économie
+          </a>
+        </li>
+
+        <!-- Emploi -->
+        <li class="px-2">
+          <a href="{% url 'articles:articles_par_categorie' slug='emploi' %}" class="uppercase tracking-wide {% if request.resolver_match.kwargs.slug == 'emploi' %}active{% endif %}">
+            Emploi
+          </a>
+        </li>
+
+        <!-- Éditorial -->
+        <li class="px-2">
+          <a href="{% url 'articles:articles_par_categorie' slug='editorial' %}" class="uppercase tracking-wide {% if request.resolver_match.kwargs.slug == 'editorial' %}active{% endif %}">
+            Éditorial
+          </a>
+        </li>
+
+        <!-- International -->
+        <li class="px-2">
+          <a href="{% url 'articles:articles_par_categorie' slug='international' %}" class="uppercase tracking-wide {% if request.resolver_match.kwargs.slug == 'international' %}active{% endif %}">
+            International
+          </a>
+        </li>
+
+        <!-- National -->
+        <li class="px-2">
+          <a href="{% url 'articles:articles_par_categorie' slug='national' %}" class="uppercase tracking-wide {% if request.resolver_match.kwargs.slug == 'national' %}active{% endif %}">
+            National
+          </a>
+        </li>
+
+        <!-- Opinions -->
+        <li class="px-2">
+          <a href="{% url 'articles:articles_par_categorie' slug='opinions' %}" class="uppercase tracking-wide {% if request.resolver_match.kwargs.slug == 'opinions' %}active{% endif %}">
+            Opinions
+          </a>
+        </li>
+
+        <!-- Société -->
+        <li class="px-2">
+          <a href="{% url 'articles:articles_par_categorie' slug='societe' %}" class="uppercase tracking-wide {% if request.resolver_match.kwargs.slug == 'societe' %}active{% endif %}">
+            Société
+          </a>
+        </li>
+
+        <!-- Sport -->
+        <li class="px-2">
+          <a href="{% url 'articles:articles_par_categorie' slug='sport' %}" class="uppercase tracking-wide {% if request.resolver_match.kwargs.slug == 'sport' %}active{% endif %}">
+            Sport
+          </a>
+        </li>
+
       </ul>
     </div>
   </nav>
-</header>
 
+</header>
 
 <!-- --------- Mobile off-canvas menu (hidden by default) --------- -->
 <!-- overlay -->
@@ -126,17 +204,17 @@
 
 <!-- panel -->
 <aside id="mobileMenu" class="fixed inset-y-0 left-0 w-64 max-w-full bg-white shadow-lg transform -translate-x-full transition-transform duration-300 z-50" aria-hidden="true" role="dialog" aria-label="Menu mobile">
-    <div class="p-4 flex items-center justify-between border-b">
-      <div class="font-bold text-lg text-slate-800">Menu</div>
-      <button id="menuCloseBtn" aria-label="Fermer le menu">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-    </div>
+  <div class="p-4 flex items-center justify-between border-b">
+    <div class="font-bold text-lg text-slate-800">Menu</div>
+    <button id="menuCloseBtn" aria-label="Fermer le menu">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
 
-    <!-- MOBILE SEARCH (recommended: small form inside menu) -->
-    <div class="flex-1 overflow-y-auto p-4">
+  <!-- MOBILE SEARCH (recommended: small form inside menu) -->
+  <div class="flex-1 overflow-y-auto p-4">
     <form id="mobileSearch" class="mb-4 block md:hidden flex justify-center" action="{% url 'articles:recherche' %}" method="get" role="search" aria-label="Recherche mobile">
       <label for="q_mobile" class="sr-only">Recherche</label>
       <div class="flex gap-2 w-full max-w-xs">
@@ -146,20 +224,61 @@
     </form>
 
     <nav class="space-y-1 text-sm">
-      <a href="{% url 'articles:index' %}" class="block px-3 py-2 rounded font-semibold bg-blue-100 text-blue-800">Accueil</a>
-      <a href="{% url 'articles:articles_par_categorie' slug='une' %}" class="block px-3 py-2 rounded hover:bg-slate-100">À la une</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='minute' %}" class="block px-3 py-2 rounded hover:bg-slate-100">À la minute</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='annonces' %}" class="block px-3 py-2 rounded hover:bg-slate-100">Annonces</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='culture' %}" class="block px-3 py-2 rounded hover:bg-slate-100">Culture</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='economie' %}" class="block px-3 py-2 rounded hover:bg-slate-100">Économie</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='emploi' %}" class="block px-3 py-2 rounded hover:bg-slate-100">Emploi</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='editorial' %}" class="block px-3 py-2 rounded hover:bg-slate-100">Éditorial</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='international' %}" class="block px-3 py-2 rounded hover:bg-slate-100">International</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='national' %}" class="block px-3 py-2 rounded hover:bg-slate-100">National</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='opinions' %}" class="block px-3 py-2 rounded hover:bg-slate-100">Opinions</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='societe' %}" class="block px-3 py-2 rounded hover:bg-slate-100">Société</a>
-        <a href="{% url 'articles:articles_par_categorie' slug='sport' %}" class="block px-3 py-2 rounded hover:bg-slate-100">Sport</a>
+      <!-- Accueil -->
+      <a href="{% url 'articles:index' %}" class="block px-3 py-2 rounded font-semibold {% if request.resolver_match.url_name == 'index' %}bg-blue-100 text-blue-800{% else %}hover:bg-slate-100{% endif %}">
+        Accueil
+      </a>
+
+      <!-- Catégories -->
+      <a href="{% url 'articles:articles_par_categorie' slug='une' %}" class="block px-3 py-2 rounded {% if request.resolver_match.kwargs.slug == 'une' %}bg-blue-100 text-blue-800 font-semibold{% else %}hover:bg-slate-100{% endif %}">
+        À la une
+      </a>
+
+      <a href="{% url 'articles:articles_par_categorie' slug='minute' %}" class="block px-3 py-2 rounded {% if request.resolver_match.kwargs.slug == 'minute' %}bg-blue-100 text-blue-800 font-semibold{% else %}hover:bg-slate-100{% endif %}">
+        À la minute
+      </a>
+
+      <a href="{% url 'articles:articles_par_categorie' slug='annonces' %}" class="block px-3 py-2 rounded {% if request.resolver_match.kwargs.slug == 'annonces' %}bg-blue-100 text-blue-800 font-semibold{% else %}hover:bg-slate-100{% endif %}">
+        Annonces
+      </a>
+
+      <a href="{% url 'articles:articles_par_categorie' slug='culture' %}" class="block px-3 py-2 rounded {% if request.resolver_match.kwargs.slug == 'culture' %}bg-blue-100 text-blue-800 font-semibold{% else %}hover:bg-slate-100{% endif %}">
+        Culture
+      </a>
+
+      <a href="{% url 'articles:articles_par_categorie' slug='economie' %}" class="block px-3 py-2 rounded {% if request.resolver_match.kwargs.slug == 'economie' %}bg-blue-100 text-blue-800 font-semibold{% else %}hover:bg-slate-100{% endif %}">
+        Économie
+      </a>
+
+      <a href="{% url 'articles:articles_par_categorie' slug='emploi' %}" class="block px-3 py-2 rounded {% if request.resolver_match.kwargs.slug == 'emploi' %}bg-blue-100 text-blue-800 font-semibold{% else %}hover:bg-slate-100{% endif %}">
+        Emploi
+      </a>
+
+      <a href="{% url 'articles:articles_par_categorie' slug='editorial' %}" class="block px-3 py-2 rounded {% if request.resolver_match.kwargs.slug == 'editorial' %}bg-blue-100 text-blue-800 font-semibold{% else %}hover:bg-slate-100{% endif %}">
+        Éditorial
+      </a>
+
+      <a href="{% url 'articles:articles_par_categorie' slug='international' %}" class="block px-3 py-2 rounded {% if request.resolver_match.kwargs.slug == 'international' %}bg-blue-100 text-blue-800 font-semibold{% else %}hover:bg-slate-100{% endif %}">
+        International
+      </a>
+
+      <a href="{% url 'articles:articles_par_categorie' slug='national' %}" class="block px-3 py-2 rounded {% if request.resolver_match.kwargs.slug == 'national' %}bg-blue-100 text-blue-800 font-semibold{% else %}hover:bg-slate-100{% endif %}">
+        National
+      </a>
+
+      <a href="{% url 'articles:articles_par_categorie' slug='opinions' %}" class="block px-3 py-2 rounded {% if request.resolver_match.kwargs.slug == 'opinions' %}bg-blue-100 text-blue-800 font-semibold{% else %}hover:bg-slate-100{% endif %}">
+        Opinions
+      </a>
+
+      <a href="{% url 'articles:articles_par_categorie' slug='societe' %}" class="block px-3 py-2 rounded {% if request.resolver_match.kwargs.slug == 'societe' %}bg-blue-100 text-blue-800 font-semibold{% else %}hover:bg-slate-100{% endif %}">
+        Société
+      </a>
+
+      <a href="{% url 'articles:articles_par_categorie' slug='sport' %}" class="block px-3 py-2 rounded {% if request.resolver_match.kwargs.slug == 'sport' %}bg-blue-100 text-blue-800 font-semibold{% else %}hover:bg-slate-100{% endif %}">
+        Sport
+      </a>
     </nav>
+
   </div>
 </aside>
 

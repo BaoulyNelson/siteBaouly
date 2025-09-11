@@ -1,3 +1,6 @@
+/* ==============================
+   Variables globales
+============================== */
 :root {
   --nav-dark: #042a4a; /* top thin bar */
   --brand-blue: #0e73ff; /* main blue */
@@ -5,101 +8,32 @@
   --accent-yellow: #ffd23f;
 }
 
-/* small helpers to match the screenshot */
-.brand-logo {
-  font-family: "Cinzel Decorative", serif;
-  letter-spacing: -1px;
-}
-.nav-compact {
-  white-space: nowrap;
-  -webkit-overflow-scrolling: touch;
-}
-/* visual: slightly rotate ticket like the screenshot */
-.ticket-rot {
-  transform: rotate(-12deg);
-}
-
-/* Minimal CSS to handle overlay positioning + motion preferences */
-#searchPanel {
-  transition: opacity 260ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-#searchPanel.hidden {
-  opacity: 0;
-  transform: translateY(-6px);
-  pointer-events: none;
-}
-#searchPanel:not(.hidden) {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  #searchPanel {
-    transition: none !important;
-  }
-}
-
-#searchPanel {
-  position: absolute;
-  top: 100%; /* juste sous la nav */
-  left: 0;
-  width: 100%;
-  background: white;
-  padding: 1rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: center;
-}
-#searchPanel form {
-  width: 100%;
-  max-width: 800px; /* limite élégante */
-}
-
-/* mobileSearch visible quand le menu est ouvert (pas translate-x-full) */
-#mobileMenu:not(.-translate-x-full) #mobileSearch {
-  display: block;
-}
-
-/* par défaut */
-#mobileSearch {
-  display: none;
-}
-
-/* Empêche le débordement global */
-body,
-html {
+/* ==============================
+   Reset & Base
+============================== */
+html,
+body {
+  height: 100%;
+  margin: 0;
   max-width: 100%;
   overflow-x: hidden;
-}
-
-/* Conteneur principal de navigation */
-.topbar,
-.mainnav {
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-/* Flexbox responsive pour la nav */
-.mainnav > .nav-items,
-.topbar > .nav-items {
   display: flex;
-  flex-wrap: wrap; /* permet aux éléments de passer à la ligne si trop larges */
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  -webkit-user-select: none; /* Chrome, Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+  user-select: none; /* Standard */
+  -webkit-user-drag: none;
 }
 
-/* Logo et éléments flexibles */
-.brand-logo,
-.logo {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis; /* coupe le texte trop long avec "..." */
-  white-space: nowrap;
+main {
+  flex: 1; /* occupe tout l’espace restant */
 }
 
-/* Images et icônes */
+footer {
+  margin-top: auto; /* pousse le footer en bas */
+}
+
 img,
 svg {
   max-width: 100%;
@@ -107,13 +41,9 @@ svg {
   display: block;
 }
 
-/* Menu compact (mobile) */
-.nav-compact {
-  flex-wrap: wrap; /* permet au contenu de passer à la ligne */
-  overflow-x: auto; /* scroll horizontal seulement si nécessaire */
-}
-
-/* Classe d'accessibilité pour masquer un élément visuellement mais le garder pour les lecteurs d'écran */
+/* ==============================
+   Accessibilité
+============================== */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -126,7 +56,90 @@ svg {
   border-width: 0;
 }
 
-/* Style optionnel pour affiner la barre de défilement de la navigation desktop */
+/* ==============================
+   Navigation & Topbar
+============================== */
+.topbar,
+.mainnav {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.topbar > .nav-items,
+.mainnav > .nav-items {
+  display: flex;
+  flex-wrap: wrap; /* retour à la ligne si trop large */
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+/* Styles personnalisés si nécessaire */
+.font-unifraktur {
+  font-family: "UnifrakturCook", cursive;
+}
+/* Menu compact (mobile) */
+.nav-compact {
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  flex-wrap: wrap;
+  overflow-x: auto; /* scroll horizontal seulement si besoin */
+}
+
+/* ==============================
+   Recherche (searchPanel)
+============================== */
+#searchPanel {
+  position: absolute;
+  top: 0; /* sera ajusté dynamiquement par JS */
+  left: 0;
+  width: 100%;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  transition: opacity 260ms cubic-bezier(0.2, 0.8, 0.2, 1),transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  z-index: 50;
+  background-color: white; /* ou couleur souhaitée */
+}
+
+#searchPanel.hidden {
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+}
+
+#searchPanel:not(.hidden) {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #searchPanel {
+    transition: none !important;
+  }
+}
+
+
+/* ==============================
+   Mobile Search
+============================== */
+#mobileSearch {
+  display: none;
+}
+#mobileMenu:not(.-translate-x-full) #mobileSearch {
+  display: block;
+}
+
+/* ==============================
+   Divers
+============================== */
+.ticket-rot {
+  transform: rotate(-12deg); /* effet ticket */
+}
+
+/* Scrollbar custom (desktop) */
 .custom-scrollbar::-webkit-scrollbar {
   height: 4px;
 }
@@ -138,31 +151,7 @@ svg {
   border-radius: 20px;
 }
 
-/* Blocage de la sélection de texte */
-body {
-  -webkit-user-select: none; /* Chrome, Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE/Edge */
-  user-select: none; /* Standard */
-}
-
-/* Optionnel : blocage du glisser-déposer du texte */
-body {
-  -webkit-user-drag: none;
-}
-
-html,
-body {
-  height: 100%;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-main {
-  flex: 1; /* prend tout l'espace restant */
-}
-
-footer {
-  margin-top: auto; /* pousse le footer en bas */
+.active {
+  font-weight: 600;
+  border-bottom: 4px solid white;
 }
