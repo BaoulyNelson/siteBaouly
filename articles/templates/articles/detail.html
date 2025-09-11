@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}{{ article.titre }} — Mon Journal{% endblock %}
+{% block title %}{{ article.titre }} -- Mon Journal{% endblock %}
 
 {% block meta %}
   <meta property="og:title" content="{{ article.titre }}">
@@ -9,133 +9,677 @@
   {% if absolute_image_url %}
     <meta property="og:image" content="{{ absolute_image_url }}">
   {% else %}
-    <meta property="og:image" content="https://picsum.photos/1200/600?random=1">
+    <meta property="og:image" content="https://picsum.photos/1200/630?random=1">
   {% endif %}
   <meta property="og:url" content="{{ request.build_absolute_uri }}">
   <meta property="og:type" content="article">
 {% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'css/detail.css' %}">
+  <style>
+    /* --- Variables de Design --- */
+    :root {
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-serif: "Georgia", "Times New Roman", serif;
+      --primary-color: #005AEE;
+      --dark-text: #1a1a1a;
+      --light-text: #555;
+      --border-color: #e5e7eb;
+      --background-color: #f9fafb;
+      --white-color: #ffffff;
+      --reading-progress-height: 4px;
+    }
+
+    /* --- Reset et Base --- */
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--white-color);
+      color: var(--dark-text);
+      line-height: 1.7;
+    }
+
+    /* --- Barre de Progression --- */
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--reading-progress-height);
+      z-index: 1000;
+      background-color: transparent;
+    }
+    .reading-progress-bar {
+      height: 100%;
+      background-color: var(--primary-color);
+      width: 0;
+      transition: width 0.1s ease-out;
+    }
+
+    /* --- Mise en page principale de l'article --- */
+    .article-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 4rem;
+      max-width: 1200px;
+      margin: 4rem auto;
+      padding: 0 1rem;
+    }
+
+    @media (min-width: 1024px) {
+      .article-layout {
+        grid-template-columns: minmax(0, 2.5fr) minmax(0, 1fr);
+      }
+    }
+
+    .article-main {
+      min-width: 0;
+    }
+
+    /* --- En-tête de l'article --- */
+    .article-header {
+      margin-bottom: 2rem;
+    }
+    .article-title {
+      font-family: var(--font-serif);
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      color: #111827;
+    }
+    .article-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      color: var(--light-text);
+      font-size: 0.9rem;
+    }
+    .author-info, .publication-date, .reading-time {
+      display: flex;
+      align-items: center;
+    }
+    .author-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: var(--border-color);
+      color: var(--light-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 0.75rem;
+    }
+    .meta-icon {
+      width: 16px;
+      height: 16px;
+      margin-right: 0.5rem;
+      stroke: var(--light-text);
+    }
+
+    /* --- Image principale --- */
+    .article-image-container {
+      margin-bottom: 2.5rem;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+    .article-image {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* --- Contenu de l'article --- */
+    .article-content {
+      font-family: var(--font-serif);
+      font-size: 1.125rem;
+      color: var(--dark-text);
+    }
+    .article-content h2, .article-content h3 {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      margin-top: 2.5em;
+      margin-bottom: 1em;
+      line-height: 1.3;
+    }
+    .article-content h2 { font-size: 1.8rem; }
+    .article-content h3 { font-size: 1.4rem; }
+    .article-content p { margin-bottom: 1.5em; }
+    .article-content a {
+      color: var(--primary-color);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .article-content a:hover {
+      border-bottom-color: var(--primary-color);
+    }
+    .article-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin: 2rem 0;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+    .article-content img:hover {
+      opacity: 0.85;
+    }
+    .article-content pre {
+      background-color: #1f2937;
+      color: #d1d5db;
+      padding: 1.5rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 0.9rem;
+      position: relative;
+    }
+    .copy-code-btn {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background-color: #4b5563;
+      color: white;
+      border: none;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .article-content pre:hover .copy-code-btn {
+      opacity: 1;
+    }
+
+    /* --- Pied de page de l'article (Claps & Partage) --- */
+    .article-footer {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .clap-section {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .clap-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 1px solid var(--border-color);
+      background: var(--white-color);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .clap-btn svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--dark-text);
+      fill: none;
+      transition: all 0.2s ease;
+    }
+    .clap-btn:hover {
+      border-color: var(--primary-color);
+      background: #f0f5ff;
+    }
+    .clap-btn.clapped {
+      border-color: var(--primary-color);
+      background: var(--primary-color);
+    }
+    .clap-btn.clapped svg {
+      stroke: var(--white-color);
+      fill: var(--white-color);
+      transform: scale(1.1);
+    }
+    .clap-count {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--light-text);
+    }
+    .share-buttons {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .share-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      text-decoration: none;
+      color: var(--light-text);
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .share-btn:hover {
+      background-color: var(--background-color);
+      border-color: #d1d5db;
+    }
+    .share-btn svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    /* --- Section Auteur --- */
+    .author-bio-box {
+      margin-top: 4rem;
+      padding: 2rem;
+      background-color: var(--background-color);
+      border-radius: 12px;
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+    }
+    .author-bio-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: var(--border-color);
+      color: var(--light-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    .author-bio-content h4 {
+      margin: 0 0 0.25rem 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    .author-bio-content p {
+      margin: 0;
+      color: var(--light-text);
+      font-size: 0.95rem;
+    }
+
+    /* --- Barre latérale --- */
+    .article-sidebar {
+      min-width: 0;
+    }
+    .sidebar-sticky-content {
+      position: sticky;
+      top: 60px; /* Espace pour la barre de navigation */
+    }
+    .sidebar-widget {
+      margin-bottom: 3rem;
+    }
+    .widget-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    #toc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 0.9rem;
+    }
+    #toc-list li a {
+      display: block;
+      padding: 0.5rem 0;
+      color: var(--light-text);
+      text-decoration: none;
+      border-left: 2px solid transparent;
+      padding-left: 1rem;
+      transition: all 0.2s;
+    }
+    #toc-list li a:hover {
+      color: var(--dark-text);
+      background-color: var(--background-color);
+    }
+    #toc-list li a.active {
+      color: var(--primary-color);
+      font-weight: 500;
+      border-left-color: var(--primary-color);
+    }
+    .related-articles-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .related-article-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-decoration: none;
+    }
+    .related-article-item img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+    .related-article-item span {
+      color: var(--dark-text);
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+    .related-article-item:hover span {
+      color: var(--primary-color);
+    }
+
+    /* --- Visionneuse d'images (Lightbox) --- */
+    #image-lightbox {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 2rem;
+      box-sizing: border-box;
+    }
+    #image-lightbox.active {
+      display: flex;
+    }
+    #image-lightbox img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      cursor: default;
+    }
+    #close-lightbox {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      color: white;
+      font-size: 2.5rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+  </style>
 {% endblock %}
-
-
-
-
-
 
 {% block content %}
 <div class="reading-progress">
-  <div class="reading-progress-bar" id="reading-progress"></div>
+  <div class="reading-progress-bar" id="reading-progress-bar"></div>
 </div>
 
-<article class="article-container">
-  <header class="article-header">
-    <h1 class="article-title">{{ article.titre }}</h1>
-    
-    <div class="article-meta">
-      <div class="author-info">
-        <div class="author-avatar">
-          {{ article.auteur.get_full_name|default:article.auteur.username|first|upper }}
+<div class="article-layout">
+  <main class="article-main">
+    <article>
+      <header class="article-header">
+        <h1 class="article-title text-3xl lg:text-5xl font-bold">{{ article.titre }}</h1>
+
+        <div class="article-meta">
+          <div class="author-info">
+            <div class="author-avatar">
+              {{ article.auteur.get_full_name|default:article.auteur.username|first|upper }}
+            </div>
+            <span class="author-name">{{ article.auteur.get_full_name|default:article.auteur.username }}</span>
+          </div>
+          <span class="meta-separator">&bull;</span>
+          <div class="publication-date">
+            <svg class="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            {{ article.date_publication|date:"j F Y" }}
+          </div>
+          <span class="meta-separator">&bull;</span>
+          <div class="reading-time">
+            <svg class="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span id="time-to-read"></span>
+          </div>
         </div>
-        <span class="author-name">{{ article.auteur.get_full_name|default:article.auteur.username }}</span>
+      </header>
+
+      <div class="article-image-container">
+        {% if article.image %}
+          <img src="{{ article.image.url }}" alt="{{ article.titre }}" class="article-image">
+        {% else %}
+          <img src="https://picsum.photos/1200/630?random=1" alt="Image par défaut" class="article-image">
+        {% endif %}
       </div>
-      
-      <div class="publication-date">
-        <svg class="date-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-        </svg>
-        {{ article.date_publication|date:"j F Y" }}
+
+      <div class="article-content" id="article-content">
+        {{ article.contenu|safe }}
       </div>
+
+      <footer class="article-footer">
+        <div class="clap-section">
+          <button class="clap-btn" id="clap-btn">
+            <svg viewBox="0 0 24 24"><path d="M14.5 19.5a.5.5 0 01-.5.5h-10a.5.5 0 01-.5-.5v-10a.5.5 0 01.5-.5h10a.5.5 0 01.5.5v10zM19 9.5a.5.5 0 00-.5-.5h-2a.5.5 0 00-.5.5v10a.5.5 0 00.5.5h2a.5.5 0 00.5-.5V10a4 4 0 00-4-4h-1.5V4.5a.5.5 0 00-.5-.5h-2a.5.5 0 00-.5.5v1.5H6a4 4 0 00-4 4v10a4 4 0 004 4h10a4 4 0 004-4v-8.5a.5.5 0 00-.5-.5z"></path></svg>
+          </button>
+          <span class="clap-count" id="clap-count">0 applaudissements</span>
+        </div>
+        <div class="share-buttons">
+          <a href="#" class="share-btn" onclick="shareOnTwitter(event)">
+            <svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+            Twitter
+          </a>
+          <a href="#" class="share-btn" onclick="copyToClipboard(event)">
+            <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            Copier le lien
+          </a>
+        </div>
+      </footer>
+    </article>
+
+    <section class="author-bio-box">
+      <div class="author-bio-avatar">
+        {{ article.auteur.get_full_name|default:article.auteur.username|first|upper }}
+      </div>
+      <div class="author-bio-content">
+        <h4>{{ article.auteur.get_full_name|default:article.auteur.username }}</h4>
+        <p>Ici se trouve une courte biographie de l'auteur, décrivant son expertise, ses centres d'intérêt ou toute autre information pertinente qui pourrait intéresser le lecteur et donner plus de crédibilité à l'article.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <aside class="article-sidebar">
+    <div class="sidebar-sticky-content">
+      <div class="sidebar-widget">
+        <h3 class="widget-title">Table des matières</h3>
+        <ul id="toc-list">
+          <!-- Généré par JavaScript -->
+        </ul>
+      </div>
+
+      <div class="sidebar-widget">
+        <h3 class="widget-title">Articles similaires</h3>
+        <div class="related-articles-list">
+            {% for rel in related_articles %}
+            <a href="{% url 'articles:detail' rel.slug %}" class="related-article-item">
+                {% if rel.image %}
+                <img src="{{ rel.image.url }}" alt="{{ rel.titre }}">
+                {% else %}
+                <img src="https://picsum.photos/100/100?random={{ forloop.counter }}" alt="{{ rel.titre }}">
+                {% endif %}
+                <span>{{ rel.titre|truncatewords:10 }}</span>
+            </a>
+            {% empty %}
+            <p>Aucun article similaire pour le moment.</p>
+            {% endfor %}
+        </div>
     </div>
-  </header>
 
-  <div class="article-image-container">
-    {% if article.image %}
-      <img src="{{ article.image.url }}" alt="{{ article.titre }}" class="article-image">
-    {% else %}
-      <img src="https://picsum.photos/1200/600?random=1" alt="Image par défaut" class="article-image">
-    {% endif %}
-    <div class="image-overlay"></div>
-  </div>
-
-  <div class="article-content">
-    {{ article.contenu|safe }}
-  </div>
-
-  <footer class="article-footer">
-    <div class="share-buttons">
-      <a href="#" class="share-btn" onclick="shareOnTwitter()">
-        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
-        </svg>
-        Partager
-      </a>
-      <a href="#" class="share-btn" onclick="copyToClipboard()">
-        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-        </svg>
-        Copier le lien
-      </a>
     </div>
-  </footer>
-</article>
+  </aside>
+</div>
 
-
+<div id="image-lightbox">
+  <span id="close-lightbox">&times;</span>
+  <img id="lightbox-img" src="" alt="Image en gros plan">
+</div>
 
 <script>
-  // Barre de progression de lecture
-  window.addEventListener('scroll', function() {
-    const article = document.querySelector('.article-content');
-    const progressBar = document.getElementById('reading-progress');
-    
-    if (article && progressBar) {
-      const articleHeight = article.offsetHeight;
-      const articleTop = article.offsetTop;
-      const scrolled = window.scrollY - articleTop;
-      const progress = Math.min(Math.max(scrolled / articleHeight, 0), 1);
-      
-      progressBar.style.width = (progress * 100) + '%';
+document.addEventListener('DOMContentLoaded', function() {
+  const articleContent = document.getElementById('article-content');
+  if (!articleContent) return;
+
+  // --- 1. Barre de progression de lecture ---
+  const progressBar = document.getElementById('reading-progress-bar');
+  window.addEventListener('scroll', () => {
+    const contentTop = articleContent.offsetTop;
+    const contentHeight = articleContent.offsetHeight;
+    const viewportHeight = window.innerHeight;
+    const scrollY = window.scrollY;
+
+    if (scrollY >= contentTop && scrollY <= contentTop + contentHeight - viewportHeight) {
+      const progress = (scrollY - contentTop) / (contentHeight - viewportHeight);
+      progressBar.style.width = Math.min(progress * 100, 100) + '%';
+    } else if (scrollY < contentTop) {
+      progressBar.style.width = '0%';
+    } else {
+      progressBar.style.width = '100%';
     }
   });
 
-  // Fonctions de partage
-  function shareOnTwitter() {
-    const title = encodeURIComponent(document.querySelector('.article-title').textContent);
-    const url = encodeURIComponent(window.location.href);
-    window.open(`https://twitter.com/intent/tweet?text=${title}&url=${url}`, '_blank');
-  }
+  // --- 2. Calcul du temps de lecture ---
+  const wordsPerMinute = 225;
+  const text = articleContent.innerText || articleContent.textContent;
+  const wordCount = text.split(/\s+/).length;
+  const readingTime = Math.ceil(wordCount / wordsPerMinute);
+  document.getElementById('time-to-read').textContent = `${readingTime} min de lecture`;
 
-  function copyToClipboard() {
-    navigator.clipboard.writeText(window.location.href).then(function() {
-      const btn = event.target.closest('.share-btn');
-      const originalText = btn.innerHTML;
-      btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Copié !';
-      btn.style.background = '#10b981';
-      btn.style.color = 'white';
-      btn.style.borderColor = '#10b981';
-      
-      setTimeout(() => {
-        btn.innerHTML = originalText;
-        btn.style.background = '';
-        btn.style.color = '';
-        btn.style.borderColor = '';
-      }, 2000);
-    });
-  }
+  // --- 3. Génération de la Table des Matières (TOC) et Scroll-Spy ---
+  const tocList = document.getElementById('toc-list');
+  const headings = articleContent.querySelectorAll('h2, h3');
+  const observerOptions = { rootMargin: '-40% 0px -60% 0px' };
+  let currentActiveLink = null;
 
-  // Animation fluide pour les ancres
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-      e.preventDefault();
-      const target = document.querySelector(this.getAttribute('href'));
-      if (target) {
-        target.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
+  const headingObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const id = entry.target.getAttribute('id');
+      const tocLink = tocList.querySelector(`a[href="#${id}"]`);
+      if (entry.isIntersecting && tocLink) {
+        if (currentActiveLink) {
+          currentActiveLink.classList.remove('active');
+        }
+        tocLink.classList.add('active');
+        currentActiveLink = tocLink;
       }
     });
+  }, observerOptions);
+
+  if (headings.length > 0 && tocList) {
+    headings.forEach((heading, index) => {
+      const id = 'section-' + index;
+      heading.setAttribute('id', id);
+
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.textContent = heading.textContent;
+      a.href = '#' + id;
+      li.appendChild(a);
+      tocList.appendChild(li);
+
+      headingObserver.observe(heading);
+    });
+  } else if (tocList) {
+    tocList.parentElement.style.display = 'none';
+  }
+
+  // --- 4. Bouton d'applaudissement (Clap) ---
+  const clapBtn = document.getElementById('clap-btn');
+  const clapCount = document.getElementById('clap-count');
+  let claps = 0;
+  let hasClapped = false;
+
+  clapBtn.addEventListener('click', () => {
+    claps++;
+    hasClapped = true;
+    clapBtn.classList.add('clapped');
+    clapBtn.disabled = true; // Empêche les clics multiples
+    
+    clapCount.textContent = `${claps} applaudissement${claps > 1 ? 's' : ''}`;
+    
+    // Petite animation
+    clapBtn.style.transform = 'scale(0.9)';
+    setTimeout(() => { clapBtn.style.transform = 'scale(1)'; }, 150);
+    
+    // Ici, vous feriez un appel API pour sauvegarder le clap.
+    // Pour la démo, on le garde en local.
+    setTimeout(() => { clapBtn.disabled = false; }, 500); // Réactive après un court délai
   });
+
+  // --- 5. Visionneuse d'images (Lightbox) ---
+  const lightbox = document.getElementById('image-lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const closeLightbox = document.getElementById('close-lightbox');
+
+  articleContent.querySelectorAll('img').forEach(img => {
+    img.addEventListener('click', () => {
+      lightbox.classList.add('active');
+      lightboxImg.src = img.src;
+    });
+  });
+
+  const closeAction = () => lightbox.classList.remove('active');
+  closeLightbox.addEventListener('click', closeAction);
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) {
+      closeAction();
+    }
+  });
+
+  // --- 6. Bouton de copie pour les blocs de code ---
+  articleContent.querySelectorAll('pre').forEach(pre => {
+    const code = pre.querySelector('code');
+    if (!code) return;
+
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'copy-code-btn';
+    copyBtn.textContent = 'Copier';
+    pre.appendChild(copyBtn);
+
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(code.textContent).then(() => {
+        copyBtn.textContent = 'Copié !';
+        setTimeout(() => {
+          copyBtn.textContent = 'Copier';
+        }, 2000);
+      });
+    });
+  });
+});
+
+// --- Fonctions de partage (gardées de l'original) ---
+function shareOnTwitter(event) {
+  event.preventDefault();
+  const title = encodeURIComponent(document.querySelector('.article-title').textContent);
+  const url = encodeURIComponent(window.location.href);
+  window.open(`https://twitter.com/intent/tweet?text=${title}&url=${url}`, '_blank');
+}
+
+function copyToClipboard(event) {
+  event.preventDefault();
+  navigator.clipboard.writeText(window.location.href).then(function() {
+    const btn = event.target.closest('.share-btn');
+    const originalContent = btn.innerHTML;
+    btn.innerHTML = 'Copié !';
+    btn.style.background = '#e0e7ff';
+    btn.style.borderColor = '#c7d2fe';
+    
+    setTimeout(() => {
+      btn.innerHTML = originalContent;
+      btn.style.background = '';
+      btn.style.borderColor = '';
+    }, 2000);
+  });
+}
 </script>
 {% endblock %}

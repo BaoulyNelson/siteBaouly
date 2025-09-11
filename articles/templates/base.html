@@ -1,40 +1,54 @@
 {% load static %}
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{% block title %}{{ article.titre }} | LeBaouly{% endblock %}</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}{{ article.titre }} | LeBaouly{% endblock %}</title>
 
-  <!-- ==============================
+    <!-- ==============================
        Favicon & Polices
   ============================== -->
-  <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;700&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+    <link
+      rel="icon"
+      href="{% static 'images/favicon.ico' %}"
+      type="image/x-icon"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;700&family=Montserrat:wght@600&display=swap"
+      rel="stylesheet"
+    />
 
-
-  
     <!-- On inclut une police pour le logo, comme dans votre exemple -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- ==============================
+    <!-- ==============================
        Styles
   ============================== -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"
+    />
 
-  <!-- ==============================
+    <!-- ==============================
        Open Graph / Twitter Card
   ============================== -->
-  {% with img=article.image.url|default:"https://picsum.photos/1200/600?random=1" %}
+    {% if article.image %} {% with img=article.image.url %}
     <!-- Open Graph -->
     <meta property="og:type" content="article" />
     <meta property="og:title" content="{{ article.titre }}" />
-    <meta property="og:description" content="{{ article.contenu|truncatechars:150|striptags }}" />
+    <meta
+      property="og:description"
+      content="{{ article.contenu|truncatechars:150|striptags }}"
+    />
     <meta property="og:url" content="{{ request.build_absolute_uri }}" />
     <meta property="og:image" content="{{ img }}" />
     <meta property="og:image:width" content="1200" />
@@ -43,69 +57,87 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="{{ article.titre }}" />
-    <meta name="twitter:description" content="{{ article.contenu|truncatechars:150|striptags }}" />
+    <meta
+      name="twitter:description"
+      content="{{ article.contenu|truncatechars:150|striptags }}"
+    />
     <meta name="twitter:image" content="{{ img }}" />
-  {% endwith %}
+    {% endwith %} {% else %}
+    <!-- Open Graph fallback -->
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="{{ article.titre }}" />
+    <meta
+      property="og:description"
+      content="{{ article.contenu|truncatechars:150|striptags }}"
+    />
+    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+    <meta
+      property="og:image"
+      content="https://picsum.photos/1200/600?random=1"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
 
-  {% block extra_css %}{% endblock %}
-</head>
+    <!-- Twitter fallback -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ article.titre }}" />
+    <meta
+      name="twitter:description"
+      content="{{ article.contenu|truncatechars:150|striptags }}"
+    />
+    <meta
+      name="twitter:image"
+      content="https://picsum.photos/1200/600?random=1"
+    />
+    {% endif %} {% block extra_css %}{% endblock %}
+  </head>
 
-<body class="bg-white text-gray-800">
-  {% include "partials/header.html" %}
+  <body class="bg-white text-gray-800">
+    {% include "partials/header.html" %}
 
-  <!-- ==============================
+    <!-- ==============================
        Messages flash
   ============================== -->
-  {% if messages %}
+    {% if messages %}
     <div class="flex justify-center mt-4">
       <div class="w-full max-w-xl space-y-3">
         {% for message in messages %}
-          <div class="
-            px-4 py-3 rounded-lg text-center border
-            {% if message.tags == 'success' %}
-              bg-green-100 border-green-300 text-green-700
-            {% elif message.tags == 'error' %}
-              bg-red-100 border-red-300 text-red-700
-            {% elif message.tags == 'warning' %}
-              bg-yellow-100 border-yellow-300 text-yellow-700
-            {% else %}
-              bg-blue-100 border-blue-300 text-blue-700
-            {% endif %}
-          ">
-            {{ message }}
-          </div>
+        <div
+          class="px-4 py-3 rounded-lg text-center border {% if message.tags == 'success' %} bg-green-100 border-green-300 text-green-700 {% elif message.tags == 'error' %} bg-red-100 border-red-300 text-red-700 {% elif message.tags == 'warning' %} bg-yellow-100 border-yellow-300 text-yellow-700 {% else %} bg-blue-100 border-blue-300 text-blue-700 {% endif %}"
+        >
+          {{ message }}
+        </div>
         {% endfor %}
       </div>
     </div>
-  {% endif %}
+    {% endif %}
 
-  <!-- ==============================
+    <!-- ==============================
        Contenu principal
   ============================== -->
-  <main class="flex-1 max-w-7xl mx-auto px-4 py-8">
-    {% block content %}{% endblock %}
-  </main>
+    <main class="flex-1 max-w-7xl mx-auto px-4 py-8">
+      {% block content %}{% endblock %}
+    </main>
 
-  {% include "partials/footer.html" %}
+    {% include "partials/footer.html" %}
 
-  <!-- ==============================
+    <!-- ==============================
        Scripts
   ============================== -->
-  <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
-  <script src="{% static 'js/script.js' %}"></script>
-  <script src="{% static 'js/caroussel.js' %}"></script>
-  <script src="{% static 'js/monter.js' %}"></script>
-  <script src="{% static 'js/traduction.js' %}"></script>
-  <script src="{% static 'js/notif.js' %}"></script>
-  <script src="{% static 'js/protection.js' %}"></script>
-  <script src="{% static 'js/mobileMenu.js' %}"></script>
-  <script src="{% static 'js/searchOverlay.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/caroussel.js' %}"></script>
+    <script src="{% static 'js/monter.js' %}"></script>
+    <script src="{% static 'js/traduction.js' %}"></script>
+    <script src="{% static 'js/notif.js' %}"></script>
+    <script src="{% static 'js/protection.js' %}"></script>
+    <script src="{% static 'js/mobileMenu.js' %}"></script>
+    <script src="{% static 'js/searchOverlay.js' %}"></script>
 
+    <!-- Google Translate (caché) -->
+    <div id="google_translate_element" style="display: none"></div>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-  <!-- Google Translate (caché) -->
-  <div id="google_translate_element" style="display:none;"></div>
-  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-  {% block extra_js %}{% endblock %}
-</body>
+    {% block extra_js %}{% endblock %}
+  </body>
 </html>

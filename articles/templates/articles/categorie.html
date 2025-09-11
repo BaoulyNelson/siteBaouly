@@ -23,47 +23,52 @@
             <!-- Article principal (hero) -->
             {% with articles.0 as principal %}
             <section class="mb-16">
-                <!-- La balise <article> est maintenant le conteneur relatif pour notre lien superposé -->
-                <article class="group relative overflow-hidden rounded-2xl bg-white shadow-xl hover:shadow-2xl transition-all duration-500">
-                    <div class="aspect-[16/9] lg:aspect-[21/9] overflow-hidden">
-                        <!-- Le lien <a> a été retiré d'ici -->
-                        <img src="{% if principal.image %}{{ principal.image.url }}{% else %}https://picsum.photos/1200/600?random=1{% endif %}" 
-                             alt="{{ principal.titre }}" 
-                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-                             loading="lazy">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                    </div>
-                    
-                    <!-- Le bloc de texte est visuellement au-dessus (z-20) mais ignore les clics (pointer-events-none) pour les laisser passer au lien en dessous -->
-                    <div class="absolute bottom-0 left-0 right-0 p-8 text-white z-20 pointer-events-none">
-                        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
-                            <span class="px-3 py-1 bg-blue-600 text-xs font-semibold uppercase tracking-wide rounded-full">
-                                {{ categorie|capfirst }}
-                            </span>
-                            <div class="flex items-center gap-2 text-sm opacity-90">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
-                                {{ principal.date_publication|date:"j F Y" }}
-                            </div>
-                            <div class="flex items-center gap-2 text-sm opacity-90">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
-                                {{ principal.auteur.username }}
-                            </div>
-                        </div>
-                        <!-- Le lien <a> a été retiré, mais l'effet de survol est conservé via group-hover -->
-                        <h2 class="text-2xl lg:text-4xl font-bold leading-tight mb-4 transition-colors group-hover:text-blue-200">
-                            {{ principal.titre }}
-                        </h2>
-                        <p class="text-gray-200 text-lg leading-relaxed max-w-3xl hidden sm:block">
-                            {{ principal.contenu|truncatewords:35 }}
-                        </p>
-                    </div>
+            <article class="group overflow-hidden rounded-2xl bg-white shadow-xl hover:shadow-2xl transition-all duration-500">
+                <!-- Image -->
+                <div class="aspect-[16/9] lg:aspect-[21/9] overflow-hidden">
+                <img src="{% if principal.image %}{{ principal.image.url }}{% else %}https://picsum.photos/1200/600?random=1{% endif %}" 
+                    alt="{{ principal.titre }}" 
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                    loading="lazy">
+                </div>
 
-                    <!-- NOUVEAU : Le lien unique qui recouvre toute la carte. Il est sous le texte (z-10) mais reçoit les clics. -->
-                    <a href="{% url 'articles:detail' principal.slug %}" class="absolute inset-0 z-10">
-                        <span class="sr-only">Lire l'article : {{ principal.titre }}</span>
-                    </a>
-                </article>
+                <!-- Texte sous l’image, plus de position absolute -->
+                <div class="p-8 text-gray-900">
+                <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4 text-sm text-gray-600">
+                    <span class="px-3 py-1 bg-blue-600 text-xs font-semibold uppercase tracking-wide text-white rounded-full">
+                    {{ categorie|capfirst }}
+                    </span>
+                    <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                    </svg>
+                    {{ principal.date_publication|date:"j F Y" }}
+                    </div>
+                    <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                    </svg>
+                    {{ principal.auteur.username }}
+                    </div>
+                </div>
+
+                <h2 class="text-2xl lg:text-4xl font-bold leading-tight mb-4 transition-colors group-hover:text-blue-600">
+                    {{ principal.titre }}
+                </h2>
+                
+                <p class="text-gray-700 text-lg leading-relaxed max-w-3xl hidden sm:block">
+                    {{ principal.contenu|truncatewords:35 }}
+                </p>
+                </div>
+
+                <!-- Lien qui recouvre tout l’article -->
+                <a href="{% url 'articles:detail' principal.slug %}" class="absolute inset-0 z-10">
+                <span class="sr-only">Lire l'article : {{ principal.titre }}</span>
+                </a>
+                
+            </article>
             </section>
+
             {% endwith %}
 
             <!-- Articles secondaires -->

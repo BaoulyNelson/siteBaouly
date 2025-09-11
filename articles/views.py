@@ -68,22 +68,26 @@ def articles_par_categorie(request, slug):
 
 
 
+from django.shortcuts import render, get_object_or_404
+
 def detail(request, slug):
     article = get_object_or_404(Article, slug=slug)
 
-    # Construire l’URL absolue de l’image si dispo
-    absolute_image_url = None
-    if article.image:
-        absolute_image_url = request.build_absolute_uri(article.image.url)
+    # URL absolue de l'image pour OpenGraph
+    absolute_image_url = request.build_absolute_uri(article.image.url) if article.image else None
 
-    if request.user.is_authenticated and request.user.is_staff:
-        template = "dashboard/article_detail.html"
-    else:
-        template = "articles/detail.html"
+    # Articles similaires (même catégorie, sauf l'article actuel, limité à 3)
+    related_articles = Article.objects.filter(
+        categorie=article.categorie
+    ).exclude(id=article.id).order_by('-date_publication')[:3]
+
+    # Choisir le template selon le rôle
+    template = "dashboard/article_detail.html" if request.user.is_authenticated and request.user.is_staff else "articles/detail.html"
 
     return render(request, template, {
         "article": article,
-        "absolute_image_url": absolute_image_url
+        "absolute_image_url": absolute_image_url,
+        "related_articles": related_articles
     })
 
 
