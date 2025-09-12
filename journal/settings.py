@@ -138,7 +138,7 @@ LOGOUT_REDIRECT_URL = "articles:index"
 # 🌍 Internationalisation
 # =========================
 LANGUAGE_CODE = "en-us"
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/Port-au-Prince"
 USE_I18N = True
 USE_TZ = True
 

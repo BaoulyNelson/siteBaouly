@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Article,Temoignage,Contact,NewsletterSubscriber
-from .models import MembreEquipe
+from .models import MembreEquipe,AuditLog
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
@@ -54,3 +54,12 @@ class MembreEquipeAdmin(admin.ModelAdmin):
 admin.site.site_header = "Mon Journal - Administration"
 admin.site.site_title = "Mon Journal"
 admin.site.index_title = "Bienvenue dans l'espace d'administration"
+
+
+
+@admin.register(AuditLog)
+class AuditLogAdmin(admin.ModelAdmin):
+    list_display = ("user", "action", "article", "timestamp")
+    list_filter = ("action", "timestamp", "user")
+    search_fields = ("user__username", "article__titre", "action")
+    ordering = ("-timestamp",)

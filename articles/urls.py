@@ -71,7 +71,7 @@ urlpatterns = [
     path("dashboard/equipe/ajouter/", views.MembreEquipeCreateView.as_view(), name="ajouter_membre"),
     path("dashboard/equipe/<int:pk>/modifier/", views.MembreEquipeUpdateView.as_view(), name="modifier_membre"),
     path("api/equipe/", equipe_json, name="api-equipe"),
-
+    path("dashboard/logs/", views.audit_log_list, name="action_logs"),
     # Articles par catégorie et détail
     path("categorie/<str:slug>/", views.articles_par_categorie, name="articles_par_categorie"),
     path("<slug:slug>/", views.detail, name="detail"),

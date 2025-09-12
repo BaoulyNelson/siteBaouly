@@ -127,3 +127,20 @@ class MembreEquipe(models.Model):
             base = f"{self.prenom}-{self.nom}" if self.nom else self.prenom
             self.slug = slugify(base)[:120]
         super().save(*args, **kwargs)
+
+
+
+
+class AuditLog(models.Model):
+    ACTIONS = [
+        ("create", "Création"),
+        ("update", "Modification"),
+        ("delete", "Suppression"),
+    ]
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    article = models.ForeignKey("Article", on_delete=models.CASCADE)
+    action = models.CharField(max_length=10, choices=ACTIONS)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.get_action_display()} - {self.article.titre}"

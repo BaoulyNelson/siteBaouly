@@ -24,7 +24,9 @@ from django.urls import reverse
 from django.utils.html import strip_tags
 from django.http import JsonResponse
 from .models import MembreEquipe
-
+from .models import AuditLog
+from .utils import log_action
+from django.contrib.admin.models import ADDITION, CHANGE
 
 def index(request):
     a_la_une = Article.objects.filter(categorie="une").order_by("-date_publication").first()
@@ -68,7 +70,10 @@ def articles_par_categorie(request, slug):
 
 
 
-from django.shortcuts import render, get_object_or_404
+def audit_log_list(request):
+    logs = AuditLog.objects.select_related("user", "article").order_by("-timestamp")
+    return render(request, "admin/audit_logs.html", {"logs": logs})
+
 
 def detail(request, slug):
     article = get_object_or_404(Article, slug=slug)
@@ -193,6 +198,15 @@ class ArticleCreateView(LoginRequiredMixin, StaffRequiredMixin, CreateView):
         # affecter l'auteur automatiquement
         form.instance.auteur = self.request.user
         response = super().form_valid(form)
+
+        # logger l’action
+        log_action(
+            user=self.request.user,
+            obj=self.object,
+            action_flag=ADDITION,
+            message="Article créé via le dashboard"
+        )
+
         messages.success(self.request, "✅ L'article a été créé avec succès !")
         return response
 
@@ -205,8 +219,18 @@ class ArticleUpdateView(LoginRequiredMixin, StaffRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
+
+        # logger l’action
+        log_action(
+            user=self.request.user,
+            obj=self.object,
+            action_flag=CHANGE,
+            message="Article mis à jour via le dashboard"
+        )
+
         messages.success(self.request, "✏️ L'article a été mis à jour avec succès !")
         return response
+
     
     
 class ArticleDetailView(LoginRequiredMixin, StaffRequiredMixin, DetailView):

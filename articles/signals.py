@@ -1,14 +1,13 @@
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save,post_delete
 from django.dispatch import receiver
 from django.core.mail import send_mail
 from django.conf import settings
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from .models import Article
+from .models import Article,AuditLog
 from django.contrib.auth.signals import user_logged_in
 from django.contrib import messages
-
 
 @receiver(user_logged_in)
 def welcome_user(sender, request, user, **kwargs):
@@ -53,3 +52,28 @@ def notify_new_article(sender, instance, created, **kwargs):
                 "message": f"📰 Nouvel article : {instance.titre}"
             }
         )
+        
+        
+# signals.py
+
+
+@receiver(post_save, sender=Article)
+def log_article_save(sender, instance, created, **kwargs):
+    if created:
+        action = "create"
+    else:
+        action = "update"
+    # On suppose que l'article a un champ "auteur" = User
+    AuditLog.objects.create(
+        user=instance.auteur,
+        article=instance,
+        action=action
+    )
+
+@receiver(post_delete, sender=Article)
+def log_article_delete(sender, instance, **kwargs):
+    AuditLog.objects.create(
+        user=instance.auteur,
+        article=instance,
+        action="delete"
+    )
