@@ -1,25 +1,24 @@
-
-  <footer class="bg-[#052d4a] text-slate-200">
+<footer class="bg-[#052d4a] text-slate-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
 
         <!-- LOGO + description -->
-        <div>
+        <div class="text-center md:text-left">
           <div class="mb-4">
             <!-- Logo fictif en SVG, remplace par ton logo -->
-            <svg width="180" height="48" viewBox="0 0 320 68" xmlns="http://www.w3.org/2000/svg">
+            <svg width="180" height="48" viewBox="0 0 320 68" xmlns="http://www.w3.org/2000/svg" class="mx-auto md:mx-0">
               <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" font-family="Cinzel Decorative, serif" font-weight="700" font-size="28" fill="#ffffff">
                 Le Baouly
               </text>
             </svg>
           </div>
           <p class="text-sm leading-relaxed">
-            Premier quotidien national. Informations, analyses et opinions pour comprendre l’actualité en Haïti et dans le monde.
+            Premier quotidien national. Informations, analyses et opinions pour comprendre l'actualité en Haïti et dans le monde.
           </p>
         </div>
 
         <!-- Navigation -->
-        <div>
+        <div class="text-center md:text-left">
           <h4 class="text-white font-semibold mb-4">Rubriques</h4>
           <ul class="space-y-2 text-sm">
             <li><a href="{% url 'articles:articles_par_categorie' slug='une' %}" class="hover:text-white">À la une</a></li>
@@ -29,39 +28,37 @@
           </ul>
         </div>
 
-        <div>
+        <div class="text-center md:text-left">
           <h4 class="text-white font-semibold mb-4">À propos</h4>
           <ul class="space-y-2 text-sm">
             <li><a href="{% url 'articles:about_us' %}" class="hover:text-white">Qui sommes-nous</a></li>
             <li><a href="{% url 'articles:contact' %}" class="hover:text-white">Contact</a></li>
             <li><a href="{% url 'articles:advertising' %}" class="hover:text-white">Publicité</a></li>
             <li><a href="{% url 'articles:careers' %}" class="hover:text-white">Carrières</a></li>
-
           </ul>
         </div>
 
         <!-- Newsletter / réseaux sociaux -->
-        <div>
+        <div class="text-center md:text-left">
           <h4 class="text-white font-semibold mb-4">Newsletter</h4>
-          <p class="text-sm mb-4">Recevez chaque matin l’essentiel de l’actualité.</p>
-        <form action="{% url 'articles:subscribe' %}" method="post" class="flex items-center">
-  {% csrf_token %}
-  <input
-    name="email"
-    type="email"
-    placeholder="Votre email"
-    aria-label="Votre email"
-    required
-    class="w-full px-3 py-2 rounded-l-md focus:outline-none text-gray-900 bg-white border border-gray-300"
-  >
-  <input type="hidden" name="next" value="{{ request.path }}">
-  <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r-md">
-    OK
-  </button>
-</form>
+          <p class="text-sm mb-4">Recevez chaque matin l'essentiel de l'actualité.</p>
+          <form action="{% url 'articles:subscribe' %}" method="post" class="flex items-center">
+            {% csrf_token %}
+            <input
+              name="email"
+              type="email"
+              placeholder="Votre email"
+              aria-label="Votre email"
+              required
+              class="w-full px-3 py-2 rounded-l-md focus:outline-none text-gray-900 bg-white border border-gray-300"
+            >
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r-md">
+              OK
+            </button>
+          </form>
 
-
-          <div class="flex space-x-4 mt-6">
+          <div class="flex space-x-4 mt-6 justify-center md:justify-start">
             <a href="#" class="hover:text-white">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M22.675 0h-21.35C.596 0 0 .597 0 1.334v21.332C0 23.403.596 24 1.325 24h11.495v-9.294H9.691v-3.622h3.129V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.466.098 2.798.142v3.24h-1.919c-1.505 0-1.797.715-1.797 1.764v2.311h3.592l-.467 3.622h-3.125V24h6.127C23.404 24 24 23.403 24 22.666V1.334C24 .597 23.404 0 22.675 0z" />
@@ -118,27 +115,25 @@
     <!-- BOTTOM bar -->
     <div class="bg-gray-800">
       <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between text-sm text-gray-400">
-        <p>© {% now "Y" %} Le Baouly. Tous droits réservés.</p>
+        <p class="text-center sm:text-left">© {% now "Y" %} Le Baouly. Tous droits réservés.</p>
         <div class="flex gap-4 mt-2 sm:mt-0">
           <a href="{% url 'articles:legal_notice' %}" class="hover:text-white">Mentions légales</a>
           <a href="{% url 'articles:privacy_policy' %}" class="hover:text-white">Politique de confidentialité</a>
           <a href="{% url 'articles:cookies_policy' %}" class="hover:text-white">Cookies</a>
-
         </div>
       </div>
     </div>
 
-      <!-- icône de partage (alignée à droite) -->
-<!-- Bouton "Remonter en haut" -->
-<button id="backToTop" 
-  class="hidden fixed bottom-6 right-6 z-50 p-3 border border-white/20 rounded-lg bg-indigo-600/90 hover:bg-indigo-700/90 shadow-lg transition-opacity duration-300"
-  aria-label="Remonter en haut">
+    <!-- Bouton "Remonter en haut" -->
+    <button id="backToTop" 
+      class="hidden fixed bottom-6 right-6 z-50 p-3 border border-white/20 rounded-lg bg-indigo-600/90 hover:bg-indigo-700/90 shadow-lg transition-opacity duration-300"
+      aria-label="Remonter en haut">
 
-  <!-- Icône "flèche haut" -->
-  <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 19V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M7 10l5-5 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>
-</button>
+      <!-- Icône "flèche haut" -->
+      <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 19V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M7 10l5-5 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
 
   </footer>

@@ -28,6 +28,7 @@ class Article(models.Model):
     image = models.ImageField(upload_to="articles/%Y/%m/%d/", blank=True, null=True)
     categorie = models.CharField(max_length=20, choices=CATEGORIES, default="une")
     date_publication = models.DateTimeField(auto_now_add=True)
+    date_modification = models.DateTimeField(auto_now=True) 
     auteur = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="articles"
     )
