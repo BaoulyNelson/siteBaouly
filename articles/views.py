@@ -369,6 +369,23 @@ def subscribe(request):
     return redirect("index")
 
 
+def send_latest_articles():
+    subscribers = NewsletterSubscriber.objects.all()
+    latest_articles = Article.objects.filter(active=True).order_by('-date_publication')[:5]
+
+    content = ""
+    for article in latest_articles:
+        content += f"{article.titre}\n{article.get_absolute_url()}\n\n"
+
+    for subscriber in subscribers:
+        send_mail(
+            subject="Nos dernières actualités 📰",
+            message=content,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[subscriber.email],
+            fail_silently=True,
+        )
+
 
 # views.py
 

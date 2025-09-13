@@ -2,8 +2,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm,UserCreationForm
 from django.contrib.auth.models import User
-from .models import Contact, Temoignage,NewsletterSubscriber
-from .models import Article
+from .models import Contact, Temoignage,NewsletterSubscriber, MembreEquipe,Article
 
 
 class CustomAuthForm(AuthenticationForm):
@@ -168,16 +167,29 @@ class ArticleForm(forms.ModelForm):
         model = Article
         fields = ["titre", "resume", "contenu", "image", "categorie", "active"]
         widgets = {
-            "titre": forms.TextInput(attrs={"class": "block w-full rounded-md p-2 border", "placeholder": "Titre de l'article"}),
-            "resume": forms.Textarea(attrs={"class": "block w-full rounded-md p-2 border", "rows": 3, "placeholder": "Résumé"}),
-            "contenu": forms.Textarea(attrs={"class": "block w-full rounded-md p-2 border", "rows": 10, "placeholder": "Contenu (Markdown/HTML selon ton usage)"}),
-            "categorie": forms.Select(attrs={"class": "block w-full rounded-md p-2 border"}),
+            "titre": forms.TextInput(attrs={
+                "class": "block w-full rounded-md p-2 border",
+                "placeholder": "Titre de l'article"
+            }),
+            "resume": forms.Textarea(attrs={
+                "class": "block w-full rounded-md p-2 border",
+                "rows": 3,
+                "placeholder": "Résumé"
+            }),
+            "contenu": forms.Textarea(attrs={
+                "class": "block w-full rounded-md p-2 border",
+                "rows": 10,
+                "placeholder": "Contenu (Markdown/HTML selon ton usage)"
+            }),
+            "categorie": forms.Select(attrs={
+                "class": "block w-full rounded-md p-2 border"
+            }),
             "active": forms.CheckboxInput(attrs={"class": "h-4 w-4"}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Optionnel : labels francisés
+        # Labels francisés
         self.fields["titre"].label = "Titre"
         self.fields["resume"].label = "Résumé (facultatif)"
         self.fields["contenu"].label = "Contenu"
@@ -185,9 +197,10 @@ class ArticleForm(forms.ModelForm):
         self.fields["categorie"].label = "Catégorie"
         self.fields["active"].label = "Publier (actif)"
 
+        # 🔹 Autofocus sur le champ titre
+        self.fields["titre"].widget.attrs.update({"autofocus": "autofocus"})
 
-from django import forms
-from .models import MembreEquipe
+
 
 class MembreEquipeForm(forms.ModelForm):
     class Meta:

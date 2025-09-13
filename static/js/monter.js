@@ -1,4 +1,7 @@
+document.addEventListener("DOMContentLoaded", () => {
   const backToTop = document.getElementById("backToTop");
+
+  if (!backToTop) return; // sécurité
 
   // Afficher / cacher quand on scrolle
   window.addEventListener("scroll", () => {
@@ -13,3 +16,4 @@
   backToTop.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
+});
