@@ -41,6 +41,66 @@ def notify_admin_on_new_user(sender, instance, created, **kwargs):
             fail_silently=False,
         )
 
+
+
+
+from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from .models import Article
+
+
+@receiver(post_save, sender=Article)
+def notify_admin_on_article_action(sender, instance, created, **kwargs):
+    """
+    Envoie un mail HTML à l'admin quand un staff publie ou édite un article
+    """
+    action = "publié" if created else "modifié"
+
+    subject = f"[Journal] Article {action}"
+    from_email = settings.DEFAULT_FROM_EMAIL
+    to = [settings.ADMIN_EMAIL]
+
+    # 📩 Version texte brut (fallback)
+    text_content = (
+        f"Bonjour,\n\n"
+        f"L'article « {instance.titre} » a été {action} par "
+        f"{instance.auteur.username}.\n\n"
+        f"Catégorie : {instance.get_categorie_display()}\n"
+        f"Lien : {instance.get_absolute_url()}\n\n"
+        f"— Votre application Django"
+    )
+
+    # 🎨 Version HTML (joli)
+    html_content = f"""
+    <html>
+      <body style="font-family: Arial, sans-serif; line-height:1.6; color:#333;">
+        <h2 style="color:#2c3e50;">📰 Article {action}</h2>
+        <p>
+          Bonjour,<br><br>
+          L'article <strong>« {instance.titre} »</strong> a été <strong>{action}</strong> 
+          par <em>{instance.auteur.username}</em>.
+        </p>
+        <p>
+          <strong>Catégorie :</strong> {instance.get_categorie_display()}<br>
+          <strong>Lien :</strong> 
+          <a href="{instance.get_absolute_url()}" style="color:#2980b9; text-decoration:none;">
+            Voir l’article
+          </a>
+        </p>
+        <hr>
+        <p style="font-size:12px; color:#888;">— Votre application Django</p>
+      </body>
+    </html>
+    """
+
+    # Création de l’email avec les deux versions
+    msg = EmailMultiAlternatives(subject, text_content, from_email, to)
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
+
+
 @receiver(post_save, sender=Article)
 def notify_new_article(sender, instance, created, **kwargs):
     if created:
