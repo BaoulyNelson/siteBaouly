@@ -258,7 +258,7 @@ def register(request):
             request.session["from_register"] = True
 
             # Message de succès pour l'inscription
-            messages.success(request, "✅ Inscription réussie ! Bienvenue sur le Journal Le Baouly.")
+            messages.success(request, "✅ Inscription réussie ! Bienvenue sur le Journal Focus Media.")
 
             return redirect("articles:index")
     else:

@@ -15,7 +15,7 @@ class Command(BaseCommand):
             self.stdout.write("Aucun article actif trouvé.")
             return
 
-        site_url = "https://baoulynelson.pythonanywhere.com/"  # adapte à ton domaine
+        site_url = "https://focusmedia.pythonanywhere.com/"  # adapte à ton domaine
 
         html_content = render_to_string("newsletter/newsletter.html", {
             "articles": latest_articles,

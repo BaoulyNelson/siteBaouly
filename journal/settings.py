@@ -22,7 +22,7 @@ SECRET_KEY = config(
 DEBUG = config("DJANGO_DEBUG", default=True, cast=bool)
 ALLOWED_HOSTS = config(
     "DJANGO_ALLOWED_HOSTS",
-    default="baoulynelson.pythonanywhere.com"
+    default="focusmedia.pythonanywhere.com"
 ).split(",")
 
 

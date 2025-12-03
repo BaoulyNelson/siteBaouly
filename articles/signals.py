@@ -9,6 +9,16 @@ from .models import Article,AuditLog
 from django.contrib.auth.signals import user_logged_in
 from django.contrib import messages
 
+
+
+from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from .models import Article
+
+
+
 @receiver(user_logged_in)
 def welcome_user(sender, request, user, **kwargs):
     # Si l'utilisateur vient de s'inscrire, on évite un doublon
@@ -26,7 +36,7 @@ def notify_admin_on_new_user(sender, instance, created, **kwargs):
         subject = "Nouvel utilisateur enregistré"
         message = (
             f"Bonjour,\n\n"
-            f"Un nouvel utilisateur vient de créer un compte sur le journal Le Baouly.\n\n"
+            f"Un nouvel utilisateur vient de créer un compte sur le journal Focus Media.\n\n"
             f"👤 Nom d'utilisateur : {instance.username}\n"
             f"📧 Adresse e-mail : {instance.email or 'Non renseignée'}\n\n"
             f"Merci de vérifier et d’assurer le suivi si nécessaire.\n\n"
@@ -44,11 +54,6 @@ def notify_admin_on_new_user(sender, instance, created, **kwargs):
 
 
 
-from django.core.mail import EmailMultiAlternatives
-from django.conf import settings
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from .models import Article
 
 
 @receiver(post_save, sender=Article)
